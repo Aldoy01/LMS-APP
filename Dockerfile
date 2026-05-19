@@ -21,4 +21,4 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
 
 USER www-data
 
-CMD ["php-fpm"]
+CMD ["bash", "scripts/railway-start.sh"]

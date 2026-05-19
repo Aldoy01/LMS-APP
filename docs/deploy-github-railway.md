@@ -42,6 +42,8 @@ git push -u origin main
 
 Railway/Nixpacks akan membaca `railway.toml` dan memakai `scripts/railway-start.sh` sebagai start command.
 
+Catatan: karena project ini juga punya `Dockerfile`, Railway dapat memilih Docker build. Dockerfile sudah diarahkan agar start command tetap memakai `scripts/railway-start.sh`, sehingga aplikasi listen ke `$PORT` Railway.
+
 ## 4. Environment Variables Railway
 
 Tambahkan variable berikut di service aplikasi:
@@ -121,4 +123,3 @@ Ganti password setelah production aktif.
 ## 9. Catatan
 
 Dokumentasi Nixpacks untuk PHP/Laravel menyarankan document root Laravel diarahkan ke folder `public`; project ini mengatur `NIXPACKS_PHP_ROOT_DIR=/app/public` lewat `nixpacks.toml`.
-
