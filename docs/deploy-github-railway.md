@@ -93,9 +93,11 @@ Setelah variables lengkap:
 2. Railway menjalankan composer install.
 3. Saat start, script akan menjalankan:
    - `php artisan storage:link`
-   - `php artisan migrate --force`
+   - `php artisan migrate --force` jika variable database lengkap
    - cache config, route, dan view
    - `php artisan serve` memakai `$PORT` dari Railway
+
+Jika service crash, cek tab **Deploy Logs** untuk error build dan tab **Runtime Logs** untuk error start aplikasi. Runtime crash paling sering terjadi karena `APP_KEY` kosong atau variable PostgreSQL belum sesuai service Railway.
 
 ## 7. Akun Demo
 
