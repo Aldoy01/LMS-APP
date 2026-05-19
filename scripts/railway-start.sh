@@ -7,6 +7,15 @@ if [ -n "${DATABASE_URL:-}" ] && [ -z "${DB_CONNECTION:-}" ]; then
     export DB_CONNECTION=pgsql
 fi
 
+if [ -n "${PGHOST:-}" ]; then
+    export DB_CONNECTION="${DB_CONNECTION:-pgsql}"
+    export DB_HOST="${DB_HOST:-$PGHOST}"
+    export DB_PORT="${DB_PORT:-${PGPORT:-5432}}"
+    export DB_DATABASE="${DB_DATABASE:-${PGDATABASE:-}}"
+    export DB_USERNAME="${DB_USERNAME:-${PGUSER:-}}"
+    export DB_PASSWORD="${DB_PASSWORD:-${PGPASSWORD:-}}"
+fi
+
 echo "Database check: DB_CONNECTION=${DB_CONNECTION:-empty}, DATABASE_URL=$([ -n "${DATABASE_URL:-}" ] && echo set || echo empty), DB_HOST=$([ -n "${DB_HOST:-}" ] && echo set || echo empty)"
 
 php artisan config:clear || true
