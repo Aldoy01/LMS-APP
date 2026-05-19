@@ -92,12 +92,13 @@ Setelah variables lengkap:
 1. Trigger deploy dari Railway.
 2. Railway menjalankan composer install.
 3. Saat start, script akan menjalankan:
-   - `php artisan storage:link`
    - `php artisan migrate --force` jika variable database lengkap
    - cache config, route, dan view
    - `php artisan serve` memakai `$PORT` dari Railway
 
 Jika service crash, cek tab **Deploy Logs** untuk error build dan tab **Runtime Logs** untuk error start aplikasi. Runtime crash paling sering terjadi karena `APP_KEY` kosong atau variable PostgreSQL belum sesuai service Railway.
+
+Jangan jalankan `php artisan storage:link` di Railway runtime jika muncul error `symlink(): Permission denied`; script project ini sudah tidak menjalankannya.
 
 ## 7. Akun Demo
 

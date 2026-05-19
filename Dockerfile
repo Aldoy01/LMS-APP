@@ -11,7 +11,7 @@ RUN apk add --no-cache \
     postgresql-dev \
     unzip \
     zip \
-    && docker-php-ext-install intl mbstring pdo pdo_pgsql zip
+    && docker-php-ext-install intl mbstring pdo pdo_mysql pdo_pgsql zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .

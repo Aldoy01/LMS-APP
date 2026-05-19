@@ -6,13 +6,12 @@ echo "Starting Techverse Learning LMS on port ${PORT:-8080}"
 php artisan config:clear || true
 php artisan route:clear || true
 php artisan view:clear || true
-php artisan storage:link || true
 
-if [ -n "${DB_HOST:-}" ] && [ -n "${DB_DATABASE:-}" ] && [ -n "${DB_USERNAME:-}" ]; then
+if [ "${DB_CONNECTION:-}" = "pgsql" ] && [ -n "${DB_HOST:-}" ] && [ -n "${DB_DATABASE:-}" ] && [ -n "${DB_USERNAME:-}" ]; then
     echo "Running database migrations..."
     php artisan migrate --force || echo "Migration failed; continuing so the web server can start. Check Railway database variables."
 else
-    echo "Database variables are incomplete; skipping migrations."
+    echo "PostgreSQL variables are incomplete or DB_CONNECTION is not pgsql; skipping migrations."
 fi
 
 php artisan config:cache || true
