@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LmsDashboardController;
+use App\Http\Controllers\ParticipantDashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [LmsDashboardController::class, 'index'])->name('lms.dashboard');
+Route::get('/courses/{course:slug}', [LmsDashboardController::class, 'show'])->name('lms.courses.show');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
+    Route::get('/admin/login', [AuthController::class, 'showAdminLogin'])->name('admin.login');
+    Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('admin.login.attempt');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin,admin-lms'])->group(function () {
+    Route::resource('courses', AdminCourseController::class)->except(['show', 'destroy']);
 });

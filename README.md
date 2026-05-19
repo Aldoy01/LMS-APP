@@ -1,64 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Cyber Security Playbook LMS
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi LMS berbasis Laravel dan PostgreSQL yang dibuat dari dokumen proses pengembangan dan implementasi LMS Cyber Security Playbook untuk TRAMATEKID / PT. Tera Multi Teknologi.
 
-## About Laravel
+## Modul MVP
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Dashboard course, peserta, revenue, live Q&A, pertanyaan, case review, dan CRM pipeline.
+- Database PostgreSQL untuk role, course, module, lesson, material, order, payment, enrollment, progress, live session, question, case review, lead, activity, coupon, dan certificate.
+- Seeder data demo untuk admin, mentor, peserta, sales/CS, course, transaksi, progress, live session, case review, dan lead.
+- Docker Compose dengan Laravel app container, PostgreSQL, dan scheduler untuk mode lokal.
+- GitHub Actions CI untuk migration dan test.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Menjalankan Dengan Docker
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+docker compose up -d --build
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed
+```
 
-## Learning Laravel
+Buka `http://localhost:8081`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Menjalankan Di XAMPP
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Project berada di `C:\xampp\htdocs\LMS`. Setelah dependency Composer tersedia, aplikasi bisa dibuka dari:
 
-## Laravel Sponsors
+- `http://localhost/LMS`
+- `http://localhost/LMS/public` jika rewrite Apache belum aktif
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Panel admin MVP:
 
-### Premium Partners
+- `http://localhost/LMS/admin/courses`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Panduan detail ada di `docs/xampp-setup.md`.
 
-## Contributing
+## Deploy GitHub + Railway
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Panduan deploy production tersedia di `docs/deploy-github-railway.md`.
 
-## Code of Conduct
+## Menjalankan Lokal
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Pastikan PHP 8.0+, Composer, extension `pdo_pgsql`, dan PostgreSQL tersedia.
 
-## Security Vulnerabilities
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Catatan Lingkungan Windows Ini
 
-## License
+Composer di mesin ini gagal mengunduh dependency karena masalah CA certificate Packagist (`curl error 60`). Source aplikasi sudah dibuat, tetapi folder `vendor/` belum tersedia sampai konfigurasi sertifikat Composer/PHP dibenahi atau install dilakukan lewat Docker/lingkungan lain.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Akun Demo Seeder
+
+- `admin@tramatekid.test` / `password`
+- `mentor@tramatekid.test` / `password`
+- `peserta@example.test` / `password`
+- `sales@tramatekid.test` / `password`
