@@ -21,14 +21,14 @@ git status
 git add .
 git commit -m "Prepare LMS for Railway deployment"
 git branch -M main
-git remote add origin https://github.com/USERNAME/NAMA-REPO.git
+git remote add origin https://github.com/Aldoy01/LMS-APP.git
 git push -u origin main
 ```
 
 Jika remote sudah ada:
 
 ```powershell
-git remote set-url origin https://github.com/USERNAME/NAMA-REPO.git
+git remote set-url origin https://github.com/Aldoy01/LMS-APP.git
 git push -u origin main
 ```
 
@@ -53,6 +53,7 @@ APP_NAME="Techverse Learning LMS"
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=base64:ISI_DENGAN_APP_KEY
+APP_URL=https://${{RAILWAY_PUBLIC_DOMAIN}}
 LOG_CHANNEL=stderr
 LOG_LEVEL=error
 DB_CONNECTION=pgsql
@@ -93,6 +94,7 @@ Setelah variables lengkap:
 2. Railway menjalankan composer install.
 3. Saat start, script akan menjalankan:
    - `php artisan migrate --force` jika variable database lengkap
+   - `php artisan db:seed --force` untuk akun demo dan data awal
    - cache config, route, dan view
    - `php artisan serve` memakai `$PORT` dari Railway
 
