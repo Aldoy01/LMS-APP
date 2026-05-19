@@ -16,6 +16,10 @@ if [ -n "${PGHOST:-}" ]; then
     export DB_PASSWORD="${DB_PASSWORD:-${PGPASSWORD:-}}"
 fi
 
+if [ -n "${DB_HOST:-}" ] && [ -n "${DB_DATABASE:-}" ] && [ -n "${DB_USERNAME:-}" ]; then
+    unset DATABASE_URL
+fi
+
 echo "Database check: DB_CONNECTION=${DB_CONNECTION:-empty}, DATABASE_URL=$([ -n "${DATABASE_URL:-}" ] && echo set || echo empty), DB_HOST=$([ -n "${DB_HOST:-}" ] && echo set || echo empty)"
 
 php artisan config:clear || true
