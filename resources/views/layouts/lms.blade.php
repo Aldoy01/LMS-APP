@@ -165,16 +165,16 @@
             <img class="brand-logo" src="{{ asset('images/techverse-learning-logo.jpeg') }}" alt="Techverse Learning">
         </a>
         <nav class="nav">
-            <a href="{{ route('lms.dashboard') }}#courses">Courses</a>
+            <a href="{{ route('lms.dashboard') }}">Home</a>
+            <a href="{{ route('lms.dashboard') }}#program">Program</a>
+            <a href="{{ route('lms.dashboard') }}#tentang">Tentang</a>
+            <a href="{{ route('lms.dashboard') }}#kontak">Kontak</a>
             @auth
-                <a href="{{ route('participant.home') }}">Home</a>
+                <a href="{{ route('participant.home') }}">Beranda Belajar</a>
                 <a href="{{ route('participant.home') }}#modul">Modul</a>
                 <a href="{{ route('participant.home') }}#profil">Profil</a>
                 <a href="{{ route('participant.home') }}#bantuan">Bantuan</a>
             @endauth
-            <a href="{{ route('lms.dashboard') }}#sessions">Live Q&A</a>
-            <a href="{{ route('lms.dashboard') }}#crm">CRM</a>
-            <a href="{{ route('lms.dashboard') }}#reports">Reports</a>
             @auth
                 @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
                     <a href="{{ route('admin.courses.index') }}">Admin Course</a>
