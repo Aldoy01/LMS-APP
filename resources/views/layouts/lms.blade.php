@@ -166,6 +166,12 @@
         </a>
         <nav class="nav">
             <a href="{{ route('lms.dashboard') }}#courses">Courses</a>
+            @auth
+                <a href="{{ route('participant.home') }}">Home</a>
+                <a href="{{ route('participant.home') }}#modul">Modul</a>
+                <a href="{{ route('participant.home') }}#profil">Profil</a>
+                <a href="{{ route('participant.home') }}#bantuan">Bantuan</a>
+            @endauth
             <a href="{{ route('lms.dashboard') }}#sessions">Live Q&A</a>
             <a href="{{ route('lms.dashboard') }}#crm">CRM</a>
             <a href="{{ route('lms.dashboard') }}#reports">Reports</a>

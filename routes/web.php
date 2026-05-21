@@ -32,6 +32,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/home', [ParticipantDashboardController::class, 'index'])->name('participant.home');
     Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
 });
 
