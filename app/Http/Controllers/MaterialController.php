@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\LessonMaterial;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Throwable;
 
 class MaterialController extends Controller
@@ -16,16 +16,26 @@ class MaterialController extends Controller
                 return redirect()->away($material->url);
             }
 
-            if (! $material->url || ! Storage::disk('local')->exists($material->url)) {
-                return response()->view('materials.missing', [
-                    'material' => $material,
-                ], 404);
+            $disk = Storage::disk('local');
+
+            if (! $material->url || ! $disk->exists($material->url)) {
+                return $this->unavailable($material);
             }
 
-            $path = Storage::disk('local')->path($material->url);
-            $mimeType = Storage::disk('local')->mimeType($material->url) ?: 'application/octet-stream';
+            $path = $disk->path($material->url);
+
+            if (! is_file($path) || ! is_readable($path)) {
+                return $this->unavailable($material);
+            }
+
+            $mimeType = $disk->mimeType($material->url) ?: 'application/octet-stream';
             $disposition = in_array($material->type, ['pdf', 'pdf-slide', 'video-upload'], true) ? 'inline' : 'attachment';
-            $filename = (Str::slug(pathinfo($material->title, PATHINFO_FILENAME)) ?: 'materi') . '.' . pathinfo($path, PATHINFO_EXTENSION);
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $filename = Str::slug(pathinfo($material->title ?: 'materi', PATHINFO_FILENAME)) ?: 'materi';
+
+            if ($extension) {
+                $filename .= '.' . $extension;
+            }
 
             return response()->file($path, [
                 'Content-Type' => $mimeType,
@@ -36,7 +46,14 @@ class MaterialController extends Controller
 
             return response()->view('materials.error', [
                 'material' => $material,
-            ], 500);
+            ], 200);
         }
+    }
+
+    private function unavailable(LessonMaterial $material)
+    {
+        return response()->view('materials.missing', [
+            'material' => $material,
+        ], 200);
     }
 }
