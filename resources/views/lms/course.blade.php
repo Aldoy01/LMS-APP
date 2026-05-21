@@ -29,7 +29,7 @@
             <div class="list">
                 @foreach($course->modules as $module)
                     <article class="card">
-                        <span class="eyebrow">Modul {{ $module->sort_order }}</span>
+                        <span class="eyebrow">{{ $module->category }} / Modul {{ $module->sort_order }} / {{ $module->duration_minutes }} menit</span>
                         <h3>{{ $module->title }}</h3>
                         <p>{{ $module->summary }}</p>
                         <div class="list">

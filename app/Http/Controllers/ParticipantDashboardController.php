@@ -17,10 +17,9 @@ class ParticipantDashboardController extends Controller
             ->where('user_id', Auth::id())
             ->latest()
             ->get();
-        $moduleCategories = ['Basic', 'Intermediate', 'Practical'];
         $modules = $enrollments
-            ->flatMap(function ($enrollment) use ($moduleCategories) {
-                return $enrollment->course->modules->map(function ($module, $index) use ($enrollment, $moduleCategories) {
+            ->flatMap(function ($enrollment) {
+                return $enrollment->course->modules->map(function ($module) use ($enrollment) {
                     $lessonIds = $module->lessons->pluck('id');
                     $completedCount = $enrollment->progress
                         ->whereIn('lesson_id', $lessonIds)
@@ -31,7 +30,8 @@ class ParticipantDashboardController extends Controller
                     return [
                         'course' => $enrollment->course,
                         'module' => $module,
-                        'category' => $moduleCategories[min($index, count($moduleCategories) - 1)],
+                        'category' => $module->category,
+                        'duration_minutes' => $module->duration_minutes,
                         'lesson_count' => $lessonCount,
                         'completed_count' => $completedCount,
                         'progress' => $lessonCount > 0 ? round(($completedCount / $lessonCount) * 100) : 0,

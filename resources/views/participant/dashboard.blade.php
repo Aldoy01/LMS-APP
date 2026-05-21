@@ -155,6 +155,7 @@
                         </div>
                         <p class="muted" style="margin:0 0 12px">{{ $item['module']->summary }}</p>
                         <div class="meta">
+                            <span class="badge">{{ $item['duration_minutes'] }} menit</span>
                             <span class="badge">{{ $item['lesson_count'] }} lesson</span>
                             <span class="badge">{{ $item['completed_count'] }} selesai</span>
                             <a class="button" href="{{ route('lms.courses.show', $item['course']) }}">Buka Modul</a>

@@ -98,36 +98,77 @@ class DatabaseSeeder extends Seeder
         );
 
         $modules = [
-            [
-                'title' => 'Security Baseline & Awareness',
-                'summary' => 'Fondasi threat model, password policy, MFA, dan hygiene operasional.',
-                'lessons' => [
-                    ['title' => 'Membaca Risiko Siber untuk Bisnis', 'type' => 'video', 'duration' => 28],
-                    ['title' => 'Checklist Password, MFA, dan Device Policy', 'type' => 'pdf', 'duration' => 18],
-                ],
-            ],
-            [
-                'title' => 'Incident Readiness & SOP',
-                'summary' => 'Template SOP insiden, alur eskalasi, dan latihan tabletop sederhana.',
-                'lessons' => [
-                    ['title' => 'SOP Respons Insiden Awal', 'type' => 'ebook', 'duration' => 35],
-                    ['title' => 'Simulasi Phishing dan Data Leak', 'type' => 'video', 'duration' => 42],
-                ],
-            ],
-            [
-                'title' => 'Case Solving & Upsell Review',
-                'summary' => 'Cara submit masalah nyata dan mengubah temuan menjadi rencana perbaikan.',
-                'lessons' => [
-                    ['title' => 'Menulis Case Review yang Bisa Dianalisis', 'type' => 'video', 'duration' => 24],
-                    ['title' => 'Prioritas Quick Fix vs Project Security', 'type' => 'checklist', 'duration' => 16],
-                ],
-            ],
+            ['category' => 'Basic', 'title' => 'Intro Cyber Security', 'summary' => 'Pengenalan konsep keamanan siber, tujuan belajar, etika, dan ruang lingkup defensive learning.', 'duration' => 90, 'lessons' => [
+                ['title' => 'Fondasi Cyber Security', 'type' => 'video', 'duration' => 35, 'material' => 'Slide Intro Cyber Security'],
+                ['title' => 'Checklist Etika dan Safety Lab', 'type' => 'checklist', 'duration' => 20, 'material' => 'Checklist Safety Lab'],
+            ]],
+            ['category' => 'Basic', 'title' => 'Networking Basic', 'summary' => 'Dasar jaringan, IP address, DNS, HTTP, port, dan cara membaca komunikasi antar sistem.', 'duration' => 120, 'lessons' => [
+                ['title' => 'IP, Port, DNS, dan HTTP', 'type' => 'video', 'duration' => 45, 'material' => 'Mindmap Networking Basic'],
+                ['title' => 'Latihan Membaca Alur Request', 'type' => 'worksheet', 'duration' => 30, 'material' => 'Worksheet Request Flow'],
+            ]],
+            ['category' => 'Basic', 'title' => 'Linux Basic', 'summary' => 'Perintah Linux dasar, struktur direktori, permission, service, dan log untuk kebutuhan lab keamanan.', 'duration' => 120, 'lessons' => [
+                ['title' => 'Command Line dan File Permission', 'type' => 'video', 'duration' => 45, 'material' => 'Cheatsheet Linux Command'],
+                ['title' => 'Praktik Navigasi dan Log', 'type' => 'checklist', 'duration' => 35, 'material' => 'Checklist Linux Lab'],
+            ]],
+            ['category' => 'Basic', 'title' => 'Web Security', 'summary' => 'Konsep dasar keamanan aplikasi web, authentication, session, input validation, dan common risk.', 'duration' => 105, 'lessons' => [
+                ['title' => 'Anatomi Aplikasi Web', 'type' => 'video', 'duration' => 40, 'material' => 'Slide Web Security'],
+                ['title' => 'Checklist Risiko Web Dasar', 'type' => 'pdf', 'duration' => 25, 'material' => 'Checklist Web Risk'],
+            ]],
+            ['category' => 'Basic', 'title' => 'Jenis Hacker', 'summary' => 'Memahami peran white hat, blue team, red team, black hat, bug hunter, dan batasan legal.', 'duration' => 75, 'lessons' => [
+                ['title' => 'Role dan Etika Hacker', 'type' => 'video', 'duration' => 30, 'material' => 'Infografis Jenis Hacker'],
+                ['title' => 'Studi Kasus Etika Keamanan', 'type' => 'ebook', 'duration' => 25, 'material' => 'Ebook Etika Cyber'],
+            ]],
+            ['category' => 'Intermediate', 'title' => 'SQL Injection', 'summary' => 'Memahami risiko query injection, dampak pada data, dan prinsip mitigasi input database.', 'duration' => 150, 'lessons' => [
+                ['title' => 'Konsep SQL Injection', 'type' => 'video', 'duration' => 55, 'material' => 'Slide SQL Injection'],
+                ['title' => 'Checklist Mitigasi SQLi', 'type' => 'checklist', 'duration' => 35, 'material' => 'Checklist SQLi Mitigation'],
+            ]],
+            ['category' => 'Intermediate', 'title' => 'XSS', 'summary' => 'Mempelajari reflected, stored, dan DOM XSS serta cara pencegahan berbasis encoding dan CSP.', 'duration' => 135, 'lessons' => [
+                ['title' => 'Jenis dan Dampak XSS', 'type' => 'video', 'duration' => 50, 'material' => 'Slide XSS'],
+                ['title' => 'Worksheet Output Encoding', 'type' => 'worksheet', 'duration' => 30, 'material' => 'Worksheet XSS Defense'],
+            ]],
+            ['category' => 'Intermediate', 'title' => 'Vulnerability', 'summary' => 'Cara membaca vulnerability, severity, CVE/CVSS, prioritas patch, dan risk-based remediation.', 'duration' => 120, 'lessons' => [
+                ['title' => 'Membaca Temuan Vulnerability', 'type' => 'video', 'duration' => 45, 'material' => 'Template Risk Register'],
+                ['title' => 'Prioritas Patch dan Remediasi', 'type' => 'pdf', 'duration' => 30, 'material' => 'Checklist Remediation'],
+            ]],
+            ['category' => 'Intermediate', 'title' => 'Reconnaissance', 'summary' => 'Dasar pengumpulan informasi secara legal untuk memahami permukaan serangan dan aset digital.', 'duration' => 135, 'lessons' => [
+                ['title' => 'Recon Legal dan Asset Mapping', 'type' => 'video', 'duration' => 50, 'material' => 'Template Asset Mapping'],
+                ['title' => 'Checklist Passive Recon', 'type' => 'checklist', 'duration' => 30, 'material' => 'Checklist Passive Recon'],
+            ]],
+            ['category' => 'Intermediate', 'title' => 'Wireshark', 'summary' => 'Mengenal packet capture, filter dasar, membaca trafik HTTP/DNS, dan indikasi anomali sederhana.', 'duration' => 150, 'lessons' => [
+                ['title' => 'Analisis Trafik Dasar', 'type' => 'video', 'duration' => 60, 'material' => 'Sample PCAP dan Filter'],
+                ['title' => 'Latihan Membaca Packet Capture', 'type' => 'worksheet', 'duration' => 40, 'material' => 'Worksheet Wireshark'],
+            ]],
+            ['category' => 'Practical', 'title' => 'Burp Suite', 'summary' => 'Workflow dasar proxy testing, intercept request, repeater, dan dokumentasi temuan web app.', 'duration' => 180, 'lessons' => [
+                ['title' => 'Setup Burp Suite Lab', 'type' => 'video', 'duration' => 60, 'material' => 'Checklist Setup Burp'],
+                ['title' => 'Praktik Proxy dan Repeater', 'type' => 'checklist', 'duration' => 60, 'material' => 'Lab Guide Burp Suite'],
+            ]],
+            ['category' => 'Practical', 'title' => 'Nmap', 'summary' => 'Praktik network discovery, port scanning yang aman, service detection, dan pencatatan hasil.', 'duration' => 150, 'lessons' => [
+                ['title' => 'Nmap Discovery dan Service Scan', 'type' => 'video', 'duration' => 55, 'material' => 'Cheatsheet Nmap'],
+                ['title' => 'Worksheet Hasil Scanning', 'type' => 'worksheet', 'duration' => 45, 'material' => 'Template Scan Result'],
+            ]],
+            ['category' => 'Practical', 'title' => 'Pentest Workflow', 'summary' => 'Alur kerja pentest legal dari scoping, recon, testing, evidence, validasi, sampai rekomendasi.', 'duration' => 210, 'lessons' => [
+                ['title' => 'Tahapan Pentest Profesional', 'type' => 'video', 'duration' => 70, 'material' => 'Pentest Workflow Map'],
+                ['title' => 'Template Scope dan Rules of Engagement', 'type' => 'ebook', 'duration' => 50, 'material' => 'Template ROE'],
+            ]],
+            ['category' => 'Practical', 'title' => 'Real Case Study', 'summary' => 'Studi kasus terarah untuk membaca masalah, menyusun hipotesis, memvalidasi risiko, dan membuat quick fix.', 'duration' => 180, 'lessons' => [
+                ['title' => 'Analisis Case Aplikasi Web', 'type' => 'video', 'duration' => 65, 'material' => 'Case Study Pack'],
+                ['title' => 'Menyusun Quick Fix', 'type' => 'worksheet', 'duration' => 45, 'material' => 'Worksheet Case Review'],
+            ]],
+            ['category' => 'Practical', 'title' => 'Reporting', 'summary' => 'Menyusun laporan temuan yang jelas untuk bisnis: evidence, severity, impact, rekomendasi, dan executive summary.', 'duration' => 150, 'lessons' => [
+                ['title' => 'Struktur Laporan Security', 'type' => 'video', 'duration' => 50, 'material' => 'Template Pentest Report'],
+                ['title' => 'Menulis Executive Summary', 'type' => 'pdf', 'duration' => 35, 'material' => 'Checklist Reporting'],
+            ]],
         ];
 
         foreach ($modules as $moduleIndex => $moduleData) {
             $module = CourseModule::updateOrCreate(
                 ['course_id' => $course->id, 'title' => $moduleData['title']],
-                ['summary' => $moduleData['summary'], 'sort_order' => $moduleIndex + 1]
+                [
+                    'summary' => $moduleData['summary'],
+                    'category' => $moduleData['category'],
+                    'duration_minutes' => $moduleData['duration'],
+                    'sort_order' => $moduleIndex + 1,
+                ]
             );
 
             foreach ($moduleData['lessons'] as $lessonIndex => $lessonData) {
@@ -143,11 +184,11 @@ class DatabaseSeeder extends Seeder
                 );
 
                 LessonMaterial::updateOrCreate(
-                    ['lesson_id' => $lesson->id, 'title' => 'Materi ' . $lesson->title],
+                    ['lesson_id' => $lesson->id, 'title' => $lessonData['material']],
                     [
                         'type' => $lessonData['type'],
                         'url' => 'https://storage.example.test/lms/' . $lesson->id,
-                        'downloadable' => in_array($lessonData['type'], ['pdf', 'ebook', 'checklist']),
+                        'downloadable' => in_array($lessonData['type'], ['pdf', 'ebook', 'checklist', 'worksheet']),
                     ]
                 );
             }
