@@ -37,13 +37,11 @@
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             color: var(--ink);
             background:
-                linear-gradient(rgba(137, 33, 194, .045) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 196, 248, .055) 1px, transparent 1px),
                 radial-gradient(circle at top left, rgba(137, 33, 194, .13), transparent 34rem),
                 radial-gradient(circle at top right, rgba(37, 196, 248, .16), transparent 32rem),
                 radial-gradient(circle at 58% 18%, rgba(83, 232, 212, .16), transparent 28rem),
                 linear-gradient(180deg, #ffffff 0%, #f8fbff 46%, #eefbff 100%);
-            background-size: 42px 42px, 42px 42px, auto, auto, auto;
+            background-size: auto, auto, auto, auto;
             background-attachment: fixed;
             animation: cyberBackground 18s ease-in-out infinite alternate;
         }
@@ -53,11 +51,11 @@
             inset: 0;
             pointer-events: none;
             background:
-                linear-gradient(115deg, transparent 0 18%, rgba(83, 232, 212, .13) 18.2%, transparent 18.7% 58%, rgba(254, 57, 164, .12) 58.2%, transparent 58.8%),
-                radial-gradient(circle at 8% 18%, rgba(83, 232, 212, .2) 0 2px, transparent 3px),
-                radial-gradient(circle at 88% 34%, rgba(137, 33, 194, .2) 0 1px, transparent 3px),
-                radial-gradient(circle at 72% 82%, rgba(254, 57, 164, .16) 0 2px, transparent 4px);
-            opacity: .7;
+                radial-gradient(circle at 8% 18%, rgba(83, 232, 212, .16), transparent 13rem),
+                radial-gradient(circle at 88% 34%, rgba(137, 33, 194, .12), transparent 15rem),
+                radial-gradient(circle at 72% 82%, rgba(254, 57, 164, .1), transparent 14rem);
+            filter: blur(8px);
+            opacity: .68;
             animation: circuitSweep 12s linear infinite;
         }
         body::after {
@@ -305,8 +303,8 @@
         small { color: var(--accent); }
         footer { border-top: 1px solid var(--line); padding: 24px clamp(18px, 4vw, 48px); color: var(--hero-copy); background: linear-gradient(135deg, var(--night), var(--brand-dark)); }
         @keyframes cyberBackground {
-            0% { background-position: 0 0, 0 0, left top, right top, 58% 18%, center; }
-            100% { background-position: 42px 24px, 24px 42px, 8% 4%, 92% 8%, 55% 22%, center; }
+            0% { background-position: left top, right top, 58% 18%, center; }
+            100% { background-position: 8% 4%, 92% 8%, 55% 22%, center; }
         }
         @keyframes circuitSweep {
             0% { transform: translate3d(-18px, -12px, 0); opacity: .52; }
