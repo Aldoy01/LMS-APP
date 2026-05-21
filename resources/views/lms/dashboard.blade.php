@@ -96,7 +96,7 @@
                             <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
                             <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
                         </div>
-                        <a class="button" href="{{ $memberUrl }}">Mulai Belajar</a>
+                        <a class="button" href="{{ route('purchase.create', $course) }}">Beli Paket</a>
                     </article>
                 @empty
                     <div class="card">

@@ -179,6 +179,7 @@
                 @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
                     <a href="{{ route('admin.courses.index') }}">Admin Course</a>
                     <a href="{{ route('admin.users.index') }}">User & Akses</a>
+                    <a href="{{ route('admin.payments.index') }}">Pembayaran</a>
                 @endif
                 <a href="{{ route('participant.dashboard') }}">Kelas Saya</a>
                 <form method="POST" action="{{ route('logout') }}">

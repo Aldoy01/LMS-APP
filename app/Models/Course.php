@@ -18,6 +18,11 @@ class Course extends Model
         'mentor_id',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function mentor()
     {
         return $this->belongsTo(User::class, 'mentor_id');
