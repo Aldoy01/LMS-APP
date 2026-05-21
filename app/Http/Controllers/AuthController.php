@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,9 +27,9 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (! Auth::attempt($credentials, $remember)) {
+        if (! User::where('email', $credentials['email'])->exists() || ! Auth::attempt($credentials, $remember)) {
             return back()
-                ->withErrors(['email' => 'Email atau password tidak sesuai.'])
+                ->withErrors(['email' => 'Email atau password salah.'])
                 ->onlyInput('email');
         }
 
@@ -44,9 +45,9 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! User::where('email', $credentials['email'])->exists() || ! Auth::attempt($credentials, $request->boolean('remember'))) {
             return back()
-                ->withErrors(['email' => 'Email atau password admin tidak sesuai.'])
+                ->withErrors(['email' => 'Email atau password salah.'])
                 ->onlyInput('email');
         }
 

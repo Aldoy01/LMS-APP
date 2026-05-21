@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LmsDashboardController;
 use App\Http\Controllers\ParticipantDashboardController;
@@ -18,7 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [LmsDashboardController::class, 'index'])->name('lms.dashboard');
-Route::get('/courses/{course:slug}', [LmsDashboardController::class, 'show'])->name('lms.courses.show');
+Route::middleware(['auth', 'no.cache'])->group(function () {
+    Route::get('/courses/{course:slug}', [LmsDashboardController::class, 'show'])->name('lms.courses.show');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -27,11 +30,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('admin.login.attempt');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
 });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:super-admin,admin-lms'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:super-admin,admin-lms'])->group(function () {
     Route::resource('courses', AdminCourseController::class)->except(['show', 'destroy']);
+    Route::resource('users', AdminUserController::class)->except(['show', 'destroy']);
+    Route::put('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
 });
