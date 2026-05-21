@@ -51,19 +51,19 @@
     <main class="main">
         <section class="section" id="dashboard">
             <div class="grid metrics">
-                <a class="metric" href="#daftar-modul">
+                <a class="metric module-icon" href="#daftar-modul">
                     <span>Modul</span>
                     <strong>{{ $modules->count() }}</strong>
                 </a>
-                <a class="metric" href="#daftar-modul">
+                <a class="metric progress-icon" href="#daftar-modul">
                     <span>Progress</span>
                     <strong>{{ $overallProgress }}%</strong>
                 </a>
-                <a class="metric" href="#kategori">
+                <a class="metric category-icon" href="#kategori">
                     <span>Kategori</span>
                     <strong>{{ $categoryCounts->count() }}</strong>
                 </a>
-                <a class="metric" href="#bantuan">
+                <a class="metric help-icon" href="#bantuan">
                     <span>Bantuan</span>
                     <strong>CS</strong>
                 </a>

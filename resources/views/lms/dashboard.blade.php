@@ -40,10 +40,10 @@
 
     <main class="main">
         <section class="grid metrics" id="tentang">
-            <div class="metric"><span>Course Aktif</span><strong>{{ $metrics['courses'] }}</strong></div>
-            <div class="metric"><span>Peserta</span><strong>{{ $metrics['participants'] }}</strong></div>
-            <div class="metric"><span>Format Belajar</span><strong>4+</strong></div>
-            <div class="metric"><span>Bantuan</span><strong>CS</strong></div>
+            <div class="metric course-icon"><span>Course Aktif</span><strong>{{ $metrics['courses'] }}</strong></div>
+            <div class="metric users-icon"><span>Peserta</span><strong>{{ $metrics['participants'] }}</strong></div>
+            <div class="metric format-icon"><span>Format Belajar</span><strong>4+</strong></div>
+            <div class="metric help-icon"><span>Bantuan</span><strong>CS</strong></div>
         </section>
 
         <section class="section">
