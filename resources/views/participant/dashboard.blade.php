@@ -14,17 +14,17 @@
 
     <section class="hero">
         <div>
-            <span class="eyebrow" style="color:var(--gold)">Dashboard Peserta</span>
+            <span class="eyebrow" style="color:var(--gold)">Cyber Learning Dashboard</span>
             <h1>TECHVERSE Learning</h1>
             <p>
                 Selamat datang, {{ $user->name }}. Dashboard ini menampilkan modul yang tersedia,
-                urutan belajar, progress, pengumuman, dan bantuan admin dalam satu halaman.
+                urutan belajar cyber security, progress, pengumuman, dan bantuan admin dalam satu halaman.
             </p>
             <div class="chips">
                 <span class="chip">{{ $enrollments->count() }} course aktif</span>
-                <span class="chip">{{ $modules->count() }} modul tersedia</span>
+                <span class="chip">{{ $modules->count() }} cyber module</span>
                 <span class="chip">{{ $overallProgress }}% progress belajar</span>
-                <span class="chip">{{ $user->email }}</span>
+                <span class="chip">Secure Account</span>
             </div>
             <div class="meta" style="margin-top:22px">
                 <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
@@ -34,10 +34,10 @@
         </div>
         <div class="hero-panel">
             <img class="hero-logo" src="{{ asset('images/techverse-learning-logo.jpeg') }}" alt="TECHVERSE Learning">
-            <strong>Navigasi Cepat</strong>
+            <strong>Cyber Learning Path</strong>
             <p style="margin:0;color:var(--hero-copy)">
-                Mulai dari kategori Basic, lanjutkan Intermediate, lalu masuk ke Practical untuk latihan
-                dan penerapan materi.
+                Mulai dari Basic, lanjutkan Intermediate, lalu masuk ke Practical untuk tools,
+                pentest workflow, case study, dan reporting.
             </p>
             <div class="chips">
                 <a class="chip" href="#dashboard">Dashboard</a>
@@ -79,7 +79,7 @@
                 <a class="button" href="#daftar-modul">Buka Modul</a>
             </div>
             <div class="grid courses">
-                @foreach(['Basic' => 'Mulai dari konsep utama dan pengenalan alur belajar.', 'Intermediate' => 'Lanjutkan ke pemahaman proses, SOP, dan penguatan materi.', 'Practical' => 'Masuk ke latihan, checklist, simulasi, dan penerapan nyata.'] as $category => $description)
+                @foreach(['Basic' => 'Mulai dari konsep cyber security, networking, Linux, web security, dan tipe hacker.', 'Intermediate' => 'Lanjutkan ke SQL Injection, XSS, vulnerability, reconnaissance, dan traffic analysis.', 'Practical' => 'Masuk ke Burp Suite, Nmap, workflow pentest, case study, dan reporting.'] as $category => $description)
                     <article class="card">
                         <span class="eyebrow">{{ $category }}</span>
                         <h3>{{ $categoryCounts[$category] ?? 0 }} modul</h3>

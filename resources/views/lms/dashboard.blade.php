@@ -9,18 +9,18 @@
 
     <section class="hero">
         <div>
-            <span class="eyebrow" style="color:var(--gold)">Platform Belajar Digital</span>
+            <span class="eyebrow" style="color:var(--gold)">Cyber Security Learning Platform</span>
             <h1>TECHVERSE Learning</h1>
             <p>
-                Bangun skill digital, ikuti modul terarah, dan pantau progres belajar dalam satu platform
-                LMS yang dibuat untuk peserta, mentor, dan admin pembelajaran.
+                Bangun skill cyber security dari basic sampai practical lab, ikuti learning path terarah,
+                dan pantau progres belajar dalam satu platform LMS modern.
             </p>
             <div class="chips">
-                <span class="chip">Modul Online</span>
-                <span class="chip">Dashboard Peserta</span>
-                <span class="chip">Progress Belajar</span>
-                <span class="chip">Live Q&A</span>
-                <span class="chip">Bantuan Admin</span>
+                <span class="chip">Cyber Modules</span>
+                <span class="chip">Secure Dashboard</span>
+                <span class="chip">Practical Lab</span>
+                <span class="chip">Learning Path</span>
+                <span class="chip">Admin Support</span>
             </div>
             <div class="meta" style="margin-top:22px">
                 <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
@@ -30,10 +30,10 @@
         </div>
         <div class="hero-panel">
             <img class="hero-logo" src="{{ asset('images/techverse-learning-logo.jpeg') }}" alt="TECHVERSE Learning">
-            <strong>Teman Belajar Digital Anda</strong>
+            <strong>Cyber Learning Hub</strong>
             <p style="margin:0;color:var(--hero-copy)">
-                TECHVERSE Learning membantu peserta mulai belajar dari modul pertama, melihat progres,
-                menerima pengumuman, dan mengakses bantuan ketika mengalami kendala akun.
+                TECHVERSE Learning membantu peserta memahami konsep keamanan, tools, workflow pentest,
+                dan dokumentasi report melalui modul yang terstruktur.
             </p>
         </div>
     </section>
@@ -50,28 +50,28 @@
             <div class="section-head">
                 <div>
                     <span class="eyebrow">Kenapa TECHVERSE Learning</span>
-                    <h2>Belajar Lebih Terarah</h2>
+                    <h2>Cyber Learning yang Terarah</h2>
                 </div>
             </div>
             <div class="grid courses">
                 <article class="card">
-                    <h3>Materi tersusun per modul</h3>
-                    <p>Peserta tidak perlu bingung mulai dari mana karena pembelajaran disusun bertahap dari modul dasar sampai praktik.</p>
+                    <h3>Learning path bertahap</h3>
+                    <p>Peserta mulai dari konsep keamanan, jaringan, Linux, web security, lalu masuk ke praktik tools dan reporting.</p>
                     <a class="button" href="#program">Lihat Modul</a>
                 </article>
                 <article class="card">
-                    <h3>Dashboard dan progress</h3>
-                    <p>Setelah login, peserta bisa melihat course aktif, jumlah lesson, dan progres belajar secara sederhana.</p>
+                    <h3>Dashboard belajar aman</h3>
+                    <p>Setelah login, peserta bisa melihat course aktif, lesson, progress, dan modul berikutnya dengan tampilan ringkas.</p>
                     <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
                 </article>
                 <article class="card">
-                    <h3>Pengumuman dan bantuan admin</h3>
-                    <p>Update materi dan informasi penting dapat dibaca dari beranda peserta, lengkap dengan kontak bantuan admin.</p>
+                    <h3>Update materi dan support</h3>
+                    <p>Pengumuman admin membantu peserta mengikuti update tools, materi praktik, dan jadwal pendampingan.</p>
                     <a class="button" href="#kontak">Kontak Bantuan</a>
                 </article>
                 <article class="card">
-                    <h3>Akses akun resmi</h3>
-                    <p>Login hanya untuk user terdaftar sehingga akses course tetap terkontrol oleh admin LMS.</p>
+                    <h3>Akses peserta resmi</h3>
+                    <p>Login hanya untuk user terdaftar sehingga akses kelas cyber security tetap terkontrol oleh admin LMS.</p>
                     <a class="button" href="{{ route('login') }}">Login Peserta</a>
                 </article>
             </div>
