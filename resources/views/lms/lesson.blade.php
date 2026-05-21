@@ -8,7 +8,7 @@
                     <span class="eyebrow">{{ $lesson->module->category }} / {{ $course->title }}</span>
                     <h2>{{ $lesson->title }}</h2>
                 </div>
-                <a class="button" style="background:#172033" href="{{ route('participant.dashboard') }}">Kembali ke Dashboard</a>
+                <a class="button" style="background:var(--night)" href="{{ route('participant.dashboard') }}">Kembali ke Dashboard</a>
             </div>
 
             <div class="grid split">
@@ -67,7 +67,7 @@
 
             <div class="meta" style="margin-top:18px;justify-content:space-between">
                 @if($previousLesson)
-                    <a class="button" style="background:#172033" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">Previous</a>
+                    <a class="button" style="background:var(--night)" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">Previous</a>
                 @else
                     <span></span>
                 @endif

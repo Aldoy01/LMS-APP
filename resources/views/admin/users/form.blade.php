@@ -8,17 +8,17 @@
                     <span class="eyebrow">User Access</span>
                     <h2>{{ $user->exists ? 'Edit User' : 'Tambah User Resmi' }}</h2>
                 </div>
-                <a class="button" style="background:#172033" href="{{ route('admin.users.index') }}">Kembali</a>
+                <a class="button" style="background:var(--night)" href="{{ route('admin.users.index') }}">Kembali</a>
             </div>
 
             @if(session('status'))
-                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--teal);background:var(--teal-soft);margin-bottom:14px">
                     {{ session('status') }}
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="list-row" style="border-color:#b42318;background:#fff4f2;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--danger);background:var(--accent-soft);margin-bottom:14px">
                     Data belum lengkap. Periksa field yang ditandai.
                 </div>
             @endif
@@ -106,7 +106,7 @@
                     </div>
 
                     <div class="meta" style="margin-top:18px">
-                        <button class="button" type="submit" style="background:#f2633b">Reset Password</button>
+                        <button class="button" type="submit" style="background:var(--danger)">Reset Password</button>
                     </div>
                 </form>
             @endif

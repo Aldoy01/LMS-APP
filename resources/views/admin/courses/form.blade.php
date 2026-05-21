@@ -8,11 +8,11 @@
                     <span class="eyebrow">Admin LMS</span>
                     <h2>{{ $course->exists ? 'Edit Course' : 'Tambah Course' }}</h2>
                 </div>
-                <a class="button" style="background:#172033" href="{{ route('admin.courses.index') }}">Kembali</a>
+                <a class="button" style="background:var(--night)" href="{{ route('admin.courses.index') }}">Kembali</a>
             </div>
 
             @if($errors->any())
-                <div class="list-row" style="border-color:#b42318;background:#fff4f2;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--danger);background:var(--accent-soft);margin-bottom:14px">
                     Data belum lengkap. Periksa field yang ditandai.
                 </div>
             @endif

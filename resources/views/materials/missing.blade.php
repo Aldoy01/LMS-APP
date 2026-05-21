@@ -14,7 +14,7 @@
                     <a class="button" href="{{ url()->previous() }}">Kembali</a>
                     @auth
                         @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true) && optional(optional($material->lesson)->module)->course)
-                            <a class="button" style="background:#172033" href="{{ route('admin.courses.materials.index', $material->lesson->module->course) }}">Kelola Materi</a>
+                            <a class="button" style="background:var(--night)" href="{{ route('admin.courses.materials.index', $material->lesson->module->course) }}">Kelola Materi</a>
                         @endif
                     @endauth
                 </div>

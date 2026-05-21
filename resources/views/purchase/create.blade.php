@@ -47,7 +47,7 @@
                 </div>
 
                 @if($errors->any())
-                    <div class="list-row" style="border-color:#b42318;background:#fff4f2;margin-bottom:14px">
+                    <div class="list-row" style="border-color:var(--danger);background:var(--accent-soft);margin-bottom:14px">
                         Data belum lengkap. Periksa field yang ditandai.
                     </div>
                 @endif

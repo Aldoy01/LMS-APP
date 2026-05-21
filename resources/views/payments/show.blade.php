@@ -8,11 +8,11 @@
                     <span class="eyebrow">Invoice {{ $order->invoice_number }}</span>
                     <h2>Instruksi & Konfirmasi Pembayaran</h2>
                 </div>
-                <a class="button" style="background:#172033" href="{{ route('lms.dashboard') }}">Kembali ke Home</a>
+                <a class="button" style="background:var(--night)" href="{{ route('lms.dashboard') }}">Kembali ke Home</a>
             </div>
 
             @if(session('status'))
-                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--teal);background:var(--teal-soft);margin-bottom:14px">
                     {{ session('status') }}
                 </div>
             @endif

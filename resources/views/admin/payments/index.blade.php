@@ -11,7 +11,7 @@
             </div>
 
             @if(session('status'))
-                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--teal);background:var(--teal-soft);margin-bottom:14px">
                     {{ session('status') }}
                 </div>
             @endif

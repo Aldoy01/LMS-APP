@@ -24,7 +24,7 @@
             </div>
             <div class="meta" style="margin-top:22px">
                 <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
-                <a class="button" style="background:#172033" href="#program">Lihat Program</a>
+                <a class="button" style="background:var(--night)" href="#program">Lihat Program</a>
                 <a class="button" style="background:var(--accent)" href="{{ $contactUrl }}" target="_blank" rel="noopener">Hubungi Admin</a>
             </div>
         </div>
@@ -143,7 +143,7 @@
                     <p>Hubungi admin untuk verifikasi akun, reset password, atau pengecekan course yang belum muncul.</p>
                     <div class="meta">
                         <a class="button" href="{{ $contactUrl }}" target="_blank" rel="noopener">WhatsApp Admin</a>
-                        <a class="button" style="background:#172033" href="mailto:admin@techverselearning.test">Email Admin</a>
+                        <a class="button" style="background:var(--night)" href="mailto:admin@techverselearning.test">Email Admin</a>
                     </div>
                 </div>
             </div>

@@ -8,16 +8,16 @@
                     <span class="eyebrow">Upload Materi LMS</span>
                     <h2>{{ $course->title }}</h2>
                 </div>
-                <a class="button" style="background:#172033" href="{{ route('admin.courses.index') }}">Kembali</a>
+                <a class="button" style="background:var(--night)" href="{{ route('admin.courses.index') }}">Kembali</a>
             </div>
 
             @if(session('status'))
-                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--teal);background:var(--teal-soft);margin-bottom:14px">
                     {{ session('status') }}
                 </div>
             @endif
             @if($errors->any())
-                <div class="list-row" style="border-color:#b42318;background:#fff4f2;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--danger);background:var(--accent-soft);margin-bottom:14px">
                     Data belum lengkap. Maksimal upload file 50 MB.
                 </div>
             @endif
@@ -225,8 +225,8 @@
                                                 <form method="POST" action="{{ route('admin.materials.destroy', $material) }}" class="meta">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a class="button" style="background:#172033" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Preview</a>
-                                                    <button class="button" style="background:#f2633b" type="submit">Hapus Materi</button>
+                                                    <a class="button" style="background:var(--night)" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Preview</a>
+                                                    <button class="button" style="background:var(--danger)" type="submit">Hapus Materi</button>
                                                 </form>
                                             </div>
                                         @endforeach

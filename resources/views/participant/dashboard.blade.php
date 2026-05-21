@@ -28,7 +28,7 @@
             </div>
             <div class="meta" style="margin-top:22px">
                 <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
-                <a class="button" style="background:#172033" href="#daftar-modul">Lihat Daftar Modul</a>
+                <a class="button" style="background:var(--night)" href="#daftar-modul">Lihat Daftar Modul</a>
                 <a class="button" style="background:var(--accent)" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">WhatsApp Admin</a>
             </div>
         </div>
@@ -117,7 +117,7 @@
                             <span class="badge">{{ $lessonCount }} lesson</span>
                             <span class="badge">{{ $progress }}% selesai</span>
                         </div>
-                        <div style="height:10px;background:#e9edf5;border-radius:999px;overflow:hidden">
+                        <div style="height:10px;background:var(--line);border-radius:999px;overflow:hidden">
                             <div style="height:100%;width:{{ $progress }}%;background:var(--brand)"></div>
                         </div>
                         <div class="meta">
@@ -160,7 +160,7 @@
                             <span class="badge">{{ $item['completed_count'] }} selesai</span>
                             <a class="button" href="{{ route('lms.courses.show', $item['course']) }}">Buka Modul</a>
                         </div>
-                        <div style="height:8px;background:#e9edf5;border-radius:999px;overflow:hidden">
+                        <div style="height:8px;background:var(--line);border-radius:999px;overflow:hidden">
                             <div style="height:100%;width:{{ $item['progress'] }}%;background:var(--brand)"></div>
                         </div>
                     </article>

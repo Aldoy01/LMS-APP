@@ -67,13 +67,13 @@ class MaterialController extends Controller
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Materi Belum Tersedia</title>
     <style>
-        body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+        body{margin:0;font-family:Arial,sans-serif;background:#f7f6ff;color:#100b3f}
         main{min-height:100vh;display:grid;place-items:center;padding:24px}
-        section{width:min(720px,100%);background:#fff;border:1px solid #e5e9f2;border-radius:8px;padding:32px;box-shadow:0 14px 34px rgba(23,32,51,.08)}
-        span{display:block;color:#4267f5;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.08em}
+        section{width:min(720px,100%);background:#fff;border:1px solid #dcd8ff;border-radius:8px;padding:32px;box-shadow:0 14px 34px rgba(16,11,63,.12)}
+        span{display:block;color:#8921C2;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.08em}
         h1{margin:12px 0 10px;font-size:30px}
-        p{line-height:1.7;color:#63708a}
-        a{display:inline-block;margin-top:18px;background:#172033;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700}
+        p{line-height:1.7;color:#68728c}
+        a{display:inline-block;margin-top:18px;background:linear-gradient(135deg,#8921C2,#FE39A4);color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700}
     </style>
 </head>
 <body>

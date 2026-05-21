@@ -12,7 +12,7 @@
             </div>
 
             @if(session('status'))
-                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                <div class="list-row" style="border-color:var(--teal);background:var(--teal-soft);margin-bottom:14px">
                     {{ session('status') }}
                 </div>
             @endif
@@ -30,8 +30,8 @@
                         </div>
                         <div class="meta">
                             <a class="button" href="{{ route('admin.courses.edit', $course) }}">Edit</a>
-                            <a class="button" style="background:#234aa9" href="{{ route('admin.courses.materials.index', $course) }}">Kelola Materi</a>
-                            <a class="button" style="background:#172033" href="{{ route('lms.courses.show', $course) }}">Preview</a>
+                            <a class="button" style="background:var(--brand-dark)" href="{{ route('admin.courses.materials.index', $course) }}">Kelola Materi</a>
+                            <a class="button" style="background:var(--night)" href="{{ route('lms.courses.show', $course) }}">Preview</a>
                         </div>
                     </article>
                 @empty
