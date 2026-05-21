@@ -9,7 +9,7 @@
             --ink: #17172f;
             --muted: #a9b6d3;
             --line: rgba(83, 232, 212, .24);
-            --bg: #070816;
+            --bg: #f8fbff;
             --panel: #0d1024;
             --night: #100b3f;
             --night-soft: #20105f;
@@ -35,13 +35,14 @@
             position: relative;
             margin: 0;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--card-ink);
+            color: var(--ink);
             background:
-                linear-gradient(rgba(137, 33, 194, .05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 196, 248, .07) 1px, transparent 1px),
-                radial-gradient(circle at top left, rgba(137, 33, 194, .32), transparent 32rem),
-                radial-gradient(circle at top right, rgba(37, 196, 248, .22), transparent 30rem),
-                linear-gradient(180deg, #050611 0%, #0b0d1d 44%, #070816 100%);
+                linear-gradient(rgba(137, 33, 194, .045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 196, 248, .055) 1px, transparent 1px),
+                radial-gradient(circle at top left, rgba(137, 33, 194, .13), transparent 34rem),
+                radial-gradient(circle at top right, rgba(37, 196, 248, .16), transparent 32rem),
+                radial-gradient(circle at 58% 18%, rgba(83, 232, 212, .16), transparent 28rem),
+                linear-gradient(180deg, #ffffff 0%, #f8fbff 46%, #eefbff 100%);
             background-size: 42px 42px, 42px 42px, auto, auto, auto;
             background-attachment: fixed;
         }
@@ -52,10 +53,10 @@
             pointer-events: none;
             background:
                 linear-gradient(115deg, transparent 0 18%, rgba(83, 232, 212, .13) 18.2%, transparent 18.7% 58%, rgba(254, 57, 164, .12) 58.2%, transparent 58.8%),
-                radial-gradient(circle at 8% 18%, rgba(83, 232, 212, .28) 0 2px, transparent 3px),
-                radial-gradient(circle at 88% 34%, rgba(255, 253, 187, .55) 0 1px, transparent 3px),
-                radial-gradient(circle at 72% 82%, rgba(254, 57, 164, .25) 0 2px, transparent 4px);
-            opacity: .8;
+                radial-gradient(circle at 8% 18%, rgba(83, 232, 212, .2) 0 2px, transparent 3px),
+                radial-gradient(circle at 88% 34%, rgba(137, 33, 194, .2) 0 1px, transparent 3px),
+                radial-gradient(circle at 72% 82%, rgba(254, 57, 164, .16) 0 2px, transparent 4px);
+            opacity: .7;
         }
         a { color: inherit; text-decoration: none; }
         .shell { position: relative; min-height: 100vh; }
