@@ -30,6 +30,7 @@
                         </div>
                         <div class="meta">
                             <a class="button" href="{{ route('admin.courses.edit', $course) }}">Edit</a>
+                            <a class="button" style="background:#234aa9" href="{{ route('admin.courses.materials.index', $course) }}">Kelola Materi</a>
                             <a class="button" style="background:#172033" href="{{ route('lms.courses.show', $course) }}">Preview</a>
                         </div>
                     </article>

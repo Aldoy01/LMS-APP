@@ -1,0 +1,159 @@
+@extends('layouts.lms', ['title' => 'Kelola Materi'])
+
+@section('content')
+    <main class="main">
+        <section class="section">
+            <div class="section-head">
+                <div>
+                    <span class="eyebrow">Upload Materi LMS</span>
+                    <h2>{{ $course->title }}</h2>
+                </div>
+                <a class="button" style="background:#172033" href="{{ route('admin.courses.index') }}">Kembali</a>
+            </div>
+
+            @if(session('status'))
+                <div class="list-row" style="border-color:#0f766e;background:#eef6f5;margin-bottom:14px">
+                    {{ session('status') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="list-row" style="border-color:#b42318;background:#fff4f2;margin-bottom:14px">
+                    Data belum lengkap. Maksimal upload file 50 MB.
+                </div>
+            @endif
+
+            <div class="list">
+                @foreach($course->modules as $module)
+                    <article class="card">
+                        <div class="section-head">
+                            <div>
+                                <span class="eyebrow">{{ $module->category }} / Modul {{ $module->sort_order }}</span>
+                                <h3>{{ $module->title }}</h3>
+                                <p>{{ $module->summary }}</p>
+                            </div>
+                        </div>
+
+                        <form method="POST" action="{{ route('admin.modules.update', $module) }}" class="form-grid">
+                            @csrf
+                            @method('PUT')
+                            <label>
+                                <span>Kategori</span>
+                                <select name="category" required>
+                                    @foreach(['Basic', 'Intermediate', 'Practical'] as $category)
+                                        <option value="{{ $category }}" @selected($module->category === $category)>{{ $category }}</option>
+                                    @endforeach
+                                </select>
+                            </label>
+                            <label>
+                                <span>Durasi Modul (menit)</span>
+                                <input type="number" name="duration_minutes" min="0" value="{{ $module->duration_minutes }}" required>
+                            </label>
+                            <label>
+                                <span>Urutan Modul</span>
+                                <input type="number" name="sort_order" min="0" value="{{ $module->sort_order }}" required>
+                            </label>
+                            <div class="meta" style="align-items:end">
+                                <button class="button" type="submit">Simpan Urutan</button>
+                            </div>
+                        </form>
+
+                        <div class="list" style="margin-top:18px">
+                            @foreach($module->lessons as $lesson)
+                                <div class="list-row">
+                                    <strong>{{ $lesson->title }}</strong>
+                                    <span class="muted">{{ ucfirst($lesson->content_type) }} / {{ $lesson->duration_minutes }} menit</span>
+
+                                    <form method="POST" action="{{ route('admin.materials.store', $lesson) }}" enctype="multipart/form-data" class="form-grid" style="margin-top:12px">
+                                        @csrf
+                                        <label>
+                                            <span>Judul Materi</span>
+                                            <input name="title" required>
+                                        </label>
+                                        <label>
+                                            <span>Tipe</span>
+                                            <select name="type" required>
+                                                <option value="pdf">PDF Materi</option>
+                                                <option value="pdf-slide">PDF Slide</option>
+                                                <option value="video-upload">Upload Video</option>
+                                                <option value="video-embed">Embed Video</option>
+                                                <option value="tool">Tools List</option>
+                                                <option value="resource">Resource Link</option>
+                                            </select>
+                                        </label>
+                                        <label>
+                                            <span>Urutan</span>
+                                            <input type="number" name="sort_order" value="0" min="0" required>
+                                        </label>
+                                        <label>
+                                            <span>Upload File (max 50 MB)</span>
+                                            <input type="file" name="file">
+                                        </label>
+                                        <label class="wide">
+                                            <span>Link Embed / Resource</span>
+                                            <input name="external_url" placeholder="https://youtube.com/embed/... atau https://drive.google.com/...">
+                                        </label>
+                                        <label style="display:flex;align-items:center;gap:8px">
+                                            <input type="checkbox" name="downloadable" value="1" style="width:auto">
+                                            <span>Bisa diunduh</span>
+                                        </label>
+                                        <div class="meta">
+                                            <button class="button" type="submit">Tambah Materi</button>
+                                        </div>
+                                    </form>
+
+                                    <div class="list" style="margin-top:12px">
+                                        @foreach($lesson->materials as $material)
+                                            <div class="list-row">
+                                                <form method="POST" action="{{ route('admin.materials.update', $material) }}" enctype="multipart/form-data" class="form-grid">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <label>
+                                                        <span>Judul</span>
+                                                        <input name="title" value="{{ $material->title }}" required>
+                                                    </label>
+                                                    <label>
+                                                        <span>Tipe</span>
+                                                        <select name="type" required>
+                                                            @foreach(['pdf' => 'PDF Materi', 'pdf-slide' => 'PDF Slide', 'video-upload' => 'Upload Video', 'video-embed' => 'Embed Video', 'tool' => 'Tools List', 'resource' => 'Resource Link'] as $value => $label)
+                                                                <option value="{{ $value }}" @selected($material->type === $value)>{{ $label }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </label>
+                                                    <label>
+                                                        <span>Urutan</span>
+                                                        <input type="number" name="sort_order" value="{{ $material->sort_order }}" min="0" required>
+                                                    </label>
+                                                    <label>
+                                                        <span>Ganti File</span>
+                                                        <input type="file" name="file">
+                                                    </label>
+                                                    <label class="wide">
+                                                        <span>Ganti Link</span>
+                                                        <input name="external_url" value="{{ filter_var($material->url, FILTER_VALIDATE_URL) ? $material->url : '' }}">
+                                                    </label>
+                                                    <label style="display:flex;align-items:center;gap:8px">
+                                                        <input type="checkbox" name="downloadable" value="1" style="width:auto" @checked($material->downloadable)>
+                                                        <span>Bisa diunduh</span>
+                                                    </label>
+                                                    <div class="meta">
+                                                        <button class="button" type="submit">Update Materi</button>
+                                                    </div>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.materials.destroy', $material) }}" class="meta">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="button" style="background:#172033" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Preview</a>
+                                                    <button class="button" style="background:#f2633b" type="submit">Hapus Materi</button>
+                                                </form>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+    </main>
+@endsection

@@ -42,6 +42,9 @@
                                             <span class="badge">{{ strtoupper($material->type) }}: {{ $material->title }}</span>
                                         @endforeach
                                     </div>
+                                    <div class="meta">
+                                        <a class="button" href="{{ route('lms.lessons.show', [$course, $lesson]) }}">Buka Materi</a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>

@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Admin\ModuleMaterialController as AdminModuleMaterialController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LessonPageController;
 use App\Http\Controllers\LmsDashboardController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PaymentConfirmationController;
 use App\Http\Controllers\ParticipantDashboardController;
 use App\Http\Controllers\PurchaseController;
@@ -28,6 +31,8 @@ Route::get('/pembayaran/{invoice}', [PaymentConfirmationController::class, 'show
 Route::post('/pembayaran/{invoice}/konfirmasi', [PaymentConfirmationController::class, 'confirm'])->name('payments.confirm');
 Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::get('/courses/{course:slug}', [LmsDashboardController::class, 'show'])->name('lms.courses.show');
+    Route::get('/courses/{course:slug}/lessons/{lesson}', [LessonPageController::class, 'show'])->name('lms.lessons.show');
+    Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
 });
 
 Route::middleware('guest')->group(function () {
@@ -45,6 +50,11 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:super-admin,admin-lms'])->group(function () {
     Route::resource('courses', AdminCourseController::class)->except(['show', 'destroy']);
+    Route::get('courses/{course:slug}/materials', [AdminModuleMaterialController::class, 'index'])->name('courses.materials.index');
+    Route::put('modules/{module}', [AdminModuleMaterialController::class, 'updateModule'])->name('modules.update');
+    Route::post('lessons/{lesson}/materials', [AdminModuleMaterialController::class, 'storeMaterial'])->name('materials.store');
+    Route::put('materials/{material}', [AdminModuleMaterialController::class, 'updateMaterial'])->name('materials.update');
+    Route::delete('materials/{material}', [AdminModuleMaterialController::class, 'destroyMaterial'])->name('materials.destroy');
     Route::resource('users', AdminUserController::class)->except(['show', 'destroy']);
     Route::put('users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
     Route::get('payments', [AdminPaymentVerificationController::class, 'index'])->name('payments.index');

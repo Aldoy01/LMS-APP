@@ -27,6 +27,6 @@ class Lesson extends Model
 
     public function materials()
     {
-        return $this->hasMany(LessonMaterial::class);
+        return $this->hasMany(LessonMaterial::class)->orderBy('sort_order');
     }
 }
