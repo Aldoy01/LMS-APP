@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LessonMaterial;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class MaterialController extends Controller
@@ -13,8 +14,20 @@ class MaterialController extends Controller
             return redirect()->away($material->url);
         }
 
-        abort_unless(Storage::disk('local')->exists($material->url), 404);
+        if (! Storage::disk('local')->exists($material->url)) {
+            return response()->view('materials.missing', [
+                'material' => $material,
+            ], 404);
+        }
 
-        return response()->file(storage_path('app/' . $material->url));
+        $path = Storage::disk('local')->path($material->url);
+        $mimeType = Storage::disk('local')->mimeType($material->url) ?: 'application/octet-stream';
+        $disposition = in_array($material->type, ['pdf', 'pdf-slide', 'video-upload'], true) ? 'inline' : 'attachment';
+        $filename = Str::slug(pathinfo($material->title, PATHINFO_FILENAME)) ?: 'materi';
+
+        return response()->file($path, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => $disposition . '; filename="' . $filename . '"',
+        ]);
     }
 }
