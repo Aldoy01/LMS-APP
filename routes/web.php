@@ -51,7 +51,9 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:super-admin,admin-lms'])->group(function () {
     Route::resource('courses', AdminCourseController::class)->except(['show', 'destroy']);
     Route::get('courses/{course:slug}/materials', [AdminModuleMaterialController::class, 'index'])->name('courses.materials.index');
+    Route::post('courses/{course:slug}/modules', [AdminModuleMaterialController::class, 'storeModule'])->name('modules.store');
     Route::put('modules/{module}', [AdminModuleMaterialController::class, 'updateModule'])->name('modules.update');
+    Route::post('modules/{module}/lessons', [AdminModuleMaterialController::class, 'storeLesson'])->name('lessons.store');
     Route::post('lessons/{lesson}/materials', [AdminModuleMaterialController::class, 'storeMaterial'])->name('materials.store');
     Route::put('materials/{material}', [AdminModuleMaterialController::class, 'updateMaterial'])->name('materials.update');
     Route::delete('materials/{material}', [AdminModuleMaterialController::class, 'destroyMaterial'])->name('materials.destroy');

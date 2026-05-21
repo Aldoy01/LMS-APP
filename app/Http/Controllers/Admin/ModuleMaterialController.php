@@ -32,6 +32,38 @@ class ModuleMaterialController extends Controller
         return back()->with('status', 'Urutan dan kategori modul berhasil diperbarui.');
     }
 
+    public function storeModule(Request $request, Course $course)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'summary' => ['nullable', 'string', 'max:1000'],
+            'category' => ['required', 'in:Basic,Intermediate,Practical'],
+            'duration_minutes' => ['required', 'integer', 'min:0', 'max:9999'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:999'],
+        ]);
+
+        $course->modules()->create($data);
+
+        return back()->with('status', 'Modul berhasil dibuat. Tambahkan lesson dan materi pada modul tersebut.');
+    }
+
+    public function storeLesson(Request $request, CourseModule $module)
+    {
+        $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'summary' => ['nullable', 'string', 'max:1000'],
+            'content_type' => ['required', 'in:video,pdf,ebook,checklist,worksheet,lab'],
+            'duration_minutes' => ['required', 'integer', 'min:0', 'max:9999'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:999'],
+            'is_preview' => ['nullable', 'boolean'],
+        ]);
+
+        $data['is_preview'] = $request->boolean('is_preview');
+        $module->lessons()->create($data);
+
+        return back()->with('status', 'Lesson berhasil dibuat. Sekarang upload PDF, video, tools, atau resource link.');
+    }
+
     public function storeMaterial(Request $request, Lesson $lesson)
     {
         $data = $this->validateMaterial($request);

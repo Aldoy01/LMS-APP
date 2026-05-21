@@ -22,6 +22,48 @@
                 </div>
             @endif
 
+            <form method="POST" action="{{ route('admin.modules.store', $course) }}" class="card" style="margin-bottom:18px">
+                @csrf
+                <span class="eyebrow">Buat Modul Baru</span>
+                <h3>Tambah Struktur Modul</h3>
+                <div class="form-grid">
+                    <label>
+                        <span>Judul Modul</span>
+                        <input name="title" placeholder="Contoh: Intro Cyber Security" required>
+                    </label>
+                    <label>
+                        <span>Kategori</span>
+                        <select name="category" required>
+                            <option value="Basic">Basic</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Practical">Practical</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Durasi Estimasi (menit)</span>
+                        <input type="number" name="duration_minutes" value="60" min="0" required>
+                    </label>
+                    <label>
+                        <span>Urutan Modul</span>
+                        <input type="number" name="sort_order" value="{{ $course->modules->count() + 1 }}" min="0" required>
+                    </label>
+                    <label class="wide">
+                        <span>Ringkasan Modul</span>
+                        <textarea name="summary" rows="3" placeholder="Jelaskan tujuan modul secara singkat"></textarea>
+                    </label>
+                </div>
+                <div class="meta" style="margin-top:18px">
+                    <button class="button" type="submit">Tambah Modul</button>
+                </div>
+            </form>
+
+            @if($course->modules->isEmpty())
+                <div class="card">
+                    <h3>Course ini belum punya modul</h3>
+                    <p class="muted">Buat modul pertama dulu, lalu tambahkan lesson. Setelah lesson tersedia, form upload PDF, video, tools list, dan resource link akan muncul.</p>
+                </div>
+            @endif
+
             <div class="list">
                 @foreach($course->modules as $module)
                     <article class="card">
@@ -54,6 +96,47 @@
                             </label>
                             <div class="meta" style="align-items:end">
                                 <button class="button" type="submit">Simpan Urutan</button>
+                            </div>
+                        </form>
+
+                        <form method="POST" action="{{ route('admin.lessons.store', $module) }}" class="card" style="margin-top:18px">
+                            @csrf
+                            <span class="eyebrow">Tambah Lesson</span>
+                            <div class="form-grid">
+                                <label>
+                                    <span>Judul Lesson</span>
+                                    <input name="title" placeholder="Contoh: Fondasi Cyber Security" required>
+                                </label>
+                                <label>
+                                    <span>Tipe Konten</span>
+                                    <select name="content_type" required>
+                                        <option value="video">Video</option>
+                                        <option value="pdf">PDF</option>
+                                        <option value="ebook">Ebook</option>
+                                        <option value="checklist">Checklist</option>
+                                        <option value="worksheet">Worksheet</option>
+                                        <option value="lab">Lab</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    <span>Durasi Lesson (menit)</span>
+                                    <input type="number" name="duration_minutes" value="30" min="0" required>
+                                </label>
+                                <label>
+                                    <span>Urutan Lesson</span>
+                                    <input type="number" name="sort_order" value="{{ $module->lessons->count() + 1 }}" min="0" required>
+                                </label>
+                                <label class="wide">
+                                    <span>Ringkasan Lesson</span>
+                                    <textarea name="summary" rows="3" placeholder="Jelaskan isi lesson secara singkat"></textarea>
+                                </label>
+                                <label style="display:flex;align-items:center;gap:8px">
+                                    <input type="checkbox" name="is_preview" value="1" style="width:auto">
+                                    <span>Preview gratis</span>
+                                </label>
+                            </div>
+                            <div class="meta" style="margin-top:18px">
+                                <button class="button" type="submit">Tambah Lesson</button>
                             </div>
                         </form>
 
