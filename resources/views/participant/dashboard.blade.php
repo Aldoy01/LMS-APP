@@ -1,4 +1,4 @@
-@extends('layouts.lms', ['title' => 'Home LMS'])
+@extends('layouts.lms', ['title' => 'Dashboard Peserta'])
 
 @section('content')
     @php
@@ -7,55 +7,61 @@
         $totalLessons = $enrollments->sum(fn ($enrollment) => optional($enrollment->course)->modules?->sum(fn ($module) => $module->lessons->count()) ?? 0);
         $completedLessons = $enrollments->sum(fn ($enrollment) => $enrollment->progress->where('progress_percent', 100)->count());
         $overallProgress = $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0;
-        $ctaUrl = $firstCourse ? route('lms.courses.show', $firstCourse) : route('lms.dashboard') . '#courses';
+        $ctaUrl = $firstCourse ? route('lms.courses.show', $firstCourse) : route('lms.dashboard') . '#program';
         $ctaLabel = $firstCourse ? 'Lanjutkan Modul' : 'Mulai Belajar';
+        $categoryCounts = $modules->groupBy('category')->map->count();
     @endphp
 
     <section class="hero">
         <div>
-            <span class="eyebrow" style="color:var(--gold)">Home / Beranda LMS</span>
+            <span class="eyebrow" style="color:var(--gold)">Dashboard Peserta</span>
             <h1>TECHVERSE Learning</h1>
             <p>
-                Selamat datang, {{ $user->name }}. TECHVERSE Learning membantu peserta belajar terarah,
-                memantau progress, dan mengakses modul resmi dari satu beranda.
+                Selamat datang, {{ $user->name }}. Dashboard ini menampilkan modul yang tersedia,
+                urutan belajar, progress, pengumuman, dan bantuan admin dalam satu halaman.
             </p>
             <div class="chips">
                 <span class="chip">{{ $enrollments->count() }} course aktif</span>
+                <span class="chip">{{ $modules->count() }} modul tersedia</span>
                 <span class="chip">{{ $overallProgress }}% progress belajar</span>
                 <span class="chip">{{ $user->email }}</span>
-                @if($user->company)
-                    <span class="chip">{{ $user->company }}</span>
-                @endif
             </div>
             <div class="meta" style="margin-top:22px">
                 <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
-                <a class="button" style="background:#172033" href="#arah-belajar">Arahan Peserta Baru</a>
+                <a class="button" style="background:#172033" href="#daftar-modul">Lihat Daftar Modul</a>
+                <a class="button" style="background:var(--accent)" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">WhatsApp Admin</a>
             </div>
         </div>
         <div class="hero-panel">
             <img class="hero-logo" src="{{ asset('images/techverse-learning-logo.jpeg') }}" alt="TECHVERSE Learning">
-            <strong>Tujuan Platform</strong>
+            <strong>Navigasi Cepat</strong>
             <p style="margin:0;color:var(--hero-copy)">
-                Menyediakan ruang belajar digital untuk mengikuti modul, mengecek progres, menerima
-                pengumuman admin, dan meminta bantuan saat ada kendala akses.
+                Mulai dari kategori Basic, lanjutkan Intermediate, lalu masuk ke Practical untuk latihan
+                dan penerapan materi.
             </p>
+            <div class="chips">
+                <a class="chip" href="#dashboard">Dashboard</a>
+                <a class="chip" href="#daftar-modul">Modul</a>
+                <a class="chip" href="#pengumuman">Pengumuman</a>
+                <a class="chip" href="#bantuan">Bantuan</a>
+            </div>
         </div>
     </section>
 
     <main class="main">
-        <section class="section">
+        <section class="section" id="dashboard">
             <div class="grid metrics">
-                <a class="metric" href="#modul">
+                <a class="metric" href="#daftar-modul">
                     <span>Modul</span>
-                    <strong>{{ $totalLessons }}</strong>
+                    <strong>{{ $modules->count() }}</strong>
                 </a>
-                <a class="metric" href="{{ route('participant.dashboard') }}">
-                    <span>Dashboard</span>
+                <a class="metric" href="#daftar-modul">
+                    <span>Progress</span>
                     <strong>{{ $overallProgress }}%</strong>
                 </a>
-                <a class="metric" href="#profil">
-                    <span>Profil</span>
-                    <strong>{{ $enrollments->count() }}</strong>
+                <a class="metric" href="#kategori">
+                    <span>Kategori</span>
+                    <strong>{{ $categoryCounts->count() }}</strong>
                 </a>
                 <a class="metric" href="#bantuan">
                     <span>Bantuan</span>
@@ -64,11 +70,31 @@
             </div>
         </section>
 
+        <section class="section" id="kategori">
+            <div class="section-head">
+                <div>
+                    <span class="eyebrow">Kategori Modul</span>
+                    <h2>Urutan Belajar</h2>
+                </div>
+                <a class="button" href="#daftar-modul">Buka Modul</a>
+            </div>
+            <div class="grid courses">
+                @foreach(['Basic' => 'Mulai dari konsep utama dan pengenalan alur belajar.', 'Intermediate' => 'Lanjutkan ke pemahaman proses, SOP, dan penguatan materi.', 'Practical' => 'Masuk ke latihan, checklist, simulasi, dan penerapan nyata.'] as $category => $description)
+                    <article class="card">
+                        <span class="eyebrow">{{ $category }}</span>
+                        <h3>{{ $categoryCounts[$category] ?? 0 }} modul</h3>
+                        <p>{{ $description }}</p>
+                        <a class="button" href="#daftar-modul">Lihat {{ $category }}</a>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+
         <section class="section" id="modul">
             <div class="section-head">
                 <div>
-                    <span class="eyebrow">Modul Belajar</span>
-                    <h2>Lanjutkan Course Terdaftar</h2>
+                    <span class="eyebrow">Course Terdaftar</span>
+                    <h2>Lanjutkan Belajar</h2>
                 </div>
                 <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
             </div>
@@ -83,7 +109,7 @@
                     @endphp
 
                     <article class="card">
-                        <span class="eyebrow">{{ $enrollment->access_type }} · {{ optional($enrollment->started_at)->format('d M Y') ?? 'Belum mulai' }}</span>
+                        <span class="eyebrow">{{ $enrollment->access_type }} / {{ optional($enrollment->started_at)->format('d M Y') ?? 'Belum mulai' }}</span>
                         <h3>{{ $course->title }}</h3>
                         <p>{{ $course->summary }}</p>
                         <div class="meta">
@@ -102,30 +128,48 @@
                     <div class="card">
                         <h3>Belum ada course aktif</h3>
                         <p>Course akan tampil setelah pembayaran berhasil dan enrollment aktif.</p>
-                        <a class="button" href="{{ route('lms.dashboard') }}#courses">Mulai Belajar</a>
+                        <a class="button" href="{{ route('lms.dashboard') }}#program">Mulai Belajar</a>
                     </div>
                 @endforelse
             </div>
         </section>
 
-        <section class="section" id="arah-belajar">
+        <section class="section" id="daftar-modul">
             <div class="section-head">
                 <div>
-                    <span class="eyebrow">Arahan Belajar</span>
-                    <h2>Mulai dari Mana?</h2>
+                    <span class="eyebrow">Daftar Modul</span>
+                    <h2>Modul Tersedia Berurutan</h2>
                 </div>
+                <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
             </div>
-            <div class="grid split">
-                <div class="card">
-                    <h3>1. Buka modul pertama</h3>
-                    <p>Pilih tombol “Lanjutkan Modul”, baca ringkasan course, lalu mulai dari lesson paling awal.</p>
-                    <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
-                </div>
-                <div class="card">
-                    <h3>2. Pantau progress belajar</h3>
-                    <p>Selesaikan lesson bertahap dan gunakan progress bar untuk melihat perkembangan belajar.</p>
-                    <a class="button" href="#modul">Lihat Progress</a>
-                </div>
+            <div class="list">
+                @forelse($modules as $item)
+                    <article class="list-row">
+                        <div class="section-head" style="margin-bottom:8px;align-items:center">
+                            <div>
+                                <span class="eyebrow">{{ $item['category'] }} / Modul {{ $item['module']->sort_order }}</span>
+                                <strong>{{ $item['module']->title }}</strong>
+                                <span class="muted">{{ $item['course']->title }}</span>
+                            </div>
+                            <span class="badge">{{ $item['progress'] }}% selesai</span>
+                        </div>
+                        <p class="muted" style="margin:0 0 12px">{{ $item['module']->summary }}</p>
+                        <div class="meta">
+                            <span class="badge">{{ $item['lesson_count'] }} lesson</span>
+                            <span class="badge">{{ $item['completed_count'] }} selesai</span>
+                            <a class="button" href="{{ route('lms.courses.show', $item['course']) }}">Buka Modul</a>
+                        </div>
+                        <div style="height:8px;background:#e9edf5;border-radius:999px;overflow:hidden">
+                            <div style="height:100%;width:{{ $item['progress'] }}%;background:var(--brand)"></div>
+                        </div>
+                    </article>
+                @empty
+                    <div class="card">
+                        <h3>Belum ada modul aktif</h3>
+                        <p>Modul akan tampil setelah admin mengaktifkan enrollment course untuk akun Anda.</p>
+                        <a class="button" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">Hubungi Admin</a>
+                    </div>
+                @endforelse
             </div>
         </section>
 
@@ -133,7 +177,7 @@
             <div class="section-head">
                 <div>
                     <span class="eyebrow">Pengumuman Admin</span>
-                    <h2>Update Penting</h2>
+                    <h2>Informasi Penting</h2>
                 </div>
             </div>
             <div class="list">
