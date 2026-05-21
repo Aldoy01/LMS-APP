@@ -7,37 +7,41 @@
     <style>
         :root {
             --ink: #17172f;
-            --muted: #68728c;
-            --line: #dcd8ff;
-            --bg: #f7f6ff;
-            --panel: #ffffff;
+            --muted: #a9b6d3;
+            --line: rgba(83, 232, 212, .24);
+            --bg: #070816;
+            --panel: #0d1024;
             --night: #100b3f;
             --night-soft: #20105f;
             --brand: #8921C2;
             --brand-dark: #531079;
-            --brand-soft: #f4e8ff;
+            --brand-soft: rgba(137, 33, 194, .22);
             --accent: #FE39A4;
-            --accent-soft: #ffe8f6;
+            --accent-soft: rgba(254, 57, 164, .16);
             --gold: #FFFDBB;
             --teal: #53E8D4;
-            --teal-soft: #e8fffb;
+            --teal-soft: rgba(83, 232, 212, .14);
             --cyan: #25C4F8;
-            --cyan-soft: #e6f8ff;
+            --cyan-soft: rgba(37, 196, 248, .14);
             --danger: #e21b5b;
             --hero-copy: #f5f7ff;
+            --card-ink: #f7f9ff;
+            --card-muted: #a9b6d3;
+            --card-border: rgba(83, 232, 212, .28);
+            --card-gradient: linear-gradient(145deg, rgba(6, 8, 20, .96), rgba(16, 11, 63, .92) 48%, rgba(30, 9, 45, .94));
         }
         * { box-sizing: border-box; }
         body {
             position: relative;
             margin: 0;
             font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--ink);
+            color: var(--card-ink);
             background:
                 linear-gradient(rgba(137, 33, 194, .05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(37, 196, 248, .07) 1px, transparent 1px),
-                radial-gradient(circle at top left, rgba(137, 33, 194, .14), transparent 32rem),
-                radial-gradient(circle at top right, rgba(37, 196, 248, .18), transparent 30rem),
-                linear-gradient(180deg, #fbfaff 0%, var(--bg) 42%, #f2fdff 100%);
+                radial-gradient(circle at top left, rgba(137, 33, 194, .32), transparent 32rem),
+                radial-gradient(circle at top right, rgba(37, 196, 248, .22), transparent 30rem),
+                linear-gradient(180deg, #050611 0%, #0b0d1d 44%, #070816 100%);
             background-size: 42px 42px, 42px 42px, auto, auto, auto;
             background-attachment: fixed;
         }
@@ -64,9 +68,10 @@
             justify-content: space-between;
             gap: 24px;
             padding: 18px clamp(18px, 4vw, 48px);
-            background: rgba(255, 255, 255, .84);
-            border-bottom: 1px solid var(--line);
-            box-shadow: 0 12px 34px rgba(16, 11, 63, .08);
+            background:
+                linear-gradient(135deg, rgba(5, 6, 17, .96), rgba(16, 11, 63, .9) 58%, rgba(33, 6, 42, .94));
+            border-bottom: 1px solid rgba(83, 232, 212, .28);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, .42), inset 0 -1px 0 rgba(254, 57, 164, .16);
             backdrop-filter: blur(16px);
         }
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
@@ -77,9 +82,22 @@
             object-fit: contain;
             object-position: left center;
         }
-        .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; color: var(--muted); font-size: 14px; }
-        .nav a, .nav .link-button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; border-radius: 6px; }
-        .nav a:hover { color: var(--brand-dark); background: linear-gradient(135deg, var(--brand-soft), var(--cyan-soft)); }
+        .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; color: #d8e4ff; font-size: 14px; }
+        .nav a, .nav .link-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(83, 232, 212, .18);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .04), rgba(37, 196, 248, .05));
+        }
+        .nav a:hover, .nav .link-button:hover {
+            color: #fff;
+            background: linear-gradient(135deg, rgba(137, 33, 194, .46), rgba(37, 196, 248, .22));
+            border-color: rgba(83, 232, 212, .48);
+            box-shadow: 0 0 22px rgba(83, 232, 212, .14);
+        }
         .icon-link::before {
             content: "";
             width: 16px;
@@ -122,7 +140,7 @@
         .hero p { max-width: 720px; margin: 18px 0 0; color: var(--hero-copy); font-size: 17px; line-height: 1.7; }
         .hero-panel {
             align-self: end;
-            background: rgba(16, 11, 63, .42);
+            background: linear-gradient(145deg, rgba(6, 8, 20, .78), rgba(16, 11, 63, .66));
             border: 1px solid rgba(83, 232, 212, .36);
             border-radius: 8px;
             padding: 18px;
@@ -146,11 +164,15 @@
         .metric, .card {
             position: relative;
             overflow: hidden;
-            background: var(--panel);
-            border: 1px solid var(--line);
+            color: var(--card-ink);
+            background:
+                radial-gradient(circle at top right, rgba(37, 196, 248, .16), transparent 13rem),
+                radial-gradient(circle at bottom left, rgba(254, 57, 164, .13), transparent 12rem),
+                var(--card-gradient);
+            border: 1px solid var(--card-border);
             border-radius: 8px;
             padding: 18px;
-            box-shadow: 0 14px 34px rgba(16, 11, 63, .07);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .06);
         }
         .metric::before, .card::before {
             content: "";
@@ -171,16 +193,16 @@
                 linear-gradient(135deg, rgba(137, 33, 194, .13), rgba(37, 196, 248, .18));
             border: 1px solid rgba(83, 232, 212, .35);
         }
-        .metric span, .eyebrow { color: var(--brand); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+        .metric span, .eyebrow { color: var(--teal); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
         .metric strong { display: block; margin-top: 8px; font-size: 28px; }
         .section { margin-top: 30px; }
         .section-head { display: flex; justify-content: space-between; gap: 16px; align-items: end; margin-bottom: 14px; }
         .section h2 { margin: 0; font-size: 24px; }
         .courses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .card h3 { margin: 8px 0 8px; font-size: 21px; }
-        .card p { color: var(--muted); line-height: 1.6; }
+        .card p { color: var(--card-muted); line-height: 1.6; }
         .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
-        .badge { padding: 6px 9px; border-radius: 6px; background: linear-gradient(135deg, var(--brand-soft), var(--cyan-soft)); color: var(--brand-dark); font-size: 13px; font-weight: 700; }
+        .badge { padding: 6px 9px; border-radius: 6px; background: linear-gradient(135deg, rgba(137, 33, 194, .34), rgba(37, 196, 248, .2)); color: #f7f9ff; border: 1px solid rgba(83, 232, 212, .28); font-size: 13px; font-weight: 700; }
         .button {
             display: inline-flex;
             align-items: center;
@@ -200,31 +222,40 @@
         .link-button {
             border: 0;
             background: transparent;
-            color: var(--muted);
+            color: #d8e4ff;
             font: inherit;
             padding: 8px 10px;
             border-radius: 6px;
             cursor: pointer;
         }
-        .link-button:hover { color: var(--brand-dark); background: var(--brand-soft); }
+        .link-button:hover { color: #fff; background: rgba(37, 196, 248, .12); }
         .split { grid-template-columns: 1fr 1fr; }
         .list { display: grid; gap: 12px; }
-        .list-row { padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 8px 22px rgba(16, 11, 63, .04); }
+        .list-row {
+            padding: 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            color: var(--card-ink);
+            background:
+                radial-gradient(circle at top right, rgba(83, 232, 212, .11), transparent 10rem),
+                linear-gradient(145deg, rgba(6, 8, 20, .96), rgba(14, 16, 38, .95) 52%, rgba(16, 11, 63, .9));
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .26);
+        }
         .list-row strong { display: block; margin-bottom: 5px; }
-        .muted { color: var(--muted); }
+        .muted { color: var(--card-muted); }
         .pipeline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
         .stage { border-left: 4px solid var(--cyan); }
         .risk-high { color: var(--accent); font-weight: 800; }
         .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-        .form-grid label { display: grid; gap: 7px; color: var(--muted); font-size: 14px; font-weight: 700; }
+        .form-grid label { display: grid; gap: 7px; color: var(--card-muted); font-size: 14px; font-weight: 700; }
         .form-grid .wide { grid-column: 1 / -1; }
         input, select, textarea {
             width: 100%;
             border: 1px solid var(--line);
             border-radius: 6px;
             padding: 11px 12px;
-            color: var(--ink);
-            background: #fff;
+            color: var(--card-ink);
+            background: rgba(5, 6, 17, .72);
             font: inherit;
         }
         input:focus, select:focus, textarea:focus {
