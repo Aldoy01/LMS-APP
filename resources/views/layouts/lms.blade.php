@@ -31,6 +31,10 @@
             --card-gradient: linear-gradient(145deg, rgba(6, 8, 20, .96), rgba(16, 11, 63, .92) 48%, rgba(30, 9, 45, .94));
         }
         * { box-sizing: border-box; }
+        html {
+            -webkit-text-size-adjust: 100%;
+            scroll-behavior: smooth;
+        }
         body {
             position: relative;
             margin: 0;
@@ -72,6 +76,9 @@
             animation: glowDrift 16s ease-in-out infinite alternate;
         }
         a { color: inherit; text-decoration: none; }
+        img, video, iframe {
+            max-width: 100%;
+        }
         .shell { position: relative; min-height: 100vh; }
         .topbar {
             position: sticky;
@@ -234,8 +241,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-height: 40px;
-            padding: 10px 14px;
+            min-height: 44px;
+            padding: 11px 16px;
             border-radius: 6px;
             background:
                 linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 42%),
@@ -302,6 +309,7 @@
             width: 100%;
             border: 1px solid var(--line);
             border-radius: 6px;
+            min-height: 44px;
             padding: 11px 12px;
             color: var(--card-ink);
             background: rgba(5, 6, 17, .72);
@@ -332,8 +340,148 @@
             .button { transition: none; }
         }
         @media (max-width: 820px) {
-            .hero, .metrics, .courses, .split, .pipeline, .form-grid { grid-template-columns: 1fr; }
-            .topbar { align-items: flex-start; flex-direction: column; }
+            body {
+                background-attachment: scroll;
+                animation-duration: 28s;
+            }
+            .topbar {
+                position: sticky;
+                align-items: stretch;
+                flex-direction: column;
+                gap: 12px;
+                padding: 12px 14px;
+            }
+            .brand-logo {
+                width: min(190px, 62vw);
+                height: 52px;
+            }
+            .nav {
+                width: 100%;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                padding-bottom: 4px;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav a, .nav .link-button {
+                min-height: 42px;
+                white-space: nowrap;
+                flex: 0 0 auto;
+            }
+            .main {
+                width: min(100% - 24px, 1180px);
+                padding: 20px 0 42px;
+            }
+            .hero, .metrics, .courses, .split, .pipeline, .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero {
+                gap: 20px;
+                padding: 24px 18px;
+            }
+            .hero h1 {
+                font-size: clamp(32px, 11vw, 48px);
+                line-height: 1.05;
+            }
+            .hero p {
+                font-size: 16px;
+                line-height: 1.65;
+            }
+            .hero-logo {
+                max-width: 300px;
+            }
+            .section {
+                margin-top: 22px;
+            }
+            .section-head {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .section h2 {
+                font-size: 22px;
+                line-height: 1.25;
+            }
+            .metric, .card, .list-row {
+                padding: 16px;
+            }
+            .metric {
+                min-height: 128px;
+                padding-right: 84px;
+            }
+            .metric::after {
+                width: 50px;
+                height: 50px;
+                top: 14px;
+                right: 14px;
+                background-size: 28px 28px, auto;
+            }
+            .card h3 {
+                font-size: 19px;
+                line-height: 1.3;
+            }
+            .card p, .muted, .list-row {
+                font-size: 15px;
+                line-height: 1.65;
+            }
+            .meta {
+                gap: 10px;
+            }
+            .button {
+                width: 100%;
+                min-height: 46px;
+                text-align: center;
+            }
+            .badge, .chip {
+                line-height: 1.35;
+            }
+            video, iframe {
+                width: 100%;
+                border-radius: 8px;
+            }
+            iframe {
+                min-height: 210px;
+            }
+            footer {
+                padding: 20px 14px;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        }
+        @media (max-width: 480px) {
+            .main {
+                width: min(100% - 18px, 1180px);
+            }
+            .topbar {
+                padding: 10px 9px;
+            }
+            .brand-logo {
+                width: min(176px, 68vw);
+                height: 48px;
+            }
+            .nav {
+                gap: 8px;
+            }
+            .nav a, .nav .link-button {
+                font-size: 13px;
+                padding: 8px 9px;
+            }
+            .hero {
+                padding: 22px 14px;
+            }
+            .hero-panel {
+                padding: 14px;
+            }
+            .metric strong {
+                font-size: 26px;
+            }
+            .form-grid {
+                gap: 13px;
+            }
+            input, select, textarea {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
