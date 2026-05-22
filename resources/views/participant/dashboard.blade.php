@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="hero-panel">
-            <img class="hero-logo" src="{{ asset('images/techverse-learning-logo.jpeg') }}" alt="TECHVERSE Learning">
+            <img class="hero-logo" src="{{ asset('images/techverse-color.png') }}" alt="TECHVERSE Learning">
             <strong>Cyber Learning Path</strong>
             <p style="margin:0;color:var(--hero-copy)">
                 Mulai dari Basic, lanjutkan Intermediate, lalu masuk ke Practical untuk tools,
