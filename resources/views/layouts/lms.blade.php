@@ -3,7 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'Techverse Learning LMS' }}</title>
+    @php
+        $settings = $siteSettings ?? \App\Models\SiteSetting::DEFAULTS;
+        $siteName = $settings['site_name'] ?? 'TECHVERSE Learning';
+        $logoUrl = $settings['logo_url'] ?: asset('images/techverse-color.png');
+    @endphp
+    <title>{{ $title ?? $siteName }}</title>
     <style>
         :root {
             --ink: #07164d;
@@ -13,10 +18,10 @@
             --panel: #ffffff;
             --night: #1e3a8a;
             --night-soft: #dbeafe;
-            --brand: #2f7bff;
-            --brand-dark: #3157dc;
+            --brand: {{ $settings['primary_color'] ?? '#2f7bff' }};
+            --brand-dark: {{ $settings['primary_color'] ?? '#3157dc' }};
             --brand-soft: rgba(47, 123, 255, .08);
-            --accent: #00d4ff;
+            --accent: {{ $settings['accent_color'] ?? '#00d4ff' }};
             --accent-soft: rgba(0, 212, 255, .1);
             --gold: #f59e0b;
             --teal: #22c55e;
@@ -528,17 +533,18 @@
 <div class="shell">
     <header class="topbar">
         <a href="{{ route('lms.dashboard') }}" class="brand">
-            <img class="brand-logo" src="{{ asset('images/techverse-color.png') }}" alt="Techverse Learning">
+            <img class="brand-logo" src="{{ $logoUrl }}" alt="{{ $siteName }}">
         </a>
         <nav class="nav nav-left" aria-label="Menu utama">
-            <a href="{{ route('lms.dashboard') }}">Home</a>
-            <a href="{{ route('lms.dashboard') }}#program">Program</a>
-            <a href="{{ route('lms.dashboard') }}#kontak">Contact</a>
+            <a href="{{ route('lms.dashboard') }}">{{ $settings['nav_home_label'] ?? 'Home' }}</a>
+            <a href="{{ route('lms.dashboard') }}#program">{{ $settings['nav_program_label'] ?? 'Program' }}</a>
+            <a href="{{ route('lms.dashboard') }}#kontak">{{ $settings['nav_contact_label'] ?? 'Contact' }}</a>
         </nav>
         <nav class="nav nav-actions" aria-label="Akses akun">
             @auth
                 <a class="icon-link icon-dashboard" href="{{ route('participant.dashboard') }}">Kelas Saya</a>
                 @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
+                    <a class="icon-link icon-card" href="{{ route('admin.site-content.edit') }}">Konten</a>
                     <a class="icon-link icon-shield" href="{{ route('admin.courses.index') }}">Admin</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">
@@ -546,8 +552,8 @@
                     <button class="link-button icon-link icon-login" type="submit">Logout</button>
                 </form>
             @else
-                <a class="nav-action-button" href="{{ route('login') }}">Login</a>
-                <a class="nav-action-button primary" href="{{ route('register') }}">Register</a>
+                <a class="nav-action-button" href="{{ route('login') }}">{{ $settings['login_label'] ?? 'Login' }}</a>
+                <a class="nav-action-button primary" href="{{ route('register') }}">{{ $settings['register_label'] ?? 'Register' }}</a>
             @endauth
         </nav>
     </header>

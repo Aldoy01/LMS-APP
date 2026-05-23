@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\ModuleMaterialController as AdminModuleMaterialController;
 use App\Http\Controllers\Admin\PaymentVerificationController as AdminPaymentVerificationController;
+use App\Http\Controllers\Admin\SiteContentController as AdminSiteContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LessonPageController;
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:super-admin,admin-lms'])->group(function () {
+    Route::get('site-content', [AdminSiteContentController::class, 'edit'])->name('site-content.edit');
+    Route::put('site-content', [AdminSiteContentController::class, 'update'])->name('site-content.update');
     Route::resource('courses', AdminCourseController::class)->except(['show', 'destroy']);
     Route::get('courses/{course:slug}/materials', [AdminModuleMaterialController::class, 'index'])->name('courses.materials.index');
     Route::post('courses/{course:slug}/modules', [AdminModuleMaterialController::class, 'storeModule'])->name('modules.store');

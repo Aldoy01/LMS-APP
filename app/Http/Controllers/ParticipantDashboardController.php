@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Enrollment;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Auth;
 
 class ParticipantDashboardController extends Controller
@@ -40,6 +41,10 @@ class ParticipantDashboardController extends Controller
             })
             ->sortBy(fn ($item) => [$item['course']->title, $item['module']->sort_order])
             ->values();
+        $settings = SiteSetting::publicSettings();
+        $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
+        $whatsappTarget = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
+        $email = $settings['contact_email'] ?? 'admin@techverselearning.test';
 
         return view('participant.dashboard', [
             'user' => Auth::user(),
@@ -56,10 +61,10 @@ class ParticipantDashboardController extends Controller
                 ],
             ],
             'support' => [
-                'whatsapp' => 'https://wa.me/628513332305',
-                'email' => 'mailto:admin@techverselearning.test',
-                'email_label' => 'admin@techverselearning.test',
-                'whatsapp_label' => '08513332305',
+                'whatsapp' => 'https://wa.me/' . $whatsappTarget,
+                'email' => 'mailto:' . $email,
+                'email_label' => $email,
+                'whatsapp_label' => $settings['contact_whatsapp'] ?? '08513332305',
             ],
         ]);
     }

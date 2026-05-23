@@ -2,9 +2,13 @@
 
 @section('content')
     @php
+        $settings = $siteSettings ?? \App\Models\SiteSetting::DEFAULTS;
         $memberUrl = auth()->check() ? route('participant.home') : route('login');
         $memberLabel = auth()->check() ? 'Masuk Beranda Belajar' : 'Login Member Area';
-        $contactUrl = 'https://wa.me/628513332305';
+        $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
+        $whatsappNumber = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
+        $contactUrl = 'https://wa.me/' . $whatsappNumber;
+        $heroImage = $settings['hero_image_url'] ?: asset('images/techverse-hero-bg.webp');
     @endphp
 
     <style>
@@ -13,7 +17,7 @@
             align-items: center;
             min-height: calc(100vh - 92px);
             padding: clamp(34px, 6vw, 78px) clamp(24px, 5vw, 80px);
-            background: #f8fbff;
+            background: {{ $settings['home_background'] ?? '#f8fbff' }};
             box-shadow: none;
         }
         .academy-hero h1 {
@@ -57,11 +61,11 @@
             position: absolute;
             inset: 6%;
             border-radius: 24px;
-            background: url('{{ asset('images/techverse-hero-bg.webp') }}') center / cover no-repeat;
+            background: url('{{ $heroImage }}') center / cover no-repeat;
             box-shadow: 0 26px 60px rgba(16, 85, 245, .14);
         }
         .academy-visual-frame::after {
-            content: "SQL  XSS  LAB";
+            content: "{{ $settings['hero_visual_badge'] ?? 'SQL  XSS  LAB' }}";
             position: absolute;
             right: 18px;
             bottom: 28px;
@@ -96,12 +100,11 @@
 
     <section class="hero academy-hero">
         <div>
-            <h1>Bangun Karirmu sebagai Cyber Security Profesional</h1>
+            <h1>{{ $settings['hero_title'] ?? 'Bangun Karirmu sebagai Cyber Security Profesional' }}</h1>
             <p>
-                Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang
-                berpengalaman di Industri sampai Bisa!
+                {{ $settings['hero_subtitle'] ?? 'Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang berpengalaman di Industri sampai Bisa!' }}
             </p>
-            <a class="button academy-cta" href="#program">Belajar Sekarang</a>
+            <a class="button academy-cta" href="#program">{{ $settings['hero_cta_label'] ?? 'Belajar Sekarang' }}</a>
         </div>
         <div class="academy-visual" aria-hidden="true">
             <div class="academy-visual-frame"></div>
@@ -119,8 +122,8 @@
         <section class="section">
             <div class="section-head">
                 <div>
-                    <span class="eyebrow">Kenapa TECHVERSE Learning</span>
-                    <h2>Cyber Learning yang Terarah</h2>
+                    <span class="eyebrow">{{ $settings['intro_eyebrow'] ?? 'Kenapa TECHVERSE Learning' }}</span>
+                    <h2>{{ $settings['intro_title'] ?? 'Cyber Learning yang Terarah' }}</h2>
                 </div>
             </div>
             <div class="grid courses">
@@ -213,7 +216,7 @@
                     <p>Hubungi admin untuk verifikasi akun, reset password, atau pengecekan course yang belum muncul.</p>
                     <div class="meta">
                         <a class="button" href="{{ $contactUrl }}" target="_blank" rel="noopener">WhatsApp Admin</a>
-                        <a class="button" style="background:var(--night)" href="mailto:admin@techverselearning.test">Email Admin</a>
+                        <a class="button" style="background:var(--night)" href="mailto:{{ $settings['contact_email'] ?? 'admin@techverselearning.test' }}">Email Admin</a>
                     </div>
                 </div>
             </div>
