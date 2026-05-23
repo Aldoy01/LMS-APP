@@ -88,25 +88,41 @@
             align-items: center;
             justify-content: space-between;
             gap: 24px;
-            padding: 18px clamp(18px, 4vw, 48px);
-            background: rgba(255, 255, 255, .86);
+            min-height: 92px;
+            padding: 14px clamp(18px, 4vw, 58px);
+            background: rgba(255, 255, 255, .96);
             border-bottom: 1px solid var(--line);
-            box-shadow: 0 10px 30px rgba(16, 85, 245, .06);
+            box-shadow: 0 10px 28px rgba(16, 85, 245, .04);
             backdrop-filter: blur(16px);
         }
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; }
         .brand-logo {
-            width: 220px;
-            height: 58px;
+            width: 218px;
+            height: 64px;
             display: block;
             object-fit: contain;
             object-position: left center;
         }
         .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; color: var(--muted); font-size: 14px; }
+        .nav-left {
+            flex: 1;
+            justify-content: flex-start;
+            gap: clamp(16px, 3vw, 34px);
+            color: #111827;
+            font-size: 18px;
+            font-weight: 900;
+        }
+        .nav-actions {
+            justify-content: flex-end;
+            gap: 16px;
+            font-size: 18px;
+            font-weight: 900;
+        }
         .nav a, .nav .link-button {
             display: inline-flex;
             align-items: center;
             gap: 7px;
+            min-height: 44px;
             padding: 8px 10px;
             border-radius: 6px;
             border: 1px solid transparent;
@@ -117,6 +133,27 @@
             background: var(--brand-soft);
             border-color: rgba(47, 123, 255, .16);
             box-shadow: 0 10px 24px rgba(16, 85, 245, .08);
+        }
+        .nav-action-button {
+            min-width: 138px;
+            min-height: 58px;
+            justify-content: center;
+            border-radius: 7px !important;
+            border-color: var(--brand-dark) !important;
+            color: var(--brand-dark);
+            background: #ffffff !important;
+        }
+        .nav-action-button.primary {
+            color: #ffffff;
+            background: var(--brand-dark) !important;
+            box-shadow: 0 12px 26px rgba(49, 87, 220, .18);
+        }
+        .nav-action-button:hover {
+            background: var(--brand-soft) !important;
+        }
+        .nav-action-button.primary:hover {
+            color: #ffffff;
+            background: #1f46bf !important;
         }
         .icon-link::before {
             content: "";
@@ -341,6 +378,7 @@
                 flex-direction: column;
                 gap: 12px;
                 padding: 12px 14px;
+                min-height: auto;
             }
             .brand-logo {
                 width: min(190px, 62vw);
@@ -359,6 +397,16 @@
                 min-height: 42px;
                 white-space: nowrap;
                 flex: 0 0 auto;
+            }
+            .nav-left,
+            .nav-actions {
+                justify-content: flex-start;
+                font-size: 15px;
+                gap: 10px;
+            }
+            .nav-action-button {
+                min-width: 112px;
+                min-height: 46px;
             }
             .main {
                 width: min(100% - 24px, 1180px);
@@ -482,31 +530,24 @@
         <a href="{{ route('lms.dashboard') }}" class="brand">
             <img class="brand-logo" src="{{ asset('images/techverse-color.png') }}" alt="Techverse Learning">
         </a>
-        <nav class="nav">
-            <a class="icon-link icon-home" href="{{ route('lms.dashboard') }}">Home</a>
-            <a class="icon-link icon-book" href="{{ route('lms.dashboard') }}#program">Program</a>
-            <a class="icon-link icon-info" href="{{ route('lms.dashboard') }}#tentang">Tentang</a>
-            <a class="icon-link icon-help" href="{{ route('lms.dashboard') }}#kontak">Kontak</a>
+        <nav class="nav nav-left" aria-label="Menu utama">
+            <a href="{{ route('lms.dashboard') }}">Home</a>
+            <a href="{{ route('lms.dashboard') }}#program">Program</a>
+            <a href="{{ route('lms.dashboard') }}#kontak">Contact</a>
+        </nav>
+        <nav class="nav nav-actions" aria-label="Akses akun">
             @auth
-                <a class="icon-link icon-dashboard" href="{{ route('participant.home') }}">Beranda Belajar</a>
-                <a class="icon-link icon-book" href="{{ route('participant.home') }}#modul">Modul</a>
-                <a class="icon-link icon-user" href="{{ route('participant.home') }}#profil">Profil</a>
-                <a class="icon-link icon-help" href="{{ route('participant.home') }}#bantuan">Bantuan</a>
-            @endauth
-            @auth
-                @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
-                    <a class="icon-link icon-shield" href="{{ route('admin.courses.index') }}">Admin Course</a>
-                    <a class="icon-link icon-user" href="{{ route('admin.users.index') }}">User & Akses</a>
-                    <a class="icon-link icon-card" href="{{ route('admin.payments.index') }}">Pembayaran</a>
-                @endif
                 <a class="icon-link icon-dashboard" href="{{ route('participant.dashboard') }}">Kelas Saya</a>
+                @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
+                    <a class="icon-link icon-shield" href="{{ route('admin.courses.index') }}">Admin</a>
+                @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button class="link-button icon-link icon-login" type="submit">Logout</button>
                 </form>
             @else
-                <a class="icon-link icon-login" href="{{ route('login') }}">Login Peserta</a>
-                <a class="icon-link icon-shield" href="{{ route('admin.login') }}">Login Admin</a>
+                <a class="nav-action-button" href="{{ route('login') }}">Login</a>
+                <a class="nav-action-button primary" href="{{ route('lms.dashboard') }}#program">Register</a>
             @endauth
         </nav>
     </header>

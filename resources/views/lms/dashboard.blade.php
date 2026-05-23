@@ -7,34 +7,104 @@
         $contactUrl = 'https://wa.me/628513332305';
     @endphp
 
-    <section class="hero">
+    <style>
+        .academy-hero {
+            grid-template-columns: minmax(0, .95fr) minmax(320px, 1.05fr);
+            align-items: center;
+            min-height: calc(100vh - 92px);
+            padding: clamp(34px, 6vw, 78px) clamp(24px, 5vw, 80px);
+            background: #f8fbff;
+            box-shadow: none;
+        }
+        .academy-hero h1 {
+            max-width: 780px;
+            color: #1f1f28;
+            font-size: clamp(38px, 4.6vw, 64px);
+            line-height: 1.18;
+            letter-spacing: 0;
+        }
+        .academy-hero p {
+            max-width: 720px;
+            color: #252533;
+            font-size: clamp(20px, 2.2vw, 32px);
+            line-height: 1.45;
+        }
+        .academy-cta {
+            margin-top: 30px;
+            min-width: 220px;
+            min-height: 64px;
+            border-radius: 7px;
+            font-size: 24px;
+            background: var(--brand-dark);
+        }
+        .academy-visual {
+            display: grid;
+            place-items: center;
+            min-height: 520px;
+        }
+        .academy-visual-frame {
+            position: relative;
+            width: min(720px, 100%);
+            aspect-ratio: 1.25;
+            border-radius: 26px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 62% 36%, rgba(0, 212, 255, .22), transparent 15rem),
+                linear-gradient(145deg, #ffffff, #edf6ff);
+        }
+        .academy-visual-frame::before {
+            content: "";
+            position: absolute;
+            inset: 6%;
+            border-radius: 24px;
+            background: url('{{ asset('images/techverse-hero-bg.webp') }}') center / cover no-repeat;
+            box-shadow: 0 26px 60px rgba(16, 85, 245, .14);
+        }
+        .academy-visual-frame::after {
+            content: "SQL  XSS  LAB";
+            position: absolute;
+            right: 18px;
+            bottom: 28px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            color: #ffffff;
+            background: var(--brand-dark);
+            box-shadow: 0 16px 30px rgba(49, 87, 220, .24);
+            font-weight: 900;
+            letter-spacing: .04em;
+        }
+        @media (max-width: 820px) {
+            .academy-hero {
+                min-height: auto;
+                grid-template-columns: 1fr;
+                padding: 34px 18px;
+            }
+            .academy-hero p {
+                font-size: 18px;
+            }
+            .academy-cta {
+                width: auto;
+                min-width: 190px;
+                min-height: 54px;
+                font-size: 19px;
+            }
+            .academy-visual {
+                min-height: 320px;
+            }
+        }
+    </style>
+
+    <section class="hero academy-hero">
         <div>
-            <span class="eyebrow" style="color:var(--gold)">Cyber Security Learning Platform</span>
-            <h1>TECHVERSE Learning</h1>
+            <h1>Bangun Karirmu sebagai Cyber Security Profesional</h1>
             <p>
-                Bangun skill cyber security dari basic sampai practical lab, ikuti learning path terarah,
-                dan pantau progres belajar dalam satu platform LMS modern.
+                Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang
+                berpengalaman di Industri sampai Bisa!
             </p>
-            <div class="chips">
-                <span class="chip">Cyber Modules</span>
-                <span class="chip">Secure Dashboard</span>
-                <span class="chip">Practical Lab</span>
-                <span class="chip">Learning Path</span>
-                <span class="chip">Admin Support</span>
-            </div>
-            <div class="meta" style="margin-top:22px">
-                <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
-                <a class="button" style="background:var(--night)" href="#program">Lihat Program</a>
-                <a class="button" style="background:var(--accent)" href="{{ $contactUrl }}" target="_blank" rel="noopener">Hubungi Admin</a>
-            </div>
+            <a class="button academy-cta" href="#program">Belajar Sekarang</a>
         </div>
-        <div class="hero-panel">
-            <img class="hero-logo" src="{{ asset('images/techverse-color.png') }}" alt="TECHVERSE Learning">
-            <strong>Cyber Learning Hub</strong>
-            <p style="margin:0;color:var(--hero-copy)">
-                TECHVERSE Learning membantu peserta memahami konsep keamanan, tools, workflow pentest,
-                dan dokumentasi report melalui modul yang terstruktur.
-            </p>
+        <div class="academy-visual" aria-hidden="true">
+            <div class="academy-visual-frame"></div>
         </div>
     </section>
 
