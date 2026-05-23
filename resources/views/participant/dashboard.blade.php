@@ -31,21 +31,26 @@
         .member-menu-button {
             position: fixed;
             top: 18px;
-            left: 18px;
+            left: 260px;
             z-index: 60;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             min-height: 44px;
-            padding: 10px 14px;
+            padding: 10px 13px;
             border: 1px solid rgba(47, 123, 255, .2);
-            border-radius: 12px;
+            border-left: 0;
+            border-radius: 0 14px 14px 0;
             color: #07164d;
             background: rgba(255, 255, 255, .9);
-            box-shadow: 0 12px 30px rgba(16, 85, 245, .14);
+            box-shadow: 12px 12px 30px rgba(16, 85, 245, .12);
             backdrop-filter: blur(14px);
             cursor: pointer;
             font-weight: 900;
+            transition: left .24s ease, box-shadow .2s ease, background .2s ease;
+        }
+        .member-area.sidebar-closed .member-menu-button {
+            left: 0;
         }
         .member-menu-button span {
             width: 18px;
@@ -342,7 +347,10 @@
             }
             .member-menu-button {
                 top: 12px;
-                left: 12px;
+                left: 0;
+            }
+            .member-area:not(.sidebar-closed) .member-menu-button {
+                left: min(84vw, 310px);
             }
             .member-sidebar {
                 position: fixed;
