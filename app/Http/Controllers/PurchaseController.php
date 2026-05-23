@@ -14,6 +14,17 @@ use Illuminate\Validation\Rule;
 
 class PurchaseController extends Controller
 {
+    public function register()
+    {
+        return view('purchase.register', [
+            'courses' => Course::with('modules.lessons')
+                ->where('status', 'published')
+                ->orderBy('level')
+                ->orderBy('title')
+                ->get(),
+        ]);
+    }
+
     public function create(Course $course)
     {
         return view('purchase.create', [

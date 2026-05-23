@@ -547,7 +547,7 @@
                 </form>
             @else
                 <a class="nav-action-button" href="{{ route('login') }}">Login</a>
-                <a class="nav-action-button primary" href="{{ route('lms.dashboard') }}#program">Register</a>
+                <a class="nav-action-button primary" href="{{ route('register') }}">Register</a>
             @endauth
         </nav>
     </header>

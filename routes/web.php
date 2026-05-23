@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [LmsDashboardController::class, 'index'])->name('lms.dashboard');
+Route::get('/register', [PurchaseController::class, 'register'])->name('register');
 Route::get('/paket/{course:slug}/beli', [PurchaseController::class, 'create'])->name('purchase.create');
 Route::post('/paket/{course:slug}/beli', [PurchaseController::class, 'store'])->name('purchase.store');
 Route::get('/pembayaran/{invoice}', [PaymentConfirmationController::class, 'show'])->name('payments.show');
