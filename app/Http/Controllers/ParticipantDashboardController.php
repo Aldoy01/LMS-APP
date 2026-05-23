@@ -56,10 +56,10 @@ class ParticipantDashboardController extends Controller
                 ],
             ],
             'support' => [
-                'whatsapp' => 'https://wa.me/6281200000001',
+                'whatsapp' => 'https://wa.me/628513332305',
                 'email' => 'mailto:admin@techverselearning.test',
                 'email_label' => 'admin@techverselearning.test',
-                'whatsapp_label' => '+62 812-0000-0001',
+                'whatsapp_label' => '08513332305',
             ],
         ]);
     }

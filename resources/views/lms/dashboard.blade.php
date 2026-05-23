@@ -4,7 +4,7 @@
     @php
         $memberUrl = auth()->check() ? route('participant.home') : route('login');
         $memberLabel = auth()->check() ? 'Masuk Beranda Belajar' : 'Login Member Area';
-        $contactUrl = 'https://wa.me/6281200000001';
+        $contactUrl = 'https://wa.me/628513332305';
     @endphp
 
     <section class="hero">
