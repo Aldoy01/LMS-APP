@@ -19,15 +19,73 @@
             grid-template-columns: 260px minmax(0, 1fr);
             min-height: 100vh;
             background: #f4f7fc;
+            transition: grid-template-columns .24s ease;
         }
         .topbar,
         footer {
+            display: none;
+        }
+        .member-area.sidebar-closed {
+            grid-template-columns: 0 minmax(0, 1fr);
+        }
+        .member-menu-button {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 60;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 10px 14px;
+            border: 1px solid rgba(47, 123, 255, .2);
+            border-radius: 12px;
+            color: #07164d;
+            background: rgba(255, 255, 255, .9);
+            box-shadow: 0 12px 30px rgba(16, 85, 245, .14);
+            backdrop-filter: blur(14px);
+            cursor: pointer;
+            font-weight: 900;
+        }
+        .member-menu-button span {
+            width: 18px;
+            height: 2px;
+            display: block;
+            position: relative;
+            border-radius: 999px;
+            background: #2f7bff;
+        }
+        .member-menu-button span::before,
+        .member-menu-button span::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 2px;
+            border-radius: 999px;
+            background: #2f7bff;
+        }
+        .member-menu-button span::before {
+            top: -6px;
+        }
+        .member-menu-button span::after {
+            top: 6px;
+        }
+        .member-menu-overlay {
             display: none;
         }
         .member-sidebar {
             background: #ffffff;
             border-right: 1px solid rgba(47, 123, 255, .12);
             padding: 28px 24px;
+            overflow: hidden;
+            transition: transform .24s ease, opacity .2s ease, padding .24s ease, border-color .2s ease;
+        }
+        .member-area.sidebar-closed .member-sidebar {
+            transform: translateX(-100%);
+            opacity: 0;
+            padding-inline: 0;
+            border-color: transparent;
         }
         .member-profile {
             display: grid;
@@ -92,6 +150,7 @@
         }
         .member-content {
             padding: 28px clamp(18px, 4vw, 44px) 48px;
+            padding-top: 82px;
             min-width: 0;
         }
         .purchase-alert {
@@ -279,10 +338,47 @@
         }
         @media (max-width: 980px) {
             .member-area {
-                grid-template-columns: 1fr;
+                display: block;
+            }
+            .member-menu-button {
+                top: 12px;
+                left: 12px;
             }
             .member-sidebar {
-                display: none;
+                position: fixed;
+                inset: 0 auto 0 0;
+                z-index: 55;
+                width: min(84vw, 310px);
+                max-width: 310px;
+                overflow-y: auto;
+                box-shadow: 24px 0 60px rgba(7, 22, 77, .18);
+                transform: translateX(-105%);
+                opacity: 1;
+                padding: 76px 22px 28px;
+            }
+            .member-area:not(.sidebar-closed) .member-sidebar {
+                transform: translateX(0);
+                padding: 76px 22px 28px;
+            }
+            .member-area.sidebar-closed .member-sidebar {
+                padding: 76px 22px 28px;
+            }
+            .member-menu-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 50;
+                display: block;
+                background: rgba(7, 22, 77, .42);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .2s ease;
+            }
+            .member-area:not(.sidebar-closed) .member-menu-overlay {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .member-content {
+                padding-top: 72px;
             }
             .member-hero {
                 grid-template-columns: 1fr;
@@ -303,8 +399,15 @@
         }
     </style>
 
-    <div class="member-area">
-        <aside class="member-sidebar" aria-label="Menu peserta">
+    <div class="member-area" id="participantDashboard">
+        <button class="member-menu-button" type="button" aria-controls="participantMenu" aria-expanded="true">
+            <span aria-hidden="true"></span>
+            Menu
+        </button>
+
+        <div class="member-menu-overlay" data-close-participant-menu></div>
+
+        <aside class="member-sidebar" id="participantMenu" aria-label="Menu peserta">
             <div class="member-profile">
                 <div class="member-avatar">{{ $initials ?: 'TL' }}</div>
                 <strong>{{ $user->name }}</strong>
@@ -487,4 +590,52 @@
             </section>
         </main>
     </div>
+
+    <script>
+        (function () {
+            const area = document.getElementById('participantDashboard');
+            if (!area) {
+                return;
+            }
+
+            const button = area.querySelector('.member-menu-button');
+            const overlay = area.querySelector('[data-close-participant-menu]');
+            const links = area.querySelectorAll('.sidebar-link');
+
+            const setMenu = (isOpen) => {
+                area.classList.toggle('sidebar-closed', !isOpen);
+                button?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            };
+
+            const syncDefault = () => {
+                if (area.dataset.menuTouched === 'true') {
+                    return;
+                }
+
+                setMenu(window.innerWidth > 980);
+            };
+
+            button?.addEventListener('click', () => {
+                area.dataset.menuTouched = 'true';
+                setMenu(area.classList.contains('sidebar-closed'));
+            });
+
+            overlay?.addEventListener('click', () => {
+                area.dataset.menuTouched = 'true';
+                setMenu(false);
+            });
+
+            links.forEach((link) => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 980) {
+                        area.dataset.menuTouched = 'true';
+                        setMenu(false);
+                    }
+                });
+            });
+
+            syncDefault();
+            window.addEventListener('resize', syncDefault);
+        })();
+    </script>
 @endsection
