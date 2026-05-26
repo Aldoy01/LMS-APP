@@ -251,6 +251,11 @@
             place-items: center;
             border-radius: 999px;
             color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .03em;
+            line-height: 1;
+            text-align: center;
         }
         .stat-icon.blue { background: #2f7bff; }
         .stat-icon.cyan { background: #22c9d7; }
@@ -346,16 +351,37 @@
         }
         .dashboard-headline {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-columns: 72px minmax(0, 1fr) auto;
             gap: 18px;
-            align-items: end;
+            align-items: center;
             margin-bottom: 18px;
+            padding: 22px;
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 88% 20%, rgba(0, 212, 255, .16), transparent 16rem),
+                #ffffff;
+            box-shadow: 0 16px 36px rgba(16, 85, 245, .08);
+        }
+        .headline-icon {
+            width: 72px;
+            height: 72px;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            color: #ffffff;
+            background:
+                linear-gradient(145deg, #3157dc, #00d4ff);
+            box-shadow: 0 18px 32px rgba(49, 87, 220, .22);
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: .04em;
         }
         .dashboard-headline h1 {
             margin: 0;
             color: #07164d;
-            font-size: clamp(30px, 4vw, 52px);
-            line-height: 1.08;
+            font-size: clamp(28px, 3.5vw, 44px);
+            line-height: 1.12;
         }
         .dashboard-headline p {
             max-width: 760px;
@@ -363,13 +389,6 @@
             color: #4b587c;
             text-align: left;
             line-height: 1.65;
-        }
-        .section-label {
-            color: #3157dc;
-            font-size: 12px;
-            font-weight: 900;
-            letter-spacing: .08em;
-            text-transform: uppercase;
         }
         .status-pill {
             display: inline-flex;
@@ -501,6 +520,12 @@
             .discussion-card {
                 grid-template-columns: 1fr;
             }
+            .headline-icon {
+                width: 58px;
+                height: 58px;
+                border-radius: 18px;
+                font-size: 17px;
+            }
         }
     </style>
 
@@ -527,7 +552,7 @@
             </div>
 
             <div class="sidebar-group">
-                <p class="sidebar-title">Section LMS</p>
+                <p class="sidebar-title">LMS</p>
                 <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">PT</span> Produk Terbaru</a>
                 <a class="sidebar-link" href="#grup-diskusi"><span class="sidebar-icon">GD</span> Grup Diskusi</a>
                 <a class="sidebar-link" href="#profil"><span class="sidebar-icon">PF</span> Profil</a>
@@ -543,8 +568,8 @@
         <main class="member-content">
             <section id="dashboard">
                 <div class="dashboard-headline">
+                    <span class="headline-icon" aria-hidden="true">TL</span>
                     <div>
-                        <span class="section-label">Section 1 - Headline</span>
                         <h1>Dashboard LMS TECHVERSE Learning</h1>
                         <p>
                             Selamat datang, {{ $user->name }}. Pantau kelas yang sudah dibeli,
@@ -567,7 +592,6 @@
             </section>
 
             <section class="member-section" id="data-belajar">
-                <span class="section-label">Section 2 - Data Belajar</span>
                 <h2>Ringkasan Progress Peserta</h2>
                 <div class="member-stats">
                     <div class="member-stat">
@@ -590,7 +614,6 @@
             </section>
 
             <section class="member-section" id="kelas-dipilih">
-                <span class="section-label">Section 3 - Tampilan Kelas yang Dipilih</span>
                 <h2>Kelas Saya</h2>
                 <div class="course-access-grid">
                     @forelse($enrollments as $enrollment)
@@ -628,7 +651,6 @@
             </section>
 
             <section class="member-section" id="rekomendasi">
-                <span class="section-label">Section 4 - Rekomendasi Modul Pembelajaran</span>
                 <h2>Roadmap Level Berikutnya</h2>
                 <div class="course-access-grid">
                     @forelse($recommendedCourses as $course)
@@ -653,7 +675,6 @@
             </section>
 
             <section class="member-section" id="produk-terbaru">
-                <span class="section-label">Section 5 - Produk/Modul Terbaru</span>
                 <h2>Update Kelas Terbaru</h2>
                 <div class="module-list">
                     @forelse($latestCourses as $course)
@@ -682,7 +703,6 @@
             </section>
 
             <section class="member-section" id="grup-diskusi">
-                <span class="section-label">Section 6 - Grup Diskusi</span>
                 <h2>Forum Belajar Peserta</h2>
                 <div class="module-list">
                     @foreach($discussionGroups as $group)
@@ -713,7 +733,6 @@
             </section>
 
             <section class="dashboard-footer">
-                <span class="section-label">Section 7 - Footer</span>
                 <p>
                     TECHVERSE Learning LMS membantu peserta mengikuti roadmap cyber security secara bertahap:
                     belajar, praktik, berdiskusi, lalu naik ke level berikutnya saat siap.
