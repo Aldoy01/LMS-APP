@@ -469,6 +469,119 @@
             background: linear-gradient(145deg, #3157dc, #00d4ff);
             font-weight: 900;
         }
+        .class-access-shell {
+            display: grid;
+            grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        .class-hero-card {
+            min-height: 100%;
+            padding: 22px;
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 22px;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 84% 18%, rgba(0, 212, 255, .28), transparent 12rem),
+                linear-gradient(145deg, #07164d 0%, #3157dc 58%, #00a6ff 100%);
+            box-shadow: 0 20px 46px rgba(16, 85, 245, .14);
+        }
+        .class-hero-card h3 {
+            margin: 12px 0 10px;
+            font-size: clamp(26px, 3vw, 42px);
+            line-height: 1.12;
+        }
+        .class-hero-card p {
+            color: rgba(255, 255, 255, .88);
+            text-align: left;
+            line-height: 1.65;
+        }
+        .checkout-note {
+            margin-top: 18px;
+            padding: 13px;
+            border: 1px solid rgba(255, 255, 255, .28);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, .12);
+            color: rgba(255, 255, 255, .9);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+        .lesson-panel {
+            display: grid;
+            gap: 14px;
+        }
+        .module-access-card {
+            padding: 18px;
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 18px;
+            background: #ffffff;
+            box-shadow: 0 14px 34px rgba(16, 85, 245, .08);
+        }
+        .module-access-card h3 {
+            margin: 8px 0 8px;
+            color: #07164d;
+            font-size: 20px;
+        }
+        .lesson-access-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .lesson-access-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 13px;
+            border: 1px solid rgba(47, 123, 255, .12);
+            border-radius: 14px;
+            background: #f8fbff;
+        }
+        .lesson-access-row strong {
+            display: block;
+            color: #07164d;
+            line-height: 1.35;
+        }
+        .lesson-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 9px;
+        }
+        .lesson-info span {
+            padding: 6px 9px;
+            border-radius: 999px;
+            color: #4b587c;
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .12);
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .discussion-split {
+            display: grid;
+            grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+        .discussion-panel {
+            padding: 20px;
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 14px 34px rgba(16, 85, 245, .08);
+        }
+        .discussion-panel h3 {
+            margin: 0 0 8px;
+            color: #07164d;
+        }
+        .discussion-panel p {
+            color: #4b587c;
+            text-align: left;
+        }
+        .discussion-links {
+            display: grid;
+            gap: 12px;
+        }
         .product-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(180px, 1fr));
@@ -635,7 +748,10 @@
                 grid-template-columns: 1fr;
             }
             .dashboard-headline,
-            .discussion-card {
+            .discussion-card,
+            .class-access-shell,
+            .discussion-split,
+            .lesson-access-row {
                 grid-template-columns: 1fr;
             }
             .headline-icon {
@@ -740,40 +856,80 @@
             </section>
 
             <section class="member-section" id="kelas-dipilih">
-                <h2>Kelas Saya</h2>
-                <div class="course-access-grid">
-                    @forelse($enrollments as $enrollment)
-                        @php
-                            $course = $enrollment->course;
-                            $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
-                            $completedCount = $enrollment->progress->where('progress_percent', 100)->count();
-                            $progress = $lessonCount > 0 ? round(($completedCount / $lessonCount) * 100) : 0;
-                            $statusLabel = $progress >= 100 ? 'Selesai' : ($progress > 0 ? 'Berlangsung' : 'Belum mulai');
-                            $statusClass = $progress >= 100 ? 'done' : ($progress > 0 ? 'in-progress' : '');
-                        @endphp
-                        <article class="access-card">
-                            <span class="status-pill {{ $statusClass }}">{{ $statusLabel }}</span>
-                            <h3>{{ $course->title }}</h3>
-                            <p>{{ $course->summary }}</p>
+                <h2>Akses Kelas</h2>
+                @if($firstEnrollment && $firstCourse)
+                    @php
+                        $activeCourse = $firstCourse;
+                        $activeLessonCount = $activeCourse->modules->sum(fn ($module) => $module->lessons->count());
+                        $activeDuration = $activeCourse->modules->sum(fn ($module) => $module->duration_minutes);
+                        $activeCompleted = $firstEnrollment->progress->where('progress_percent', 100)->count();
+                        $activeProgress = $activeLessonCount > 0 ? round(($activeCompleted / $activeLessonCount) * 100) : 0;
+                    @endphp
+                    <div class="class-access-shell">
+                        <article class="class-hero-card">
+                            <span class="status-pill {{ $activeProgress >= 100 ? 'done' : ($activeProgress > 0 ? 'in-progress' : '') }}">
+                                {{ $activeProgress >= 100 ? 'Selesai' : ($activeProgress > 0 ? 'Berlangsung' : 'Belum mulai') }}
+                            </span>
+                            <h3>{{ $activeCourse->title }}</h3>
+                            <p>{{ $activeCourse->summary }}</p>
                             <div class="meta">
-                                <span class="badge">{{ $lessonCount }} lesson</span>
-                                <span class="badge">{{ $course->modules->count() }} modul</span>
-                                <span class="badge">{{ $progress }}% selesai</span>
+                                <span class="badge">{{ $activeCourse->modules->count() }} modul</span>
+                                <span class="badge">{{ $activeLessonCount }} lesson</span>
+                                <span class="badge">{{ $activeDuration }} menit</span>
+                                <span class="badge">{{ $activeProgress }}% selesai</span>
                             </div>
-                            <div class="progress-track"><div class="progress-fill" style="width:{{ $progress }}%"></div></div>
-                            <div class="meta">
-                                <a class="button" href="{{ route('lms.courses.show', $course) }}">{{ $progress > 0 ? 'Lanjutkan Kelas' : 'Mulai Kelas' }}</a>
+                            <div class="progress-track"><div class="progress-fill" style="width:{{ $activeProgress }}%"></div></div>
+                            <div class="checkout-note">
+                                Checkout manual: akses kelas aktif setelah pembayaran diverifikasi admin. Jika lesson belum terbuka,
+                                hubungi admin melalui menu bantuan.
                             </div>
                         </article>
-                    @empty
-                        <article class="access-card">
-                            <span class="status-pill">Belum mulai</span>
-                            <h3>Belum ada kelas aktif</h3>
-                            <p>Kelas akan tampil setelah pembayaran diverifikasi dan akses peserta diaktifkan.</p>
-                            <div class="meta"><a class="button" href="{{ route('register') }}">Pilih Paket Kelas</a></div>
-                        </article>
-                    @endforelse
-                </div>
+
+                        <div class="lesson-panel">
+                            @foreach($activeCourse->modules as $module)
+                                <article class="module-access-card">
+                                    <span class="badge">Modul {{ $module->sort_order }} / {{ $module->category }}</span>
+                                    <h3>{{ $module->title }}</h3>
+                                    <p>{{ $module->summary }}</p>
+                                    <div class="lesson-access-list">
+                                        @forelse($module->lessons as $lesson)
+                                            @php
+                                                $materialCount = $lesson->materials->count();
+                                                $slideCount = $lesson->materials->whereIn('type', ['slide', 'slides', 'pdf_slide'])->count();
+                                                $readingCount = max($materialCount, $slideCount);
+                                            @endphp
+                                            <article class="lesson-access-row">
+                                                <div>
+                                                    <strong>Lesson {{ $lesson->sort_order }}: {{ $lesson->title }}</strong>
+                                                    <div class="lesson-info">
+                                                        <span>{{ $readingCount ?: 12 }} {{ $slideCount > 0 ? 'Slide' : 'Halaman' }}</span>
+                                                        <span>Video {{ $lesson->duration_minutes ?: 28 }} Menit</span>
+                                                        <span>Quiz</span>
+                                                    </div>
+                                                </div>
+                                                <a class="button" href="{{ route('lms.lessons.show', [$activeCourse, $lesson]) }}">Buka Lesson</a>
+                                            </article>
+                                        @empty
+                                            <article class="lesson-access-row">
+                                                <div>
+                                                    <strong>Lesson belum tersedia</strong>
+                                                    <div class="lesson-info"><span>Admin sedang menyiapkan materi</span></div>
+                                                </div>
+                                            </article>
+                                        @endforelse
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <article class="access-card">
+                        <span class="status-pill">Belum mulai</span>
+                        <h3>Belum ada kelas aktif</h3>
+                        <p>Kelas akan tampil setelah pembayaran diverifikasi dan akses peserta diaktifkan.</p>
+                        <div class="meta"><a class="button" href="{{ route('register') }}">Pilih Paket Kelas</a></div>
+                    </article>
+                @endif
             </section>
 
             <section class="member-section" id="rekomendasi">
@@ -837,17 +993,46 @@
 
             <section class="member-section" id="grup-diskusi">
                 <h2>Forum Belajar Peserta</h2>
-                <div class="module-list">
-                    @foreach($discussionGroups as $group)
-                        <article class="access-card discussion-card">
-                            <span class="discussion-icon">{{ str_starts_with($group['name'], 'Telegram') ? 'TG' : 'DC' }}</span>
-                            <div>
-                                <h3>{{ $group['name'] }}</h3>
-                                <p>{{ $group['description'] }}</p>
-                            </div>
-                            <a class="button" href="{{ $group['url'] }}" target="_blank" rel="noopener">Gabung</a>
-                        </article>
-                    @endforeach
+                <div class="discussion-split">
+                    <article class="discussion-panel">
+                        <h3>Diskusi cepat kelas</h3>
+                        <p>
+                            Gunakan grup Telegram atau WhatsApp untuk koordinasi kelas, pengumuman,
+                            dan tanya jawab ringan bersama admin.
+                        </p>
+                        <div class="discussion-links">
+                            @foreach(collect($discussionGroups)->take(2) as $group)
+                                <article class="discussion-card">
+                                    <span class="discussion-icon">{{ str_starts_with($group['name'], 'Telegram') ? 'TG' : 'WA' }}</span>
+                                    <div>
+                                        <h3>{{ $group['name'] }}</h3>
+                                        <p>{{ $group['description'] }}</p>
+                                    </div>
+                                    <a class="button" href="{{ $group['url'] }}" target="_blank" rel="noopener">Gabung</a>
+                                </article>
+                            @endforeach
+                        </div>
+                    </article>
+
+                    <article class="discussion-panel">
+                        <h3>Lab Room & Troubleshooting</h3>
+                        <p>
+                            Gunakan Discord untuk diskusi teknis yang lebih panjang, troubleshooting tools,
+                            review praktik, dan tanya jawab seputar workflow pentest.
+                        </p>
+                        <div class="discussion-links">
+                            @foreach(collect($discussionGroups)->skip(2) as $group)
+                                <article class="discussion-card">
+                                    <span class="discussion-icon">DC</span>
+                                    <div>
+                                        <h3>{{ $group['name'] }}</h3>
+                                        <p>{{ $group['description'] }}</p>
+                                    </div>
+                                    <a class="button" href="{{ $group['url'] }}" target="_blank" rel="noopener">Gabung</a>
+                                </article>
+                            @endforeach
+                        </div>
+                    </article>
                 </div>
             </section>
 

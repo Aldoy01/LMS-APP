@@ -13,7 +13,7 @@ class ParticipantDashboardController extends Controller
     {
         $enrollments = Enrollment::with([
             'course.mentor',
-            'course.modules.lessons',
+            'course.modules.lessons.materials',
             'progress.lesson',
         ])
             ->where('user_id', Auth::id())
@@ -70,6 +70,11 @@ class ParticipantDashboardController extends Controller
                     'name' => 'Telegram Community',
                     'description' => 'Diskusi cepat seputar roadmap, tugas modul, dan update kelas.',
                     'url' => 'https://t.me/techverselearning',
+                ],
+                [
+                    'name' => 'WhatsApp Group',
+                    'description' => 'Koordinasi kelas, pengumuman cepat, dan bantuan akses bersama admin.',
+                    'url' => 'https://wa.me/' . $whatsappTarget,
                 ],
                 [
                     'name' => 'Discord Lab Room',
