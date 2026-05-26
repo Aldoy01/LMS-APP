@@ -229,49 +229,74 @@
         }
         .member-stats {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(4, minmax(210px, 1fr));
+            gap: 20px;
         }
         .member-stat {
-            display: flex;
+            position: relative;
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
             align-items: center;
-            gap: 14px;
-            min-height: 98px;
-            padding: 18px;
-            border: 1px solid rgba(47, 123, 255, .12);
-            border-radius: 10px;
-            background: #ffffff;
-            box-shadow: 0 12px 28px rgba(16, 85, 245, .08);
+            gap: 16px;
+            min-height: 126px;
+            padding: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(47, 123, 255, .13);
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 94% 12%, rgba(0, 212, 255, .14), transparent 9rem),
+                linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+            box-shadow:
+                0 18px 42px rgba(16, 85, 245, .1),
+                inset 0 1px 0 rgba(255, 255, 255, .9);
+        }
+        .member-stat::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 5px;
+            background: linear-gradient(180deg, #3157dc, #00d4ff);
         }
         .stat-icon {
-            width: 54px;
-            height: 54px;
-            flex: 0 0 54px;
+            width: 64px;
+            height: 64px;
+            flex: 0 0 64px;
             display: grid;
             place-items: center;
             border-radius: 999px;
             color: #ffffff;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 900;
             letter-spacing: .03em;
             line-height: 1;
             text-align: center;
+            box-shadow:
+                0 14px 26px rgba(16, 85, 245, .16),
+                inset 0 1px 0 rgba(255, 255, 255, .32);
         }
         .stat-icon.blue { background: #2f7bff; }
         .stat-icon.cyan { background: #22c9d7; }
         .stat-icon.green { background: #22c55e; }
         .stat-icon.yellow { background: #facc15; }
-        .member-stat span {
+        .stat-copy {
+            min-width: 0;
+        }
+        .stat-copy span {
             display: block;
             color: #4b587c;
-            font-size: 14px;
+            font-size: clamp(13px, 1vw, 15px);
             font-weight: 800;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
         }
-        .member-stat strong {
+        .stat-copy strong {
             display: block;
-            margin-top: 4px;
+            margin-top: 8px;
             color: #2f7bff;
-            font-size: 22px;
+            font-size: clamp(24px, 2.4vw, 34px);
+            line-height: 1.04;
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
         }
         .course-access-grid {
             display: grid;
@@ -527,6 +552,11 @@
                 font-size: 17px;
             }
         }
+        @media (min-width: 981px) and (max-width: 1380px) {
+            .member-stats {
+                grid-template-columns: repeat(2, minmax(240px, 1fr));
+            }
+        }
     </style>
 
     <div class="member-area" id="participantDashboard">
@@ -596,19 +626,19 @@
                 <div class="member-stats">
                     <div class="member-stat">
                         <span class="stat-icon yellow">CL</span>
-                        <div><span>Kelas Diikuti</span><strong>{{ $enrollments->count() }} kelas</strong></div>
+                        <div class="stat-copy"><span>Kelas Diikuti</span><strong>{{ $enrollments->count() }} kelas</strong></div>
                     </div>
                     <div class="member-stat">
                         <span class="stat-icon cyan">MD</span>
-                        <div><span>Modul Dibaca</span><strong>{{ $completedModules }} dari {{ $modules->count() }}</strong></div>
+                        <div class="stat-copy"><span>Modul Dibaca</span><strong>{{ $completedModules }} dari {{ $modules->count() }}</strong></div>
                     </div>
                     <div class="member-stat">
                         <span class="stat-icon blue">VD</span>
-                        <div><span>Video Ditonton</span><strong>{{ $watchedVideos }} dari {{ $totalVideoLessons }}</strong></div>
+                        <div class="stat-copy"><span>Video Ditonton</span><strong>{{ $watchedVideos }} dari {{ $totalVideoLessons }}</strong></div>
                     </div>
                     <div class="member-stat">
                         <span class="stat-icon green">%</span>
-                        <div><span>Progress</span><strong>{{ $overallProgress }}%</strong></div>
+                        <div class="stat-copy"><span>Progress</span><strong>{{ $overallProgress }}%</strong></div>
                     </div>
                 </div>
             </section>
