@@ -469,6 +469,98 @@
             background: linear-gradient(145deg, #3157dc, #00d4ff);
             font-weight: 900;
         }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 18px;
+        }
+        .product-card {
+            display: flex;
+            min-width: 0;
+            min-height: 100%;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 14px 34px rgba(16, 85, 245, .1);
+        }
+        .product-cover {
+            position: relative;
+            aspect-ratio: 1.6;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 28% 32%, rgba(0, 212, 255, .2), transparent 8rem),
+                linear-gradient(135deg, #07164d 0%, #3157dc 56%, #00d4ff 100%);
+        }
+        .product-cover img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .product-cover-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            padding: 18px;
+            color: #ffffff;
+            text-align: center;
+            font-weight: 900;
+            line-height: 1.18;
+        }
+        .product-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            padding: 5px 9px;
+            color: #ffffff;
+            background: #22c55e;
+            border-radius: 0 0 8px 0;
+            font-size: 11px;
+            font-weight: 900;
+        }
+        .product-body {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 8px;
+            padding: 13px;
+        }
+        .product-price {
+            color: #22c55e;
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .product-title {
+            min-height: 40px;
+            color: #4b587c;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.35;
+        }
+        .product-actions {
+            display: grid;
+            gap: 10px;
+            margin-top: auto;
+        }
+        .product-actions .button {
+            width: 100%;
+            min-height: 38px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            box-shadow: none;
+            text-shadow: none;
+        }
+        .button-sales {
+            background: #22c9b9;
+        }
+        .button-order {
+            background: #8b9cf6;
+        }
         .dashboard-footer {
             margin-top: 30px;
             padding: 20px;
@@ -535,7 +627,8 @@
             }
             .member-stats,
             .course-access-grid,
-            .announcement-grid {
+            .announcement-grid,
+            .product-grid {
                 grid-template-columns: 1fr;
             }
             .module-row {
@@ -555,6 +648,9 @@
         @media (min-width: 981px) and (max-width: 1380px) {
             .member-stats {
                 grid-template-columns: repeat(2, minmax(240px, 1fr));
+            }
+            .product-grid {
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
             }
         }
     </style>
@@ -705,21 +801,28 @@
             </section>
 
             <section class="member-section" id="produk-terbaru">
-                <h2>Update Kelas Terbaru</h2>
-                <div class="module-list">
+                <h2>Produk Terbaru</h2>
+                <div class="product-grid">
                     @forelse($latestCourses as $course)
-                        <article class="module-row">
-                            <div>
-                                <span class="badge">{{ $course->level }} / {{ ucfirst($course->status) }}</span>
-                                <strong>{{ $course->title }}</strong>
-                                <p>{{ $course->summary }}</p>
-                                <div class="meta">
-                                    <span class="badge">{{ $course->modules->count() }} modul</span>
-                                    <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
-                                    <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
+                        <article class="product-card">
+                            <div class="product-cover">
+                                <span class="product-badge">Lifetime</span>
+                                @if($course->cover_image)
+                                    <img src="{{ $course->cover_image }}" alt="{{ $course->title }}">
+                                @else
+                                    <div class="product-cover-placeholder">
+                                        <span>{{ $course->title }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="product-body">
+                                <div class="product-price">Rp. {{ number_format($course->price, 0, ',', '.') }}</div>
+                                <div class="product-title">{{ $course->title }}</div>
+                                <div class="product-actions">
+                                    <a class="button button-sales" href="{{ route('lms.dashboard') }}#program">Sales Page</a>
+                                    <a class="button button-order" href="{{ route('purchase.create', $course) }}">Order Paket</a>
                                 </div>
                             </div>
-                            <a class="button" href="{{ route('purchase.create', $course) }}">Lihat Paket</a>
                         </article>
                     @empty
                         <article class="module-row">
