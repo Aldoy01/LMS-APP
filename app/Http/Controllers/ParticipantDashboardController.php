@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,18 @@ class ParticipantDashboardController extends Controller
             })
             ->sortBy(fn ($item) => [$item['course']->title, $item['module']->sort_order])
             ->values();
+        $enrolledCourseIds = $enrollments->pluck('course_id')->all();
+        $recommendedCourses = Course::with('modules.lessons')
+            ->where('status', 'published')
+            ->whereNotIn('id', $enrolledCourseIds)
+            ->orderBy('level')
+            ->limit(4)
+            ->get();
+        $latestCourses = Course::with('modules.lessons')
+            ->where('status', 'published')
+            ->latest()
+            ->limit(4)
+            ->get();
         $settings = SiteSetting::publicSettings();
         $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
         $whatsappTarget = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
@@ -50,6 +63,20 @@ class ParticipantDashboardController extends Controller
             'user' => Auth::user(),
             'enrollments' => $enrollments,
             'modules' => $modules,
+            'recommendedCourses' => $recommendedCourses,
+            'latestCourses' => $latestCourses,
+            'discussionGroups' => [
+                [
+                    'name' => 'Telegram Community',
+                    'description' => 'Diskusi cepat seputar roadmap, tugas modul, dan update kelas.',
+                    'url' => 'https://t.me/techverselearning',
+                ],
+                [
+                    'name' => 'Discord Lab Room',
+                    'description' => 'Ruang tanya jawab praktik lab, tools, dan troubleshooting peserta.',
+                    'url' => 'https://discord.gg/techverselearning',
+                ],
+            ],
             'announcements' => [
                 [
                     'title' => 'Update Materi Mingguan',

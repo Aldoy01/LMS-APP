@@ -11,6 +11,9 @@
         $ctaLabel = $firstCourse ? 'Akses Kelas Saya' : 'Pilih Program';
         $categoryCounts = $modules->groupBy('category')->map->count();
         $initials = collect(explode(' ', $user->name))->filter()->map(fn ($part) => mb_substr($part, 0, 1))->take(2)->join('');
+        $completedModules = $modules->where('progress', 100)->count();
+        $totalVideoLessons = $enrollments->sum(fn ($enrollment) => optional($enrollment->course)->modules?->sum(fn ($module) => $module->lessons->where('content_type', 'video')->count()) ?? 0);
+        $watchedVideos = $enrollments->sum(fn ($enrollment) => $enrollment->progress->filter(fn ($progress) => $progress->progress_percent === 100 && optional($progress->lesson)->content_type === 'video')->count());
     @endphp
 
     <style>
@@ -341,6 +344,96 @@
             color: #4b587c;
             text-align: left;
         }
+        .dashboard-headline {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: end;
+            margin-bottom: 18px;
+        }
+        .dashboard-headline h1 {
+            margin: 0;
+            color: #07164d;
+            font-size: clamp(30px, 4vw, 52px);
+            line-height: 1.08;
+        }
+        .dashboard-headline p {
+            max-width: 760px;
+            margin: 12px 0 0;
+            color: #4b587c;
+            text-align: left;
+            line-height: 1.65;
+        }
+        .section-label {
+            color: #3157dc;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 32px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+            color: #3157dc;
+            background: rgba(47, 123, 255, .09);
+            border: 1px solid rgba(47, 123, 255, .16);
+        }
+        .status-pill.in-progress {
+            color: #b45309;
+            background: rgba(245, 158, 11, .14);
+            border-color: rgba(245, 158, 11, .24);
+        }
+        .status-pill.done {
+            color: #15803d;
+            background: rgba(34, 197, 94, .12);
+            border-color: rgba(34, 197, 94, .22);
+        }
+        .locked-card {
+            position: relative;
+        }
+        .locked-card::after {
+            content: "Terkunci";
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            color: #ffffff;
+            background: #07164d;
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .discussion-card {
+            display: grid;
+            grid-template-columns: 52px minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+        }
+        .discussion-icon {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: #ffffff;
+            background: linear-gradient(145deg, #3157dc, #00d4ff);
+            font-weight: 900;
+        }
+        .dashboard-footer {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 16px;
+            color: #4b587c;
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .14);
+            box-shadow: 0 10px 24px rgba(16, 85, 245, .06);
+        }
         @media (max-width: 980px) {
             .member-area {
                 display: block;
@@ -404,6 +497,10 @@
             .module-row {
                 grid-template-columns: 1fr;
             }
+            .dashboard-headline,
+            .discussion-card {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
@@ -424,16 +521,16 @@
             <div class="sidebar-group">
                 <p class="sidebar-title">Overview</p>
                 <a class="sidebar-link active" href="#dashboard"><span class="sidebar-icon">DH</span> Dashboard</a>
-                <a class="sidebar-link" href="#akses-kelas"><span class="sidebar-icon">PK</span> Produk Kelas</a>
-                <a class="sidebar-link" href="#modul"><span class="sidebar-icon">MD</span> Modul</a>
-                <a class="sidebar-link" href="#pengumuman"><span class="sidebar-icon">UP</span> Update</a>
+                <a class="sidebar-link" href="#data-belajar"><span class="sidebar-icon">DB</span> Data Belajar</a>
+                <a class="sidebar-link" href="#kelas-dipilih"><span class="sidebar-icon">KD</span> Kelas Dipilih</a>
+                <a class="sidebar-link" href="#rekomendasi"><span class="sidebar-icon">RM</span> Rekomendasi</a>
             </div>
 
             <div class="sidebar-group">
-                <p class="sidebar-title">Akses</p>
-                <a class="sidebar-link" href="#akses-kelas"><span class="sidebar-icon">AK</span> Akses Kelas</a>
+                <p class="sidebar-title">Section LMS</p>
+                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">PT</span> Produk Terbaru</a>
+                <a class="sidebar-link" href="#grup-diskusi"><span class="sidebar-icon">GD</span> Grup Diskusi</a>
                 <a class="sidebar-link" href="#profil"><span class="sidebar-icon">PF</span> Profil</a>
-                <a class="sidebar-link" href="#bantuan"><span class="sidebar-icon">CS</span> Bantuan</a>
             </div>
 
             <div class="sidebar-group">
@@ -445,72 +542,56 @@
 
         <main class="member-content">
             <section id="dashboard">
+                <div class="dashboard-headline">
+                    <div>
+                        <span class="section-label">Section 1 - Headline</span>
+                        <h1>Dashboard LMS TECHVERSE Learning</h1>
+                        <p>
+                            Selamat datang, {{ $user->name }}. Pantau kelas yang sudah dibeli,
+                            cek progres belajar, lanjutkan modul aktif, dan temukan rekomendasi level berikutnya.
+                        </p>
+                    </div>
+                    <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
+                </div>
+
                 <div class="purchase-alert">
                     <svg class="purchase-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
                         <path d="M10 15h23v9a9 9 0 0 1-9 9h-5a9 9 0 0 1-9-9v-9z" fill="currentColor" opacity=".18"/>
                         <path d="M10 15h23v9a9 9 0 0 1-9 9h-5a9 9 0 0 1-9-9v-9zM33 18h5a5 5 0 0 1 0 10h-5M8 38h30" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <div>
-                        <strong>Terima kasih telah membeli paket kelas TechVerse Learning.</strong>
-                        <a href="{{ $ctaUrl }}">{{ $firstCourse ? 'Klik di sini untuk akses kelas pembelian' : 'Pilih program learning untuk mulai belajar' }}</a>
-                    </div>
-                </div>
-
-                <div class="member-hero">
-                    <svg class="rocket-illustration" viewBox="0 0 420 300" fill="none" aria-hidden="true">
-                        <ellipse cx="190" cy="264" rx="116" ry="18" fill="#1e3a8a" opacity=".14"/>
-                        <path d="M194 218c-44 14-80 38-104 70 43-10 78-26 105-50l-1-20z" fill="#dbeafe"/>
-                        <path d="M235 225c13 36 35 62 76 76-3-42-19-78-48-103l-28 27z" fill="#dbeafe"/>
-                        <path d="M118 196c54-98 132-151 236-168-14 103-67 181-166 236l-70-68z" fill="#ffffff" stroke="#3157dc" stroke-width="6"/>
-                        <path d="M300 42c-5 36-22 70-51 102-28 30-61 51-98 63l37 37c99-55 152-133 166-236-18 3-36 7-54 14z" fill="#2f7bff" opacity=".22"/>
-                        <circle cx="266" cy="108" r="34" fill="#dbeafe" stroke="#3157dc" stroke-width="6"/>
-                        <circle cx="266" cy="108" r="17" fill="#2f7bff"/>
-                        <path d="M112 197l75 75-65 17-27-27 17-65z" fill="#3157dc"/>
-                        <path d="M95 262c-19 8-37 22-52 43 26-7 47-16 63-30l-11-13z" fill="#f59e0b"/>
-                        <path d="M182 67c-22 1-50 7-74 28 29 2 53 9 72 23l2-51z" fill="#dbeafe" stroke="#3157dc" stroke-width="6"/>
-                        <path d="M91 122c-19 21-29 48-28 79 26-19 53-29 79-31l-51-48z" fill="#dbeafe" stroke="#3157dc" stroke-width="6"/>
-                        <path d="M225 184l-67-67" stroke="#3157dc" stroke-width="8" stroke-linecap="round"/>
-                        <circle cx="166" cy="111" r="28" fill="#ffffff" stroke="#dbeafe" stroke-width="8"/>
-                        <path d="M166 86c-10-18-2-38 18-45 17 15 16 34 3 50" stroke="#3157dc" stroke-width="5" stroke-linecap="round"/>
-                        <circle cx="156" cy="111" r="6" fill="#07164d"/>
-                        <circle cx="179" cy="111" r="6" fill="#07164d"/>
-                        <path d="M158 130c8 6 18 6 26 0" stroke="#07164d" stroke-width="4" stroke-linecap="round"/>
-                    </svg>
-                    <div>
-                        <h1>Selamat Datang {{ $user->name }}</h1>
-                        <p>
-                            Nikmati kemudahan akses seluruh kelas cyber security dalam satu dashboard.
-                            Lanjutkan modul, pantau progress, dan hubungi admin jika membutuhkan bantuan.
-                        </p>
-                        <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
+                        <strong>{{ $firstCourse ? 'Akses kelas Anda sudah aktif.' : 'Belum ada akses kelas aktif.' }}</strong>
+                        <a href="{{ $ctaUrl }}">{{ $firstCourse ? 'Klik di sini untuk melanjutkan produk pembelian' : 'Pilih program untuk memulai registrasi kelas' }}</a>
                     </div>
                 </div>
             </section>
 
-            <section class="member-section" id="data-hari-ini">
-                <h2>Data Belajar Hari Ini</h2>
+            <section class="member-section" id="data-belajar">
+                <span class="section-label">Section 2 - Data Belajar</span>
+                <h2>Ringkasan Progress Peserta</h2>
                 <div class="member-stats">
                     <div class="member-stat">
                         <span class="stat-icon yellow">CL</span>
-                        <div><span>Kelas Aktif</span><strong>{{ $enrollments->count() }}</strong></div>
+                        <div><span>Kelas Diikuti</span><strong>{{ $enrollments->count() }} kelas</strong></div>
                     </div>
                     <div class="member-stat">
-                        <span class="stat-icon cyan">OK</span>
-                        <div><span>Total Modul</span><strong>{{ $modules->count() }}</strong></div>
+                        <span class="stat-icon cyan">MD</span>
+                        <div><span>Modul Dibaca</span><strong>{{ $completedModules }} dari {{ $modules->count() }}</strong></div>
                     </div>
                     <div class="member-stat">
-                        <span class="stat-icon blue">%</span>
+                        <span class="stat-icon blue">VD</span>
+                        <div><span>Video Ditonton</span><strong>{{ $watchedVideos }} dari {{ $totalVideoLessons }}</strong></div>
+                    </div>
+                    <div class="member-stat">
+                        <span class="stat-icon green">%</span>
                         <div><span>Progress</span><strong>{{ $overallProgress }}%</strong></div>
-                    </div>
-                    <div class="member-stat">
-                        <span class="stat-icon green">CS</span>
-                        <div><span>Bantuan</span><strong>Aktif</strong></div>
                     </div>
                 </div>
             </section>
 
-            <section class="member-section" id="akses-kelas">
-                <h2>Akses Kelas Saya</h2>
+            <section class="member-section" id="kelas-dipilih">
+                <span class="section-label">Section 3 - Tampilan Kelas yang Dipilih</span>
+                <h2>Kelas Saya</h2>
                 <div class="course-access-grid">
                     @forelse($enrollments as $enrollment)
                         @php
@@ -518,66 +599,100 @@
                             $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
                             $completedCount = $enrollment->progress->where('progress_percent', 100)->count();
                             $progress = $lessonCount > 0 ? round(($completedCount / $lessonCount) * 100) : 0;
+                            $statusLabel = $progress >= 100 ? 'Selesai' : ($progress > 0 ? 'Berlangsung' : 'Belum mulai');
+                            $statusClass = $progress >= 100 ? 'done' : ($progress > 0 ? 'in-progress' : '');
                         @endphp
                         <article class="access-card">
-                            <span class="badge">{{ $enrollment->access_type }} / {{ optional($enrollment->started_at)->format('d M Y') ?? 'Belum mulai' }}</span>
+                            <span class="status-pill {{ $statusClass }}">{{ $statusLabel }}</span>
                             <h3>{{ $course->title }}</h3>
                             <p>{{ $course->summary }}</p>
                             <div class="meta">
                                 <span class="badge">{{ $lessonCount }} lesson</span>
+                                <span class="badge">{{ $course->modules->count() }} modul</span>
                                 <span class="badge">{{ $progress }}% selesai</span>
                             </div>
                             <div class="progress-track"><div class="progress-fill" style="width:{{ $progress }}%"></div></div>
                             <div class="meta">
-                                <a class="button" href="{{ route('lms.courses.show', $course) }}">Masuk Kelas</a>
+                                <a class="button" href="{{ route('lms.courses.show', $course) }}">{{ $progress > 0 ? 'Lanjutkan Kelas' : 'Mulai Kelas' }}</a>
                             </div>
                         </article>
                     @empty
                         <article class="access-card">
+                            <span class="status-pill">Belum mulai</span>
                             <h3>Belum ada kelas aktif</h3>
                             <p>Kelas akan tampil setelah pembayaran diverifikasi dan akses peserta diaktifkan.</p>
-                            <div class="meta"><a class="button" href="{{ route('lms.dashboard') }}#program">Pilih Program</a></div>
+                            <div class="meta"><a class="button" href="{{ route('register') }}">Pilih Paket Kelas</a></div>
                         </article>
                     @endforelse
                 </div>
             </section>
 
-            <section class="member-section" id="modul">
-                <h2>Modul Pembelajaran</h2>
+            <section class="member-section" id="rekomendasi">
+                <span class="section-label">Section 4 - Rekomendasi Modul Pembelajaran</span>
+                <h2>Roadmap Level Berikutnya</h2>
+                <div class="course-access-grid">
+                    @forelse($recommendedCourses as $course)
+                        <article class="access-card locked-card">
+                            <span class="badge">{{ $course->level }}</span>
+                            <h3>{{ $course->title }}</h3>
+                            <p>{{ $course->summary }}</p>
+                            <div class="meta">
+                                <span class="badge">{{ $course->modules->count() }} modul</span>
+                                <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
+                                <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
+                            </div>
+                            <a class="button" href="{{ route('purchase.create', $course) }}">Buka Akses Level Ini</a>
+                        </article>
+                    @empty
+                        <article class="access-card">
+                            <h3>Rekomendasi segera tersedia</h3>
+                            <p>Semua kelas yang tersedia sudah masuk akses Anda atau admin belum menerbitkan roadmap baru.</p>
+                        </article>
+                    @endforelse
+                </div>
+            </section>
+
+            <section class="member-section" id="produk-terbaru">
+                <span class="section-label">Section 5 - Produk/Modul Terbaru</span>
+                <h2>Update Kelas Terbaru</h2>
                 <div class="module-list">
-                    @forelse($modules as $item)
+                    @forelse($latestCourses as $course)
                         <article class="module-row">
                             <div>
-                                <span class="badge">{{ $item['category'] }} / Modul {{ $item['module']->sort_order }}</span>
-                                <strong>{{ $item['module']->title }}</strong>
-                                <p>{{ $item['module']->summary }}</p>
+                                <span class="badge">{{ $course->level }} / {{ ucfirst($course->status) }}</span>
+                                <strong>{{ $course->title }}</strong>
+                                <p>{{ $course->summary }}</p>
                                 <div class="meta">
-                                    <span class="badge">{{ $item['duration_minutes'] }} menit</span>
-                                    <span class="badge">{{ $item['lesson_count'] }} lesson</span>
-                                    <span class="badge">{{ $item['progress'] }}% selesai</span>
+                                    <span class="badge">{{ $course->modules->count() }} modul</span>
+                                    <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
+                                    <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
                                 </div>
                             </div>
-                            <a class="button" href="{{ route('lms.courses.show', $item['course']) }}">Buka Modul</a>
+                            <a class="button" href="{{ route('purchase.create', $course) }}">Lihat Paket</a>
                         </article>
                     @empty
                         <article class="module-row">
                             <div>
-                                <strong>Belum ada modul aktif</strong>
-                                <p>Hubungi admin jika Anda sudah melakukan pembayaran tetapi kelas belum tampil.</p>
+                                <strong>Belum ada produk terbaru</strong>
+                                <p>Admin akan menambahkan update modul terbaru di halaman ini.</p>
                             </div>
-                            <a class="button" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">Hubungi Admin</a>
                         </article>
                     @endforelse
                 </div>
             </section>
 
-            <section class="member-section" id="pengumuman">
-                <h2>Pengumuman Admin</h2>
-                <div class="announcement-grid">
-                    @foreach($announcements as $announcement)
-                        <article class="announcement-card">
-                            <strong>{{ $announcement['title'] }}</strong>
-                            <p>{{ $announcement['body'] }}</p>
+            <section class="member-section" id="grup-diskusi">
+                <span class="section-label">Section 6 - Grup Diskusi</span>
+                <h2>Forum Belajar Peserta</h2>
+                <div class="module-list">
+                    @foreach($discussionGroups as $group)
+                        <article class="access-card discussion-card">
+                            <span class="discussion-icon">{{ str_starts_with($group['name'], 'Telegram') ? 'TG' : 'DC' }}</span>
+                            <div>
+                                <h3>{{ $group['name'] }}</h3>
+                                <p>{{ $group['description'] }}</p>
+                            </div>
+                            <a class="button" href="{{ $group['url'] }}" target="_blank" rel="noopener">Gabung</a>
                         </article>
                     @endforeach
                 </div>
@@ -595,6 +710,14 @@
                         <p>WhatsApp: <a href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">{{ $support['whatsapp_label'] }}</a><br>Email: <a href="{{ $support['email'] }}">{{ $support['email_label'] }}</a></p>
                     </article>
                 </div>
+            </section>
+
+            <section class="dashboard-footer">
+                <span class="section-label">Section 7 - Footer</span>
+                <p>
+                    TECHVERSE Learning LMS membantu peserta mengikuti roadmap cyber security secara bertahap:
+                    belajar, praktik, berdiskusi, lalu naik ke level berikutnya saat siap.
+                </p>
             </section>
         </main>
     </div>
