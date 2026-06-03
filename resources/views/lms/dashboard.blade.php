@@ -183,35 +183,120 @@
         .path-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 18px;
+            gap: 22px;
         }
         .path-card {
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             min-height: 100%;
-            padding: 24px;
-            border-radius: 24px;
+            padding: 26px;
+            border-radius: 30px;
             color: #07164d;
-            background: #ffffff;
-            border: 1px solid rgba(47, 123, 255, .14);
-            box-shadow: 0 18px 42px rgba(16, 85, 245, .1);
+            background:
+                radial-gradient(circle at 86% 12%, var(--path-glow, rgba(0, 212, 255, .18)), transparent 11rem),
+                linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,251,255,.88));
+            border: 1px solid rgba(47, 123, 255, .16);
+            box-shadow:
+                0 20px 48px rgba(16, 85, 245, .11),
+                inset 0 1px 0 rgba(255, 255, 255, .9);
+            transform: translateY(0);
+            animation: pathRise .75s ease both;
+            transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
         }
-        .path-icon {
-            width: 58px;
-            height: 58px;
-            display: grid;
-            place-items: center;
-            border-radius: 18px;
-            color: #ffffff;
-            background: linear-gradient(145deg, var(--brand-dark), var(--accent));
-            font-size: 24px;
+        .path-card:nth-child(2) { animation-delay: .08s; }
+        .path-card:nth-child(3) { animation-delay: .16s; }
+        .path-card::before {
+            content: "";
+            position: absolute;
+            inset: auto -30% -42% 22%;
+            z-index: -1;
+            height: 150px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, var(--path-accent, var(--accent)), transparent);
+            filter: blur(22px);
+            opacity: .42;
+            transform: rotate(-8deg);
+        }
+        .path-card::after {
+            content: "";
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            width: 74px;
+            height: 74px;
+            border-radius: 999px;
+            border: 1px dashed rgba(49, 87, 220, .24);
+            animation: pathOrbit 8s linear infinite;
+        }
+        .path-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(47, 123, 255, .28);
+            box-shadow:
+                0 28px 64px rgba(16, 85, 245, .18),
+                inset 0 1px 0 rgba(255, 255, 255, .96);
+        }
+        .path-card.learn {
+            --path-accent: #3157dc;
+            --path-glow: rgba(49, 87, 220, .18);
+        }
+        .path-card.tools {
+            --path-accent: #00d4ff;
+            --path-glow: rgba(0, 212, 255, .2);
+        }
+        .path-card.premium {
+            --path-accent: #f59e0b;
+            --path-glow: rgba(245, 158, 11, .18);
+        }
+        .path-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .path-step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 32px;
+            padding: 0 12px;
+            border-radius: 999px;
+            color: var(--brand-dark);
+            background: rgba(47, 123, 255, .08);
+            border: 1px solid rgba(47, 123, 255, .14);
+            font-size: 12px;
             font-weight: 900;
         }
+        .path-icon {
+            position: relative;
+            width: 66px;
+            height: 66px;
+            display: grid;
+            place-items: center;
+            border-radius: 22px;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 30% 22%, rgba(255,255,255,.36), transparent 34%),
+                linear-gradient(145deg, var(--path-accent, var(--brand-dark)), var(--accent));
+            font-size: 28px;
+            font-weight: 900;
+            box-shadow:
+                0 18px 34px rgba(16, 85, 245, .18),
+                inset 0 1px 0 rgba(255,255,255,.3);
+            animation: pathFloat 4s ease-in-out infinite;
+        }
         .path-card h3 {
-            margin: 18px 0 8px;
-            font-size: 24px;
+            margin: 22px 0 8px;
+            font-size: 26px;
+            letter-spacing: 0;
         }
         .path-card p {
             color: #4b587c;
             line-height: 1.65;
+            min-height: 78px;
         }
         .tag-row {
             display: flex;
@@ -223,9 +308,32 @@
             padding: 7px 10px;
             border-radius: 999px;
             color: var(--brand-dark);
-            background: rgba(47, 123, 255, .08);
+            background: rgba(255, 255, 255, .76);
+            border: 1px solid rgba(47, 123, 255, .12);
             font-size: 12px;
             font-weight: 900;
+        }
+        .path-card .button {
+            margin-top: auto;
+            border-radius: 14px;
+        }
+        @keyframes pathFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+        @keyframes pathOrbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pathRise {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         .feature-grid {
             display: grid;
@@ -286,6 +394,19 @@
             .tv-orbit-card {
                 min-height: 320px;
             }
+            .path-card p {
+                min-height: auto;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .path-card,
+            .path-icon,
+            .path-card::after {
+                animation: none;
+            }
+            .path-card {
+                transition: none;
+            }
         }
     </style>
 
@@ -323,22 +444,31 @@
                 <p>Pilih jalur belajar sesuai kebutuhan: mulai belajar, eksplor tools, atau masuk ke kelas premium.</p>
             </div>
             <div class="path-grid">
-                <article class="path-card">
-                    <div class="path-icon">L</div>
+                <article class="path-card learn">
+                    <div class="path-topline">
+                        <div class="path-icon">📖</div>
+                        <span class="path-step">01</span>
+                    </div>
                     <h3>Start Learning</h3>
                     <p>Masuk ke materi, roadmap, modul cyber security, dan dashboard peserta.</p>
                     <div class="tag-row"><span>Courses</span><span>Roadmap</span><span>Lessons</span></div>
                     <a class="button" href="{{ $memberUrl }}">Begin Your Journey</a>
                 </article>
-                <article class="path-card">
-                    <div class="path-icon">T</div>
+                <article class="path-card tools">
+                    <div class="path-topline">
+                        <div class="path-icon">⚙</div>
+                        <span class="path-step">02</span>
+                    </div>
                     <h3>Explore Tools</h3>
                     <p>Temukan tools pendukung, resources, slide, PDF, video, dan workflow praktik.</p>
                     <div class="tag-row"><span>PDF</span><span>Video</span><span>Resources</span></div>
                     <a class="button" href="#program">Discover Resources</a>
                 </article>
-                <article class="path-card">
-                    <div class="path-icon">P</div>
+                <article class="path-card premium">
+                    <div class="path-topline">
+                        <div class="path-icon">✦</div>
+                        <span class="path-step">03</span>
+                    </div>
                     <h3>Premium Courses</h3>
                     <p>Akses kelas berbayar, modul lanjutan, praktik tools, dan studi kasus.</p>
                     <div class="tag-row"><span>Cyber Hacks</span><span>Practical</span><span>Support</span></div>
