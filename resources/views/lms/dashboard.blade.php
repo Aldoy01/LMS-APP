@@ -4,163 +4,372 @@
     @php
         $settings = $siteSettings ?? \App\Models\SiteSetting::DEFAULTS;
         $memberUrl = auth()->check() ? route('participant.home') : route('login');
-        $memberLabel = auth()->check() ? 'Masuk Beranda Belajar' : 'Login Member Area';
+        $memberLabel = auth()->check() ? 'Buka Dashboard' : 'Start Learning';
         $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
         $whatsappNumber = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
         $contactUrl = 'https://wa.me/' . $whatsappNumber;
-        $heroImage = $settings['hero_image_url'] ?: asset('images/techverse-hero-bg.webp');
     @endphp
 
     <style>
-        .academy-hero {
-            grid-template-columns: minmax(0, .95fr) minmax(320px, 1.05fr);
+        .tv-home {
+            color: #0f172a;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(49, 87, 220, .16), transparent 22rem),
+                radial-gradient(circle at 82% 14%, rgba(0, 212, 255, .18), transparent 20rem),
+                linear-gradient(180deg, #f8fbff 0%, #ffffff 48%, #f4f8ff 100%);
+        }
+        .tv-hero {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr);
+            gap: clamp(24px, 5vw, 68px);
             align-items: center;
             min-height: calc(100vh - 92px);
-            padding: clamp(34px, 6vw, 78px) clamp(24px, 5vw, 80px);
-            background: {{ $settings['home_background'] ?? '#f8fbff' }};
-            box-shadow: none;
+            padding: clamp(42px, 7vw, 92px) 0;
         }
-        .academy-hero h1 {
-            max-width: 780px;
-            color: #1f1f28;
-            font-size: clamp(38px, 4.6vw, 64px);
-            line-height: 1.18;
+        .tv-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 42px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            color: var(--brand-dark);
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .16);
+            box-shadow: 0 12px 30px rgba(16, 85, 245, .1);
+            font-weight: 900;
+        }
+        .tv-hero h1 {
+            margin: 24px 0 0;
+            color: #07164d;
+            font-size: clamp(42px, 7vw, 86px);
+            line-height: .98;
             letter-spacing: 0;
         }
-        .academy-hero p {
+        .tv-hero h1 span {
+            display: block;
+            color: var(--brand-dark);
+        }
+        .tv-hero p {
             max-width: 720px;
-            color: #252533;
-            font-size: clamp(20px, 2.2vw, 32px);
-            line-height: 1.45;
+            margin: 22px 0 0;
+            color: #4b587c;
+            font-size: clamp(17px, 2vw, 22px);
+            line-height: 1.65;
+            text-align: left;
         }
-        .academy-cta {
-            margin-top: 30px;
-            min-width: 220px;
-            min-height: 64px;
-            border-radius: 7px;
-            font-size: 24px;
-            background: var(--brand-dark);
+        .tv-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 28px;
         }
-        .academy-visual {
+        .tv-button {
+            min-height: 54px;
+            padding: 13px 20px;
+            border-radius: 14px;
+            box-shadow: 0 14px 28px rgba(16, 85, 245, .16);
+        }
+        .tv-button.secondary {
+            color: var(--brand-dark);
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .2);
+            text-shadow: none;
+        }
+        .tv-stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 34px;
+        }
+        .tv-stat {
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .82);
+            border: 1px solid rgba(47, 123, 255, .13);
+            box-shadow: 0 12px 30px rgba(16, 85, 245, .08);
+        }
+        .tv-stat strong {
+            display: block;
+            color: #07164d;
+            font-size: 26px;
+        }
+        .tv-stat span {
+            display: block;
+            margin-top: 4px;
+            color: #4b587c;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .tv-orbit {
+            position: relative;
+            min-height: 520px;
             display: grid;
             place-items: center;
-            min-height: 520px;
         }
-        .academy-visual-frame {
+        .tv-orbit-card {
             position: relative;
-            width: min(720px, 100%);
-            aspect-ratio: 1.25;
-            border-radius: 26px;
-            overflow: hidden;
+            width: min(430px, 100%);
+            min-height: 430px;
+            border-radius: 40px;
             background:
-                radial-gradient(circle at 62% 36%, rgba(0, 212, 255, .22), transparent 15rem),
-                linear-gradient(145deg, #ffffff, #edf6ff);
+                radial-gradient(circle at 50% 35%, rgba(255,255,255,.98), rgba(255,255,255,.72) 42%, rgba(219,234,254,.8) 100%);
+            border: 1px solid rgba(47, 123, 255, .18);
+            box-shadow: 0 30px 80px rgba(16, 85, 245, .18);
+            overflow: hidden;
         }
-        .academy-visual-frame::before {
+        .tv-orbit-card::before {
             content: "";
             position: absolute;
-            inset: 6%;
-            border-radius: 24px;
-            background: url('{{ $heroImage }}') center / cover no-repeat;
-            box-shadow: 0 26px 60px rgba(16, 85, 245, .14);
+            inset: 42px;
+            border-radius: 999px;
+            background:
+                conic-gradient(from 140deg, var(--brand-dark), var(--accent), #22c55e, #f59e0b, var(--brand-dark));
+            filter: blur(.2px);
+            opacity: .9;
         }
-        .academy-visual-frame::after {
-            content: "{{ $settings['hero_visual_badge'] ?? 'SQL  XSS  LAB' }}";
+        .tv-orbit-card::after {
+            content: "TECHVERSE";
             position: absolute;
-            right: 18px;
-            bottom: 28px;
-            padding: 12px 16px;
+            inset: 104px;
+            display: grid;
+            place-items: center;
             border-radius: 999px;
             color: #ffffff;
-            background: var(--brand-dark);
-            box-shadow: 0 16px 30px rgba(49, 87, 220, .24);
+            background: linear-gradient(145deg, #07164d, var(--brand-dark));
+            font-size: clamp(20px, 3vw, 34px);
             font-weight: 900;
-            letter-spacing: .04em;
+            letter-spacing: .08em;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.24);
         }
-        @media (max-width: 820px) {
-            .academy-hero {
-                min-height: auto;
+        .floating-chip {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            color: #07164d;
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .14);
+            box-shadow: 0 18px 36px rgba(16, 85, 245, .14);
+            font-weight: 900;
+        }
+        .chip-one { top: 58px; left: 4px; }
+        .chip-two { right: 0; top: 132px; }
+        .chip-three { bottom: 78px; left: 18px; }
+        .tv-section {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 34px 0;
+        }
+        .tv-section-head {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+        .tv-section-head h2 {
+            margin: 0;
+            color: #07164d;
+            font-size: clamp(30px, 4vw, 48px);
+        }
+        .tv-section-head p {
+            margin: 10px auto 0;
+            max-width: 680px;
+            color: #4b587c;
+            line-height: 1.7;
+        }
+        .path-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+        .path-card {
+            min-height: 100%;
+            padding: 24px;
+            border-radius: 24px;
+            color: #07164d;
+            background: #ffffff;
+            border: 1px solid rgba(47, 123, 255, .14);
+            box-shadow: 0 18px 42px rgba(16, 85, 245, .1);
+        }
+        .path-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            color: #ffffff;
+            background: linear-gradient(145deg, var(--brand-dark), var(--accent));
+            font-size: 24px;
+            font-weight: 900;
+        }
+        .path-card h3 {
+            margin: 18px 0 8px;
+            font-size: 24px;
+        }
+        .path-card p {
+            color: #4b587c;
+            line-height: 1.65;
+        }
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .tag-row span {
+            padding: 7px 10px;
+            border-radius: 999px;
+            color: var(--brand-dark);
+            background: rgba(47, 123, 255, .08);
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .feature-card {
+            padding: 20px;
+            border-radius: 22px;
+            background: rgba(255,255,255,.86);
+            border: 1px solid rgba(47, 123, 255, .14);
+        }
+        .feature-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #07164d;
+            font-size: 18px;
+        }
+        .program-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        .program-card .button {
+            margin-top: auto;
+        }
+        @media (max-width: 900px) {
+            .tv-hero,
+            .path-grid,
+            .feature-grid {
                 grid-template-columns: 1fr;
-                padding: 34px 18px;
             }
-            .academy-hero p {
-                font-size: 18px;
+            .tv-hero {
+                min-height: auto;
             }
-            .academy-cta {
-                width: auto;
-                min-width: 190px;
-                min-height: 54px;
-                font-size: 19px;
+            .tv-orbit {
+                min-height: 380px;
             }
-            .academy-visual {
+            .tv-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 520px) {
+            .tv-stats {
+                grid-template-columns: 1fr;
+            }
+            .tv-actions .button {
+                width: 100%;
+            }
+            .floating-chip {
+                position: static;
+                margin: 8px;
+            }
+            .tv-orbit {
+                display: block;
+                min-height: auto;
+            }
+            .tv-orbit-card {
                 min-height: 320px;
             }
         }
     </style>
 
-    <section class="hero academy-hero">
-        <div>
-            <h1>{{ $settings['hero_title'] ?? 'Bangun Karirmu sebagai Cyber Security Profesional' }}</h1>
-            <p>
-                {{ $settings['hero_subtitle'] ?? 'Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang berpengalaman di Industri sampai Bisa!' }}
-            </p>
-            <a class="button academy-cta" href="#program">{{ $settings['hero_cta_label'] ?? 'Belajar Sekarang' }}</a>
-        </div>
-        <div class="academy-visual" aria-hidden="true">
-            <div class="academy-visual-frame"></div>
-        </div>
-    </section>
-
-    <main class="main">
-        <section class="grid metrics" id="tentang">
-            <div class="metric course-icon"><span>Course Aktif</span><strong>{{ $metrics['courses'] }}</strong></div>
-            <div class="metric users-icon"><span>Peserta</span><strong>{{ $metrics['participants'] }}</strong></div>
-            <div class="metric format-icon"><span>Format Belajar</span><strong>4+</strong></div>
-            <div class="metric help-icon"><span>Bantuan</span><strong>CS</strong></div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div>
-                    <span class="eyebrow">{{ $settings['intro_eyebrow'] ?? 'Kenapa TECHVERSE Learning' }}</span>
-                    <h2>{{ $settings['intro_title'] ?? 'Cyber Learning yang Terarah' }}</h2>
+    <div class="tv-home">
+        <section class="tv-hero" id="home">
+            <div>
+                <span class="tv-badge">Free Learning Platform</span>
+                <h1>Welcome to {{ $settings['site_name'] ?? 'TechVerse' }} <span>Make Learning Easy & Fun</span></h1>
+                <p>
+                    Platform belajar cyber security dan teknologi yang membantu peserta belajar, praktik,
+                    memilih roadmap, dan membangun karier digital dengan materi terarah.
+                </p>
+                <div class="tv-actions">
+                    <a class="button tv-button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
+                    <a class="button tv-button secondary" href="#program">Explore Courses</a>
+                </div>
+                <div class="tv-stats">
+                    <div class="tv-stat"><strong>{{ $metrics['courses'] }}+</strong><span>Courses</span></div>
+                    <div class="tv-stat"><strong>{{ $courses->sum(fn ($course) => $course->modules->count()) }}+</strong><span>Modules</span></div>
+                    <div class="tv-stat"><strong>{{ $courses->sum(fn ($course) => $course->modules->sum(fn ($module) => $module->lessons->count())) }}+</strong><span>Lessons</span></div>
+                    <div class="tv-stat"><strong>CS</strong><span>Admin Support</span></div>
                 </div>
             </div>
-            <div class="grid courses">
-                <article class="card">
-                    <h3>Learning path bertahap</h3>
-                    <p>Peserta mulai dari konsep keamanan, jaringan, Linux, web security, lalu masuk ke praktik tools dan reporting.</p>
-                    <a class="button" href="#program">Lihat Modul</a>
-                </article>
-                <article class="card">
-                    <h3>Dashboard belajar aman</h3>
-                    <p>Setelah login, peserta bisa melihat course aktif, lesson, progress, dan modul berikutnya dengan tampilan ringkas.</p>
-                    <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
-                </article>
-                <article class="card">
-                    <h3>Update materi dan support</h3>
-                    <p>Pengumuman admin membantu peserta mengikuti update tools, materi praktik, dan jadwal pendampingan.</p>
-                    <a class="button" href="#kontak">Kontak Bantuan</a>
-                </article>
-                <article class="card">
-                    <h3>Akses peserta resmi</h3>
-                    <p>Login hanya untuk user terdaftar sehingga akses kelas cyber security tetap terkontrol oleh admin LMS.</p>
-                    <a class="button" href="{{ route('login') }}">Login Peserta</a>
-                </article>
+            <div class="tv-orbit" aria-hidden="true">
+                <div class="tv-orbit-card"></div>
+                <div class="floating-chip chip-one">Courses</div>
+                <div class="floating-chip chip-two">Tools</div>
+                <div class="floating-chip chip-three">Cyber Lab</div>
             </div>
         </section>
 
-        <section class="section" id="program">
-            <div class="section-head">
-                <div>
-                    <span class="eyebrow">Program Belajar</span>
-                    <h2>Pilih Modul Sesuai Kebutuhan</h2>
-                </div>
-                <a class="button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
+        <section class="tv-section">
+            <div class="tv-section-head">
+                <h2>Choose Your Path</h2>
+                <p>Pilih jalur belajar sesuai kebutuhan: mulai belajar, eksplor tools, atau masuk ke kelas premium.</p>
+            </div>
+            <div class="path-grid">
+                <article class="path-card">
+                    <div class="path-icon">L</div>
+                    <h3>Start Learning</h3>
+                    <p>Masuk ke materi, roadmap, modul cyber security, dan dashboard peserta.</p>
+                    <div class="tag-row"><span>Courses</span><span>Roadmap</span><span>Lessons</span></div>
+                    <a class="button" href="{{ $memberUrl }}">Begin Your Journey</a>
+                </article>
+                <article class="path-card">
+                    <div class="path-icon">T</div>
+                    <h3>Explore Tools</h3>
+                    <p>Temukan tools pendukung, resources, slide, PDF, video, dan workflow praktik.</p>
+                    <div class="tag-row"><span>PDF</span><span>Video</span><span>Resources</span></div>
+                    <a class="button" href="#program">Discover Resources</a>
+                </article>
+                <article class="path-card">
+                    <div class="path-icon">P</div>
+                    <h3>Premium Courses</h3>
+                    <p>Akses kelas berbayar, modul lanjutan, praktik tools, dan studi kasus.</p>
+                    <div class="tag-row"><span>Cyber Hacks</span><span>Practical</span><span>Support</span></div>
+                    <a class="button" href="{{ route('register') }}">Register</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="tv-section" id="tentang">
+            <div class="tv-section-head">
+                <h2>What is {{ $settings['site_name'] ?? 'TechVerse' }}?</h2>
+                <p>Learning hub untuk peserta yang ingin belajar cyber security dari basic hingga praktik.</p>
+            </div>
+            <div class="feature-grid">
+                <article class="feature-card"><strong>Comprehensive Learning</strong><p>Materi basic, intermediate, practical, PDF, video, dan resource tambahan.</p></article>
+                <article class="feature-card"><strong>Powerful Tools</strong><p>Tools list, workflow pentest, dan bahan pendukung untuk latihan mandiri.</p></article>
+                <article class="feature-card"><strong>Roadmap Terarah</strong><p>Peserta bisa mengikuti urutan modul dan melihat rekomendasi level berikutnya.</p></article>
+                <article class="feature-card"><strong>Quick References</strong><p>Slide, cheat sheet, link resource, dan materi ringkas untuk revisi cepat.</p></article>
+                <article class="feature-card"><strong>Student Benefits</strong><p>Akun peserta, akses kelas, progress belajar, dan bantuan admin dalam satu LMS.</p></article>
+                <article class="feature-card"><strong>Community Driven</strong><p>Forum diskusi Telegram, WhatsApp, dan Discord untuk tanya jawab belajar.</p></article>
+            </div>
+        </section>
+
+        <section class="tv-section" id="program">
+            <div class="tv-section-head">
+                <h2>Programming & Cyber Courses</h2>
+                <p>Pilih paket kelas, daftar, lalu lanjut ke pembayaran dan aktivasi akses peserta.</p>
             </div>
             <div class="grid courses">
                 @forelse($courses as $course)
-                    <article class="card">
+                    <article class="card program-card">
                         <span class="eyebrow">{{ $course->level }} / {{ ucfirst($course->status) }}</span>
                         <h3>{{ $course->title }}</h3>
                         <p>{{ $course->summary }}</p>
@@ -169,57 +378,27 @@
                             <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
                             <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
                         </div>
-                        <a class="button" href="{{ route('purchase.create', $course) }}">Beli Paket</a>
+                        <a class="button" href="{{ route('purchase.create', $course) }}">Order Paket</a>
                     </article>
                 @empty
-                    <div class="card">
+                    <article class="card">
                         <h3>Program segera tersedia</h3>
                         <p>Admin LMS akan menambahkan program belajar yang bisa diakses peserta terdaftar.</p>
                         <a class="button" href="{{ route('admin.login') }}">Login Admin</a>
-                    </div>
+                    </article>
                 @endforelse
             </div>
         </section>
 
-        <section class="section grid split">
-            <div>
-                <div class="section-head">
-                    <div>
-                        <span class="eyebrow">Alur Peserta</span>
-                        <h2>Cara Mulai Belajar</h2>
-                    </div>
-                </div>
-                <div class="list">
-                    <div class="list-row">
-                        <strong>1. Login sebagai peserta</strong>
-                        <span class="muted">Gunakan email dan password resmi yang dibuat oleh admin.</span>
-                    </div>
-                    <div class="list-row">
-                        <strong>2. Buka Beranda Belajar</strong>
-                        <span class="muted">Lihat course aktif, progress belajar, dan pengumuman admin.</span>
-                    </div>
-                    <div class="list-row">
-                        <strong>3. Lanjutkan modul</strong>
-                        <span class="muted">Mulai dari lesson pertama dan ikuti arahan belajar secara bertahap.</span>
-                    </div>
-                </div>
-            </div>
-            <div id="kontak">
-                <div class="section-head">
-                    <div>
-                        <span class="eyebrow">Bantuan</span>
-                        <h2>Kontak Admin</h2>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>Butuh akses atau kendala login?</h3>
-                    <p>Hubungi admin untuk verifikasi akun, reset password, atau pengecekan course yang belum muncul.</p>
-                    <div class="meta">
-                        <a class="button" href="{{ $contactUrl }}" target="_blank" rel="noopener">WhatsApp Admin</a>
-                        <a class="button" style="background:var(--night)" href="mailto:{{ $settings['contact_email'] ?? 'admin@techverselearning.test' }}">Email Admin</a>
-                    </div>
+        <section class="tv-section" id="kontak">
+            <div class="tv-section-head">
+                <h2>Need Help?</h2>
+                <p>Hubungi admin untuk akses akun, pembayaran, reset password, atau kendala kelas.</p>
+                <div class="tv-actions" style="justify-content:center">
+                    <a class="button tv-button" href="{{ $contactUrl }}" target="_blank" rel="noopener">WhatsApp Admin</a>
+                    <a class="button tv-button secondary" href="mailto:{{ $settings['contact_email'] ?? 'admin@techverselearning.test' }}">Email Admin</a>
                 </div>
             </div>
         </section>
-    </main>
+    </div>
 @endsection
