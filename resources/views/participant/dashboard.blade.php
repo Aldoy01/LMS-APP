@@ -237,11 +237,11 @@
         .hero-course-button {
             color: #ffffff;
             background:
-                linear-gradient(135deg, #42c8ec 0%, #1f75bb 48%, #5c22a8 100%);
+                linear-gradient(135deg, #2f7bff 0%, #4b3db8 46%, #7d16b8 100%);
             border: 1px solid rgba(255, 255, 255, .28);
             box-shadow:
-                0 14px 0 rgba(13, 46, 136, .28),
-                0 22px 34px rgba(16, 85, 245, .3),
+                0 14px 0 rgba(62, 22, 126, .32),
+                0 22px 34px rgba(95, 34, 168, .32),
                 inset 0 1px 0 rgba(255, 255, 255, .3);
             transform: translateY(0);
             transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
@@ -251,8 +251,8 @@
             filter: brightness(1.06);
             transform: translateY(-2px);
             box-shadow:
-                0 16px 0 rgba(13, 46, 136, .25),
-                0 26px 42px rgba(92, 34, 168, .28),
+                0 16px 0 rgba(62, 22, 126, .28),
+                0 26px 42px rgba(125, 22, 184, .34),
                 inset 0 1px 0 rgba(255, 255, 255, .34);
         }
         .member-section {
