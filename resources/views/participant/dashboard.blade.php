@@ -224,7 +224,7 @@
         }
         .member-hero h1 {
             margin: 0 0 14px;
-            font-size: clamp(30px, 3.6vw, 44px);
+            font-size: clamp(26px, 3vw, 36px);
             line-height: 1.12;
             letter-spacing: 0;
         }
@@ -232,6 +232,8 @@
             max-width: 560px;
             margin: 0 0 22px;
             color: rgba(255, 255, 255, .9);
+            font-size: 14px;
+            line-height: 1.6;
             text-align: left;
         }
         .hero-course-button {
@@ -263,7 +265,7 @@
         .member-section h2 {
             margin: 0 0 16px;
             color: #07164d;
-            font-size: 22px;
+            font-size: 18px;
         }
         .member-stats {
             display: grid;
@@ -334,7 +336,7 @@
         .stat-copy span {
             display: block;
             color: #4b587c;
-            font-size: clamp(13px, 1vw, 15px);
+            font-size: clamp(12px, .9vw, 13px);
             font-weight: 800;
             line-height: 1.25;
             overflow-wrap: anywhere;
@@ -343,7 +345,7 @@
             display: block;
             margin-top: 8px;
             color: #2f7bff;
-            font-size: clamp(24px, 2.4vw, 34px);
+            font-size: clamp(20px, 1.8vw, 26px);
             line-height: 1.04;
             letter-spacing: 0;
             overflow-wrap: anywhere;
@@ -363,10 +365,12 @@
         .access-card h3 {
             margin: 6px 0 8px;
             color: #07164d;
+            font-size: 17px;
         }
         .access-card p {
             margin: 0;
             color: #4b587c;
+            font-size: 14px;
             text-align: left;
         }
         .progress-track {
@@ -398,12 +402,13 @@
         .module-row strong {
             display: block;
             color: #07164d;
+            font-size: 14px;
         }
         .module-row p {
             margin: 4px 0 0;
             color: #4b587c;
             text-align: left;
-            font-size: 14px;
+            font-size: 13px;
         }
         .announcement-grid {
             display: grid;
@@ -418,10 +423,12 @@
         }
         .announcement-card strong {
             color: #07164d;
+            font-size: 14px;
         }
         .announcement-card p {
             margin: 6px 0 0;
             color: #4b587c;
+            font-size: 13px;
             text-align: left;
         }
         .dashboard-headline {
@@ -455,13 +462,14 @@
         .dashboard-headline h1 {
             margin: 0;
             color: #07164d;
-            font-size: clamp(28px, 3.5vw, 44px);
+            font-size: clamp(24px, 2.8vw, 34px);
             line-height: 1.12;
         }
         .dashboard-headline p {
             max-width: 760px;
             margin: 12px 0 0;
             color: #4b587c;
+            font-size: 14px;
             text-align: left;
             line-height: 1.65;
         }
@@ -521,40 +529,91 @@
         }
         .class-access-shell {
             display: grid;
-            grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, minmax(240px, 1fr));
+            gap: 16px;
             align-items: start;
         }
         .class-hero-card {
+            position: relative;
             min-height: 100%;
-            padding: 22px;
+            padding: 42px 18px 18px;
             border: 1px solid rgba(47, 123, 255, .14);
-            border-radius: 22px;
+            border-radius: 12px;
             color: #ffffff;
             background:
-                radial-gradient(circle at 84% 18%, rgba(0, 212, 255, .28), transparent 12rem),
-                linear-gradient(145deg, #07164d 0%, #3157dc 58%, #00a6ff 100%);
-            box-shadow: 0 20px 46px rgba(16, 85, 245, .14);
+                radial-gradient(circle at 88% 16%, rgba(0, 212, 255, .2), transparent 11rem),
+                linear-gradient(135deg, #162282 0%, #3157dc 52%, #12b7ff 100%);
+            box-shadow: 0 16px 34px rgba(16, 85, 245, .14);
+            overflow: hidden;
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+        .class-hero-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 22px 42px rgba(16, 85, 245, .2);
+        }
+        .class-hero-card .status-pill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-width: 108px;
+            min-height: 30px;
+            border-radius: 0 0 2px 0;
+            color: #07164d;
+            background: #cfe7bf;
+            border: 0;
+            font-size: 11px;
+        }
+        .class-hero-card .status-pill.in-progress {
+            color: #07164d;
+            background: #aeb9c8;
+        }
+        .class-hero-card .status-pill.not-started {
+            color: #07164d;
+            background: #b7b7b7;
         }
         .class-hero-card h3 {
-            margin: 12px 0 10px;
-            font-size: clamp(26px, 3vw, 42px);
-            line-height: 1.12;
+            margin: 0 0 10px;
+            font-size: 15px;
+            line-height: 1.2;
         }
         .class-hero-card p {
             color: rgba(255, 255, 255, .88);
+            font-size: 11px;
             text-align: left;
-            line-height: 1.65;
+            line-height: 1.55;
+        }
+        .class-hero-card .meta {
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .class-hero-card .badge {
+            color: rgba(255, 255, 255, .78);
+            background: rgba(7, 22, 77, .18);
+            border-color: rgba(255, 255, 255, .12);
+            font-size: 10px;
+        }
+        .class-hero-card .progress-track {
+            height: 7px;
+            margin-top: 14px;
+            background: rgba(255, 255, 255, .82);
+        }
+        .class-hero-card .progress-fill {
+            background: linear-gradient(90deg, #42c8ec, #7d16b8);
         }
         .checkout-note {
             margin-top: 18px;
-            padding: 13px;
+            padding: 10px;
             border: 1px solid rgba(255, 255, 255, .28);
-            border-radius: 14px;
+            border-radius: 10px;
             background: rgba(255, 255, 255, .12);
             color: rgba(255, 255, 255, .9);
-            font-size: 14px;
+            font-size: 10px;
             line-height: 1.55;
+        }
+        .class-card-link {
+            color: inherit;
+            display: block;
+            height: 100%;
         }
         .lesson-panel {
             display: grid;
@@ -570,7 +629,7 @@
         .module-access-card h3 {
             margin: 8px 0 8px;
             color: #07164d;
-            font-size: 20px;
+            font-size: 17px;
         }
         .lesson-access-list {
             display: grid;
@@ -590,6 +649,7 @@
         .lesson-access-row strong {
             display: block;
             color: #07164d;
+            font-size: 14px;
             line-height: 1.35;
         }
         .lesson-info {
@@ -623,9 +683,11 @@
         .discussion-panel h3 {
             margin: 0 0 8px;
             color: #07164d;
+            font-size: 17px;
         }
         .discussion-panel p {
             color: #4b587c;
+            font-size: 14px;
             text-align: left;
         }
         .discussion-links {
@@ -671,6 +733,7 @@
             color: #ffffff;
             text-align: center;
             font-weight: 900;
+            font-size: 13px;
             line-height: 1.18;
         }
         .product-badge {
@@ -694,13 +757,13 @@
         }
         .product-price {
             color: #22c55e;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 900;
         }
         .product-title {
             min-height: 40px;
             color: #4b587c;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
             line-height: 1.35;
         }
@@ -714,7 +777,7 @@
             min-height: 38px;
             padding: 8px 10px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             box-shadow: none;
             text-shadow: none;
         }
@@ -965,69 +1028,36 @@
             <section class="member-section" id="kelas-dipilih">
                 <h2>Akses Kelas</h2>
                 @if($firstEnrollment && $firstCourse)
-                    @php
-                        $activeCourse = $firstCourse;
-                        $activeLessonCount = $activeCourse->modules->sum(fn ($module) => $module->lessons->count());
-                        $activeDuration = $activeCourse->modules->sum(fn ($module) => $module->duration_minutes);
-                        $activeCompleted = $firstEnrollment->progress->where('progress_percent', 100)->count();
-                        $activeProgress = $activeLessonCount > 0 ? round(($activeCompleted / $activeLessonCount) * 100) : 0;
-                    @endphp
                     <div class="class-access-shell">
-                        <article class="class-hero-card">
-                            <span class="status-pill {{ $activeProgress >= 100 ? 'done' : ($activeProgress > 0 ? 'in-progress' : '') }}">
-                                {{ $activeProgress >= 100 ? 'Selesai' : ($activeProgress > 0 ? 'Berlangsung' : 'Belum mulai') }}
-                            </span>
-                            <h3>{{ $activeCourse->title }}</h3>
-                            <p>{{ $activeCourse->summary }}</p>
-                            <div class="meta">
-                                <span class="badge">{{ $activeCourse->modules->count() }} modul</span>
-                                <span class="badge">{{ $activeLessonCount }} lesson</span>
-                                <span class="badge">{{ $activeDuration }} menit</span>
-                                <span class="badge">{{ $activeProgress }}% selesai</span>
-                            </div>
-                            <div class="progress-track"><div class="progress-fill" style="width:{{ $activeProgress }}%"></div></div>
-                            <div class="checkout-note">
-                                Checkout manual: akses kelas aktif setelah pembayaran diverifikasi admin. Jika lesson belum terbuka,
-                                hubungi admin melalui menu bantuan.
-                            </div>
-                        </article>
-
-                        <div class="lesson-panel">
-                            @foreach($activeCourse->modules as $module)
-                                <article class="module-access-card">
-                                    <span class="badge">Modul {{ $module->sort_order }} / {{ $module->category }}</span>
-                                    <h3>{{ $module->title }}</h3>
-                                    <p>{{ $module->summary }}</p>
-                                    <div class="lesson-access-list">
-                                        @forelse($module->lessons as $lesson)
-                                            @php
-                                                $materialCount = $lesson->materials->count();
-                                                $slideCount = $lesson->materials->whereIn('type', ['slide', 'slides', 'pdf_slide'])->count();
-                                                $readingCount = max($materialCount, $slideCount);
-                                            @endphp
-                                            <article class="lesson-access-row">
-                                                <div>
-                                                    <strong>Lesson {{ $lesson->sort_order }}: {{ $lesson->title }}</strong>
-                                                    <div class="lesson-info">
-                                                        <span>{{ $readingCount ?: 12 }} {{ $slideCount > 0 ? 'Slide' : 'Halaman' }}</span>
-                                                        <span>Video {{ $lesson->duration_minutes ?: 28 }} Menit</span>
-                                                        <span>Quiz</span>
-                                                    </div>
-                                                </div>
-                                                <a class="button" href="{{ route('lms.lessons.show', [$activeCourse, $lesson]) }}">Buka Lesson</a>
-                                            </article>
-                                        @empty
-                                            <article class="lesson-access-row">
-                                                <div>
-                                                    <strong>Lesson belum tersedia</strong>
-                                                    <div class="lesson-info"><span>Admin sedang menyiapkan materi</span></div>
-                                                </div>
-                                            </article>
-                                        @endforelse
+                        @foreach($enrollments as $enrollment)
+                            @php
+                                $activeCourse = $enrollment->course;
+                                $activeLessonCount = $activeCourse->modules->sum(fn ($module) => $module->lessons->count());
+                                $activeDuration = $activeCourse->modules->sum(fn ($module) => $module->duration_minutes);
+                                $activeCompleted = $enrollment->progress->where('progress_percent', 100)->count();
+                                $activeProgress = $activeLessonCount > 0 ? round(($activeCompleted / $activeLessonCount) * 100) : 0;
+                                $statusClass = $activeProgress >= 100 ? 'done' : ($activeProgress > 0 ? 'in-progress' : 'not-started');
+                                $statusLabel = $activeProgress >= 100 ? 'Selesai' : ($activeProgress > 0 ? 'Berlangsung' : 'Belum mulai');
+                            @endphp
+                            <a class="class-card-link" href="{{ route('lms.courses.show', $activeCourse) }}">
+                                <article class="class-hero-card">
+                                    <span class="status-pill {{ $statusClass }}">{{ $statusLabel }}</span>
+                                    <h3>{{ $activeCourse->title }}</h3>
+                                    <p>{{ $activeCourse->summary }}</p>
+                                    <div class="meta">
+                                        <span class="badge">{{ $activeCourse->modules->count() }} modul</span>
+                                        <span class="badge">{{ $activeLessonCount }} lesson</span>
+                                        <span class="badge">{{ $activeDuration }} menit</span>
+                                        <span class="badge">{{ $activeProgress }}% selesai</span>
+                                    </div>
+                                    <div class="progress-track"><div class="progress-fill" style="width:{{ $activeProgress }}%"></div></div>
+                                    <div class="checkout-note">
+                                        Checkout manual: akses kelas aktif setelah pembayaran diverifikasi admin. Jika lesson belum terbuka,
+                                        hubungi admin melalui menu bantuan.
                                     </div>
                                 </article>
-                            @endforeach
-                        </div>
+                            </a>
+                        @endforeach
                     </div>
                 @else
                     <article class="access-card">
