@@ -1165,18 +1165,17 @@
                             </div>
                             <div class="product-body">
                                 <div class="product-title">{{ $course->title }}</div>
+                                <div class="product-price">Rp. {{ number_format($course->price, 0, ',', '.') }}</div>
                                 <div class="product-chips">
                                     <span class="product-chip">{{ $moduleCount }} Modul</span>
                                     <span class="product-chip">{{ $lessonCount }} Lesson</span>
                                     <span class="product-chip">Lab Practice</span>
                                     <span class="product-chip">Quiz</span>
                                 </div>
-                                <div class="product-price">Rp. {{ number_format($course->price, 0, ',', '.') }}</div>
                                 <div class="product-actions">
-                                    <a class="button button-sales" href="{{ route('lms.dashboard') }}#program">Sales Page</a>
                                     <form method="POST" action="{{ route('purchase.order', $course) }}">
                                         @csrf
-                                        <button class="button button-order" type="submit">Order Paket</button>
+                                        <button class="button button-order" type="submit">Order</button>
                                     </form>
                                 </div>
                             </div>
