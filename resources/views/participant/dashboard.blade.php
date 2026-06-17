@@ -153,6 +153,17 @@
             color: #3157dc;
             background: rgba(47, 123, 255, .08);
         }
+        .sidebar-logout {
+            margin: 0;
+        }
+        .sidebar-logout button {
+            width: 100%;
+            border: 0;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            background: transparent;
+        }
         .sidebar-icon {
             width: 20px;
             height: 20px;
@@ -913,22 +924,20 @@
             <div class="sidebar-group">
                 <p class="sidebar-title">Overview</p>
                 <a class="sidebar-link active" href="#dashboard"><span class="sidebar-icon">DH</span> Dashboard</a>
-                <a class="sidebar-link" href="#data-belajar"><span class="sidebar-icon">DB</span> Data Belajar</a>
-                <a class="sidebar-link" href="#kelas-dipilih"><span class="sidebar-icon">KD</span> Kelas Dipilih</a>
-                <a class="sidebar-link" href="#rekomendasi"><span class="sidebar-icon">RM</span> Rekomendasi</a>
+                <a class="sidebar-link" href="#rekomendasi"><span class="sidebar-icon">OC</span> Other Course</a>
+                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">WB</span> Webinar</a>
+                <a class="sidebar-link" href="#grup-diskusi"><span class="sidebar-icon">GD</span> Group Discussion</a>
             </div>
 
             <div class="sidebar-group">
-                <p class="sidebar-title">LMS</p>
-                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">PT</span> Produk Terbaru</a>
-                <a class="sidebar-link" href="#grup-diskusi"><span class="sidebar-icon">GD</span> Grup Diskusi</a>
-                <a class="sidebar-link" href="#profil"><span class="sidebar-icon">PF</span> Profil</a>
-            </div>
-
-            <div class="sidebar-group">
-                <p class="sidebar-title">Support</p>
-                <a class="sidebar-link" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener"><span class="sidebar-icon">WA</span> WhatsApp</a>
-                <a class="sidebar-link" href="{{ $support['email'] }}"><span class="sidebar-icon">@</span> Email Admin</a>
+                <p class="sidebar-title">My Account</p>
+                <a class="sidebar-link" href="#profil"><span class="sidebar-icon">PF</span> Profile</a>
+                <a class="sidebar-link" href="#kelas-dipilih"><span class="sidebar-icon">MC</span> My Course</a>
+                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">MO</span> My Order</a>
+                <form class="sidebar-logout" method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="sidebar-link" type="submit"><span class="sidebar-icon">LO</span> Log out</button>
+                </form>
             </div>
         </aside>
 
