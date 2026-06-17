@@ -787,10 +787,31 @@
             font-weight: 800;
             line-height: 1.35;
         }
+        .product-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .product-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 5px 8px;
+            border-radius: 999px;
+            color: #3157dc;
+            background: rgba(47, 123, 255, .08);
+            border: 1px solid rgba(47, 123, 255, .12);
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1;
+        }
         .product-actions {
             display: grid;
             gap: 10px;
             margin-top: auto;
+        }
+        .product-actions form {
+            margin: 0;
         }
         .product-actions .button {
             width: 100%;
@@ -936,11 +957,11 @@
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4z"/><path d="M14 20h6V4h-6z"/><path d="M4 20h6v-3H4z"/></svg></span>
                     Dashboard
                 </a>
-                <a class="sidebar-link" href="#rekomendasi">
+                <a class="sidebar-link" href="#rekomendasi-modul">
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H7a3 3 0 0 0-3 3z"/><path d="M8 8h8"/><path d="M8 12h6"/></svg></span>
                     Other Course
                 </a>
-                <a class="sidebar-link" href="#produk-terbaru">
+                <a class="sidebar-link" href="#rekomendasi-modul">
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="m10 9 5 2-5 2z" fill="currentColor" stroke="none"/><path d="M8 21h8"/></svg></span>
                     Webinar
                 </a>
@@ -960,7 +981,7 @@
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M8 4v13a3 3 0 0 0 3 3"/><path d="M9 8h6"/><path d="M9 12h5"/></svg></span>
                     My Course
                 </a>
-                <a class="sidebar-link" href="#produk-terbaru">
+                <a class="sidebar-link" href="#rekomendasi-modul">
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h15l-2 8H8z"/><path d="M6 7 5 4H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></span>
                     My Order
                 </a>
@@ -1123,34 +1144,14 @@
                 @endif
             </section>
 
-            <section class="member-section" id="rekomendasi">
-                <h2>Roadmap Level Berikutnya</h2>
-                <div class="course-access-grid">
-                    @forelse($recommendedCourses as $course)
-                        <article class="access-card locked-card">
-                            <span class="badge">{{ $course->level }}</span>
-                            <h3>{{ $course->title }}</h3>
-                            <p>{{ $course->summary }}</p>
-                            <div class="meta">
-                                <span class="badge">{{ $course->modules->count() }} modul</span>
-                                <span class="badge">{{ $course->modules->sum(fn ($module) => $module->lessons->count()) }} lesson</span>
-                                <span class="badge">Rp{{ number_format($course->price, 0, ',', '.') }}</span>
-                            </div>
-                            <a class="button" href="{{ route('purchase.create', $course) }}">Buka Akses Level Ini</a>
-                        </article>
-                    @empty
-                        <article class="access-card">
-                            <h3>Rekomendasi segera tersedia</h3>
-                            <p>Semua kelas yang tersedia sudah masuk akses Anda atau admin belum menerbitkan roadmap baru.</p>
-                        </article>
-                    @endforelse
-                </div>
-            </section>
-
-            <section class="member-section" id="produk-terbaru">
-                <h2>Produk Terbaru</h2>
+            <section class="member-section" id="rekomendasi-modul">
+                <h2>Rekomendasi Modul Pembelajaran</h2>
                 <div class="product-grid">
                     @forelse($latestCourses as $course)
+                        @php
+                            $moduleCount = $course->modules->count();
+                            $lessonCount = $course->modules->sum(fn ($module) => $module->lessons->count());
+                        @endphp
                         <article class="product-card">
                             <div class="product-cover">
                                 <span class="product-badge">Lifetime</span>
@@ -1163,11 +1164,20 @@
                                 @endif
                             </div>
                             <div class="product-body">
-                                <div class="product-price">Rp. {{ number_format($course->price, 0, ',', '.') }}</div>
                                 <div class="product-title">{{ $course->title }}</div>
+                                <div class="product-chips">
+                                    <span class="product-chip">{{ $moduleCount }} Modul</span>
+                                    <span class="product-chip">{{ $lessonCount }} Lesson</span>
+                                    <span class="product-chip">Lab Practice</span>
+                                    <span class="product-chip">Quiz</span>
+                                </div>
+                                <div class="product-price">Rp. {{ number_format($course->price, 0, ',', '.') }}</div>
                                 <div class="product-actions">
                                     <a class="button button-sales" href="{{ route('lms.dashboard') }}#program">Sales Page</a>
-                                    <a class="button button-order" href="{{ route('purchase.create', $course) }}">Order Paket</a>
+                                    <form method="POST" action="{{ route('purchase.order', $course) }}">
+                                        @csrf
+                                        <button class="button button-order" type="submit">Order Paket</button>
+                                    </form>
                                 </div>
                             </div>
                         </article>

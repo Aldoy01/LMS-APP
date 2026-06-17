@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -30,6 +31,40 @@ class PurchaseController extends Controller
         return view('purchase.create', [
             'course' => $course->load('modules.lessons'),
         ]);
+    }
+
+    public function order(Request $request, Course $course)
+    {
+        $order = Order::where('user_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->where('status', 'waiting_payment')
+            ->latest()
+            ->first();
+
+        if (! $order) {
+            $invoice = 'INV-LMS-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
+
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'course_id' => $course->id,
+                'invoice_number' => $invoice,
+                'subtotal' => $course->price,
+                'discount' => 0,
+                'total' => $course->price,
+                'status' => 'waiting_payment',
+            ]);
+
+            Payment::create([
+                'order_id' => $order->id,
+                'method' => 'manual_transfer',
+                'status' => 'waiting_confirmation',
+                'amount' => $order->total,
+            ]);
+        }
+
+        return redirect()
+            ->route('payments.show', $order->invoice_number)
+            ->with('status', 'Silakan lanjutkan pembayaran dan konfirmasi transfer.');
     }
 
     public function store(Request $request, Course $course)
