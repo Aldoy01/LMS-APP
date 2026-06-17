@@ -772,13 +772,14 @@
             display: flex;
             flex: 1;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             padding: 13px;
         }
         .product-price {
             color: #22c55e;
             font-size: 12px;
             font-weight: 900;
+            margin-top: -4px;
         }
         .product-title {
             min-height: 40px;
@@ -808,7 +809,7 @@
         .product-actions {
             display: grid;
             gap: 10px;
-            margin-top: auto;
+            margin-top: 8px;
         }
         .product-actions form {
             margin: 0;
