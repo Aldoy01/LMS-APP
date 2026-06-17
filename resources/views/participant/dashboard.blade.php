@@ -14,6 +14,10 @@
         $completedModules = $modules->where('progress', 100)->count();
         $totalVideoLessons = $enrollments->sum(fn ($enrollment) => optional($enrollment->course)->modules?->sum(fn ($module) => $module->lessons->where('content_type', 'video')->count()) ?? 0);
         $watchedVideos = $enrollments->sum(fn ($enrollment) => $enrollment->progress->filter(fn ($progress) => $progress->progress_percent === 100 && optional($progress->lesson)->content_type === 'video')->count());
+        $participantHeroImage = $siteSettings['participant_dashboard_image_url'] ?? '';
+        $participantHeroImageUrl = $participantHeroImage
+            ? (Str::startsWith($participantHeroImage, ['http://', 'https://']) ? $participantHeroImage : asset($participantHeroImage))
+            : '';
     @endphp
 
     <style>
@@ -209,6 +213,13 @@
         .rocket-illustration {
             width: min(360px, 100%);
             justify-self: center;
+            filter: drop-shadow(0 24px 28px rgba(16, 85, 245, .24));
+        }
+        .member-hero-image {
+            width: min(360px, 100%);
+            max-height: 260px;
+            justify-self: center;
+            object-fit: contain;
             filter: drop-shadow(0 24px 28px rgba(16, 85, 245, .24));
         }
         .member-hero h1 {
@@ -745,6 +756,10 @@
                 max-width: 260px;
                 order: -1;
             }
+            .member-hero-image {
+                max-width: 260px;
+                order: -1;
+            }
             .hero-copy {
                 max-width: none;
             }
@@ -835,21 +850,25 @@
                 </div>
 
                 <div class="member-hero">
-                    <svg class="rocket-illustration" viewBox="0 0 420 300" fill="none" aria-hidden="true">
-                        <path d="M106 244c26-4 51-17 73-39l39 39c-44 11-82 18-112 0z" fill="#3157DC"/>
-                        <path d="M70 248c29-10 51-23 67-40l39 39c-38 10-74 11-106 1z" fill="#FFB400"/>
-                        <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224L121 112z" fill="#FFFFFF"/>
-                        <path d="M142 133c48-46 107-71 176-76-5 69-30 128-76 176L142 133z" fill="#DCEBFF"/>
-                        <path d="M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52-5-73z" fill="#FFFFFF"/>
-                        <path d="M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88 73 5z" fill="#FFFFFF"/>
-                        <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52M121 112l136 137M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88" stroke="#3157DC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="263" cy="112" r="28" fill="#8CCBFF" stroke="#3157DC" stroke-width="10"/>
-                        <circle cx="173" cy="141" r="28" fill="#FFFFFF" stroke="#3157DC" stroke-width="8"/>
-                        <circle cx="162" cy="134" r="5" fill="#07164D"/>
-                        <circle cx="186" cy="134" r="5" fill="#07164D"/>
-                        <path d="M158 154c9 11 24 11 34 0" stroke="#07164D" stroke-width="6" stroke-linecap="round"/>
-                        <path d="M180 92v-36m-20 22 20-22 20 22" stroke="#3157DC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    @if($participantHeroImageUrl)
+                        <img class="member-hero-image" src="{{ $participantHeroImageUrl }}" alt="Ilustrasi dashboard peserta">
+                    @else
+                        <svg class="rocket-illustration" viewBox="0 0 420 300" fill="none" aria-hidden="true">
+                            <path d="M106 244c26-4 51-17 73-39l39 39c-44 11-82 18-112 0z" fill="#3157DC"/>
+                            <path d="M70 248c29-10 51-23 67-40l39 39c-38 10-74 11-106 1z" fill="#FFB400"/>
+                            <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224L121 112z" fill="#FFFFFF"/>
+                            <path d="M142 133c48-46 107-71 176-76-5 69-30 128-76 176L142 133z" fill="#DCEBFF"/>
+                            <path d="M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52-5-73z" fill="#FFFFFF"/>
+                            <path d="M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88 73 5z" fill="#FFFFFF"/>
+                            <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52M121 112l136 137M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88" stroke="#3157DC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="263" cy="112" r="28" fill="#8CCBFF" stroke="#3157DC" stroke-width="10"/>
+                            <circle cx="173" cy="141" r="28" fill="#FFFFFF" stroke="#3157DC" stroke-width="8"/>
+                            <circle cx="162" cy="134" r="5" fill="#07164D"/>
+                            <circle cx="186" cy="134" r="5" fill="#07164D"/>
+                            <path d="M158 154c9 11 24 11 34 0" stroke="#07164D" stroke-width="6" stroke-linecap="round"/>
+                            <path d="M180 92v-36m-20 22 20-22 20 22" stroke="#3157DC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    @endif
                     <div class="hero-copy">
                         <h1>Selamat Datang {{ $user->name }}</h1>
                         <p>

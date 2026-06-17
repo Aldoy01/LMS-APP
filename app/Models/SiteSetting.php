@@ -13,6 +13,7 @@ class SiteSetting extends Model
         'site_name' => 'Trama Verse',
         'logo_url' => '',
         'hero_image_url' => '',
+        'participant_dashboard_image_url' => '',
         'nav_home_label' => 'Home',
         'nav_program_label' => 'Program',
         'nav_contact_label' => 'Contact',

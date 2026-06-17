@@ -23,7 +23,7 @@
                 </div>
             @endif
 
-            <form class="card" method="POST" action="{{ route('admin.site-content.update') }}">
+            <form class="card" method="POST" action="{{ route('admin.site-content.update') }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -48,6 +48,25 @@
                         <span>URL Gambar Hero Opsional</span>
                         <input name="settings[hero_image_url]" value="{{ old('settings.hero_image_url', $settings['hero_image_url']) }}" placeholder="Kosongkan untuk gambar default">
                         @error('settings.hero_image_url') <small>{{ $message }}</small> @enderror
+                    </label>
+                    <label class="wide">
+                        <span>Upload Gambar Dashboard Peserta</span>
+                        <input type="file" name="participant_dashboard_image" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                        <small>Format JPG, PNG, WEBP, atau SVG. Maksimal 4MB. Gambar ini menggantikan roket di dashboard peserta.</small>
+                        @error('participant_dashboard_image') <small>{{ $message }}</small> @enderror
+                    </label>
+                    <label class="wide">
+                        <span>URL / Path Gambar Dashboard Peserta</span>
+                        <input name="settings[participant_dashboard_image_url]" value="{{ old('settings.participant_dashboard_image_url', $settings['participant_dashboard_image_url'] ?? '') }}" placeholder="Kosongkan untuk ilustrasi roket default">
+                        @error('settings.participant_dashboard_image_url') <small>{{ $message }}</small> @enderror
+                        @if(! empty($settings['participant_dashboard_image_url']))
+                            @php
+                                $dashboardImagePreview = Str::startsWith($settings['participant_dashboard_image_url'], ['http://', 'https://'])
+                                    ? $settings['participant_dashboard_image_url']
+                                    : asset($settings['participant_dashboard_image_url']);
+                            @endphp
+                            <img src="{{ $dashboardImagePreview }}" alt="Preview dashboard peserta" style="max-width:260px;margin-top:10px;border-radius:12px;border:1px solid rgba(47,123,255,.18)">
+                        @endif
                     </label>
                 </div>
 

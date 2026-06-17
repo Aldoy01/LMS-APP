@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SiteContentController extends Controller
 {
@@ -24,6 +25,8 @@ class SiteContentController extends Controller
             'settings.site_name' => ['required', 'string', 'max:120'],
             'settings.logo_url' => ['nullable', 'string', 'max:500'],
             'settings.hero_image_url' => ['nullable', 'string', 'max:500'],
+            'settings.participant_dashboard_image_url' => ['nullable', 'string', 'max:500'],
+            'participant_dashboard_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,svg', 'max:4096'],
             'settings.nav_home_label' => ['required', 'string', 'max:40'],
             'settings.nav_program_label' => ['required', 'string', 'max:40'],
             'settings.nav_contact_label' => ['required', 'string', 'max:40'],
@@ -41,6 +44,20 @@ class SiteContentController extends Controller
             'settings.accent_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'settings.home_background' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
+
+        if ($request->hasFile('participant_dashboard_image')) {
+            $file = $request->file('participant_dashboard_image');
+            $directory = public_path('uploads/site');
+
+            if (! is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            $filename = 'participant-dashboard-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($directory, $filename);
+
+            $data['settings']['participant_dashboard_image_url'] = 'uploads/site/' . $filename;
+        }
 
         SiteSetting::saveManySettings(array_intersect_key(
             $data['settings'],
