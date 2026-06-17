@@ -8,7 +8,7 @@
         $completedLessons = $enrollments->sum(fn ($enrollment) => $enrollment->progress->where('progress_percent', 100)->count());
         $overallProgress = $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0;
         $ctaUrl = $firstCourse ? route('lms.courses.show', $firstCourse) : route('lms.dashboard') . '#program';
-        $ctaLabel = $firstCourse ? 'Akses Kelas Saya' : 'Pilih Program';
+        $ctaLabel = $firstCourse ? 'My Course' : 'Pilih Program';
         $categoryCounts = $modules->groupBy('category')->map->count();
         $initials = collect(explode(' ', $user->name))->filter()->map(fn ($part) => mb_substr($part, 0, 1))->take(2)->join('');
         $completedModules = $modules->where('progress', 100)->count();
@@ -233,6 +233,27 @@
             margin: 0 0 22px;
             color: rgba(255, 255, 255, .9);
             text-align: left;
+        }
+        .hero-course-button {
+            color: #ffffff;
+            background:
+                linear-gradient(135deg, #42c8ec 0%, #1f75bb 48%, #5c22a8 100%);
+            border: 1px solid rgba(255, 255, 255, .28);
+            box-shadow:
+                0 14px 0 rgba(13, 46, 136, .28),
+                0 22px 34px rgba(16, 85, 245, .3),
+                inset 0 1px 0 rgba(255, 255, 255, .3);
+            transform: translateY(0);
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        }
+        .hero-course-button:hover {
+            color: #ffffff;
+            filter: brightness(1.06);
+            transform: translateY(-2px);
+            box-shadow:
+                0 16px 0 rgba(13, 46, 136, .25),
+                0 26px 42px rgba(92, 34, 168, .28),
+                inset 0 1px 0 rgba(255, 255, 255, .34);
         }
         .member-section {
             margin-top: 28px;
@@ -872,10 +893,10 @@
                     <div class="hero-copy">
                         <h1>Selamat Datang {{ $user->name }}</h1>
                         <p>
-                            Nikmati kemudahan akses seluruh kelas cyber security dalam satu dashboard.
-                            Lanjutkan modul, pantau progress, dan hubungi admin jika membutuhkan bantuan.
+                            Buka menu My Course untuk melihat kelas aktif, melanjutkan modul,
+                            memantau progress, dan menghubungi admin saat membutuhkan bantuan.
                         </p>
-                        <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
+                        <a class="button hero-course-button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
                     </div>
                 </div>
             </section>
