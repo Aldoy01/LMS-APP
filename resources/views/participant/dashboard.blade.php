@@ -301,21 +301,33 @@
             flex: 0 0 64px;
             display: grid;
             place-items: center;
-            border-radius: 999px;
+            border-radius: 22px;
             color: #ffffff;
-            font-size: 15px;
-            font-weight: 900;
-            letter-spacing: .03em;
-            line-height: 1;
-            text-align: center;
             box-shadow:
                 0 14px 26px rgba(16, 85, 245, .16),
                 inset 0 1px 0 rgba(255, 255, 255, .32);
         }
-        .stat-icon.blue { background: #2f7bff; }
-        .stat-icon.cyan { background: #22c9d7; }
-        .stat-icon.green { background: #22c55e; }
-        .stat-icon.yellow { background: #facc15; }
+        .stat-icon svg {
+            width: 34px;
+            height: 34px;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+        .stat-icon.blue {
+            background: linear-gradient(145deg, #42c8ec, #3157dc 58%, #4b3db8);
+        }
+        .stat-icon.cyan {
+            background: linear-gradient(145deg, #53e0d4, #25aee4 52%, #3157dc);
+        }
+        .stat-icon.green {
+            background: linear-gradient(145deg, #28d17c, #1facb8 52%, #3157dc);
+        }
+        .stat-icon.purple {
+            background: linear-gradient(145deg, #2f7bff, #4b3db8 52%, #7d16b8);
+        }
         .stat-copy {
             min-width: 0;
         }
@@ -905,19 +917,46 @@
                 <h2>Ringkasan Progress Peserta</h2>
                 <div class="member-stats">
                     <div class="member-stat">
-                        <span class="stat-icon yellow">CL</span>
+                        <span class="stat-icon purple" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5z"/>
+                                <path d="M7 11v4.2c0 1.4 2.2 2.8 5 2.8s5-1.4 5-2.8V11"/>
+                                <path d="M20 10v5"/>
+                            </svg>
+                        </span>
                         <div class="stat-copy"><span>Kelas Diikuti</span><strong>{{ $enrollments->count() }} kelas</strong></div>
                     </div>
                     <div class="member-stat">
-                        <span class="stat-icon cyan">MD</span>
+                        <span class="stat-icon cyan" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M7 4h7l4 4v12H7z"/>
+                                <path d="M14 4v4h4"/>
+                                <path d="M10 12h5"/>
+                                <path d="M10 16h4"/>
+                                <path d="M5 7v13"/>
+                            </svg>
+                        </span>
                         <div class="stat-copy"><span>Modul Dibaca</span><strong>{{ $completedModules }} dari {{ $modules->count() }}</strong></div>
                     </div>
                     <div class="member-stat">
-                        <span class="stat-icon blue">VD</span>
+                        <span class="stat-icon blue" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="3" y="5" width="18" height="13" rx="3"/>
+                                <path d="m10 9 5 3-5 3z" fill="currentColor" stroke="none"/>
+                                <path d="M8 21h8"/>
+                            </svg>
+                        </span>
                         <div class="stat-copy"><span>Video Ditonton</span><strong>{{ $watchedVideos }} dari {{ $totalVideoLessons }}</strong></div>
                     </div>
                     <div class="member-stat">
-                        <span class="stat-icon green">%</span>
+                        <span class="stat-icon green" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 19V5"/>
+                                <path d="M4 19h16"/>
+                                <path d="m7 15 4-4 3 3 5-7"/>
+                                <path d="M17 7h2v2"/>
+                            </svg>
+                        </span>
                         <div class="stat-copy"><span>Progress</span><strong>{{ $overallProgress }}%</strong></div>
                     </div>
                 </div>
