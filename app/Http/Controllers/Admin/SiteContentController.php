@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Throwable;
 
 class SiteContentController extends Controller
 {
@@ -46,17 +47,23 @@ class SiteContentController extends Controller
         ]);
 
         if ($request->hasFile('participant_dashboard_image')) {
-            $file = $request->file('participant_dashboard_image');
-            $directory = public_path('uploads/site');
+            try {
+                $file = $request->file('participant_dashboard_image');
+                $directory = storage_path('app/public/site');
 
-            if (! is_dir($directory)) {
-                mkdir($directory, 0755, true);
+                if (! is_dir($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                $filename = 'participant-dashboard-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($directory, $filename);
+
+                $data['settings']['participant_dashboard_image_url'] = 'site-media/' . $filename;
+            } catch (Throwable $exception) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['participant_dashboard_image' => 'Gambar gagal diupload. Coba gunakan file JPG/PNG/WEBP maksimal 4MB.']);
             }
-
-            $filename = 'participant-dashboard-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
-            $file->move($directory, $filename);
-
-            $data['settings']['participant_dashboard_image_url'] = 'uploads/site/' . $filename;
         }
 
         SiteSetting::saveManySettings(array_intersect_key(

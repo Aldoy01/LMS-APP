@@ -12,6 +12,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PaymentConfirmationController;
 use App\Http\Controllers\ParticipantDashboardController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SiteMediaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [LmsDashboardController::class, 'index'])->name('lms.dashboard');
+Route::get('/site-media/{filename}', [SiteMediaController::class, 'show'])->name('site-media.show');
 Route::get('/register', [PurchaseController::class, 'register'])->name('register');
 Route::get('/paket/{course:slug}/beli', [PurchaseController::class, 'create'])->name('purchase.create');
 Route::post('/paket/{course:slug}/beli', [PurchaseController::class, 'store'])->name('purchase.store');
