@@ -171,6 +171,15 @@
             place-items: center;
             color: #3157dc;
         }
+        .sidebar-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            stroke-width: 2.1;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
         .member-content {
             padding: 28px clamp(18px, 4vw, 44px) 48px;
             padding-top: 82px;
@@ -923,21 +932,57 @@
 
             <div class="sidebar-group">
                 <p class="sidebar-title">Overview</p>
-                <a class="sidebar-link active" href="#dashboard"><span class="sidebar-icon">DH</span> Dashboard</a>
-                <a class="sidebar-link" href="#rekomendasi"><span class="sidebar-icon">OC</span> Other Course</a>
-                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">WB</span> Webinar</a>
-                <a class="sidebar-link" href="#grup-diskusi"><span class="sidebar-icon">GD</span> Group Discussion</a>
+                <a class="sidebar-link active" href="#dashboard">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4z"/><path d="M14 20h6V4h-6z"/><path d="M4 20h6v-3H4z"/></svg></span>
+                    Dashboard
+                </a>
+                <a class="sidebar-link" href="#rekomendasi">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H7a3 3 0 0 0-3 3z"/><path d="M8 8h8"/><path d="M8 12h6"/></svg></span>
+                    Other Course
+                </a>
+                <a class="sidebar-link" href="#produk-terbaru">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="m10 9 5 2-5 2z" fill="currentColor" stroke="none"/><path d="M8 21h8"/></svg></span>
+                    Webinar
+                </a>
+                <a class="sidebar-link" href="#grup-diskusi">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 14a4 4 0 1 1 0-8"/><path d="M17 14a4 4 0 1 0 0-8"/><path d="M3 20a5 5 0 0 1 8 0"/><path d="M13 20a5 5 0 0 1 8 0"/></svg></span>
+                    Group Discussion
+                </a>
             </div>
 
             <div class="sidebar-group">
                 <p class="sidebar-title">My Account</p>
-                <a class="sidebar-link" href="#profil"><span class="sidebar-icon">PF</span> Profile</a>
-                <a class="sidebar-link" href="#kelas-dipilih"><span class="sidebar-icon">MC</span> My Course</a>
-                <a class="sidebar-link" href="#produk-terbaru"><span class="sidebar-icon">MO</span> My Order</a>
+                <a class="sidebar-link" href="#profil">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+                    Profile
+                </a>
+                <a class="sidebar-link" href="#kelas-dipilih">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M8 4v13a3 3 0 0 0 3 3"/><path d="M9 8h6"/><path d="M9 12h5"/></svg></span>
+                    My Course
+                </a>
+                <a class="sidebar-link" href="#produk-terbaru">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7h15l-2 8H8z"/><path d="M6 7 5 4H2"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg></span>
+                    My Order
+                </a>
                 <form class="sidebar-logout" method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class="sidebar-link" type="submit"><span class="sidebar-icon">LO</span> Log out</button>
+                    <button class="sidebar-link" type="submit">
+                        <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M14 4h4a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-4"/></svg></span>
+                        Log out
+                    </button>
                 </form>
+            </div>
+
+            <div class="sidebar-group">
+                <p class="sidebar-title">Support</p>
+                <a class="sidebar-link" href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20l1.4-4.2A8 8 0 1 1 8.2 18z"/><path d="M9 9.5c.4 2 2 3.6 4 4l1.4-1.4"/></svg></span>
+                    WhatsApp
+                </a>
+                <a class="sidebar-link" href="{{ $support['email'] }}">
+                    <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                    Email Admin
+                </a>
             </div>
         </aside>
 
