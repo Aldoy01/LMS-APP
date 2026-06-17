@@ -1,4 +1,4 @@
-@extends('layouts.lms', ['title' => 'TECHVERSE Learning'])
+@extends('layouts.lms', ['title' => 'Trama Verse'])
 
 @section('content')
     @php
@@ -131,7 +131,7 @@
             opacity: .9;
         }
         .tv-orbit-card::after {
-            content: "TECHVERSE";
+            content: "TRAMA VERSE";
             position: absolute;
             inset: 104px;
             display: grid;
@@ -414,7 +414,7 @@
         <section class="tv-hero" id="home">
             <div>
                 <span class="tv-badge">Free Learning Platform</span>
-                <h1>Welcome to {{ $settings['site_name'] ?? 'TechVerse' }} <span>Make Learning Easy & Fun</span></h1>
+                <h1>Welcome to {{ $settings['site_name'] ?? 'Trama Verse' }} <span>Make Learning Easy & Fun</span></h1>
                 <p>
                     Platform belajar cyber security dan teknologi yang membantu peserta belajar, praktik,
                     memilih roadmap, dan membangun karier digital dengan materi terarah.
@@ -479,7 +479,7 @@
 
         <section class="tv-section" id="tentang">
             <div class="tv-section-head">
-                <h2>What is {{ $settings['site_name'] ?? 'TechVerse' }}?</h2>
+                <h2>What is {{ $settings['site_name'] ?? 'Trama Verse' }}?</h2>
                 <p>Learning hub untuk peserta yang ingin belajar cyber security dari basic hingga praktik.</p>
             </div>
             <div class="feature-grid">
@@ -526,7 +526,7 @@
                 <p>Hubungi admin untuk akses akun, pembayaran, reset password, atau kendala kelas.</p>
                 <div class="tv-actions" style="justify-content:center">
                     <a class="button tv-button" href="{{ $contactUrl }}" target="_blank" rel="noopener">WhatsApp Admin</a>
-                    <a class="button tv-button secondary" href="mailto:{{ $settings['contact_email'] ?? 'admin@techverselearning.test' }}">Email Admin</a>
+                    <a class="button tv-button secondary" href="mailto:{{ $settings['contact_email'] ?? 'admin@tramaverse.test' }}">Email Admin</a>
                 </div>
             </div>
         </section>

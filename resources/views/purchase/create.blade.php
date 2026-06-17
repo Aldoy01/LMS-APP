@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="hero-panel">
-            <img class="hero-logo" src="{{ asset('images/techverse-color.png') }}" alt="TECHVERSE Learning">
+            <img class="hero-logo" src="{{ asset('images/trama-verse-logo.png') }}" alt="Trama Verse">
             <strong>Alur Pembelian</strong>
             <p style="margin:0;color:var(--hero-copy)">Registrasi akun, transfer pembayaran, konfirmasi pembayaran, lalu admin mengaktifkan akses kelas.</p>
         </div>

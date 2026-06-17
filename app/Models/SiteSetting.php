@@ -10,7 +10,7 @@ use Throwable;
 class SiteSetting extends Model
 {
     public const DEFAULTS = [
-        'site_name' => 'TECHVERSE Learning',
+        'site_name' => 'Trama Verse',
         'logo_url' => '',
         'hero_image_url' => '',
         'nav_home_label' => 'Home',
@@ -22,10 +22,10 @@ class SiteSetting extends Model
         'hero_subtitle' => 'Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang berpengalaman di Industri sampai Bisa!',
         'hero_cta_label' => 'Belajar Sekarang',
         'hero_visual_badge' => 'SQL  XSS  LAB',
-        'intro_eyebrow' => 'Kenapa TECHVERSE Learning',
+        'intro_eyebrow' => 'Kenapa Trama Verse',
         'intro_title' => 'Cyber Learning yang Terarah',
         'contact_whatsapp' => '08513332305',
-        'contact_email' => 'admin@techverselearning.test',
+        'contact_email' => 'admin@tramaverse.test',
         'primary_color' => '#3157dc',
         'accent_color' => '#00d4ff',
         'home_background' => '#f8fbff',

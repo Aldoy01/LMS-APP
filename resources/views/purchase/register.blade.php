@@ -1,4 +1,4 @@
-@extends('layouts.lms', ['title' => 'Register TECHVERSE Learning'])
+@extends('layouts.lms', ['title' => 'Register Trama Verse'])
 
 @section('content')
     <style>
@@ -77,7 +77,7 @@
             <div class="section-head">
                 <div>
                     <span class="eyebrow">Paket Kelas</span>
-                    <h2>Daftar Program TECHVERSE Learning</h2>
+                    <h2>Daftar Program Trama Verse</h2>
                 </div>
                 <a class="button" href="{{ route('login') }}">Sudah Punya Akun? Login</a>
             </div>

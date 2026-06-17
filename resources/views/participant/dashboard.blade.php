@@ -812,7 +812,7 @@
                 <div class="dashboard-headline">
                     <span class="headline-icon" aria-hidden="true">TL</span>
                     <div>
-                        <h1>Dashboard LMS TECHVERSE Learning</h1>
+                        <h1>Dashboard LMS Trama Verse</h1>
                         <p>
                             Selamat datang, {{ $user->name }}. Pantau kelas yang sudah dibeli,
                             cek progres belajar, lanjutkan modul aktif, dan temukan rekomendasi level berikutnya.
@@ -1052,7 +1052,7 @@
 
             <section class="dashboard-footer">
                 <p>
-                    TECHVERSE Learning LMS membantu peserta mengikuti roadmap cyber security secara bertahap:
+                    Trama Verse LMS membantu peserta mengikuti roadmap cyber security secara bertahap:
                     belajar, praktik, berdiskusi, lalu naik ke level berikutnya saat siap.
                 </p>
             </section>

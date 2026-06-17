@@ -32,7 +32,7 @@
                             <strong>Transfer Manual</strong>
                             <span class="muted">Bank: BCA / Mandiri Virtual Manual</span><br>
                             <span class="muted">No. Rekening: 1234567890</span><br>
-                            <span class="muted">Atas Nama: TECHVERSE Learning</span>
+                            <span class="muted">Atas Nama: Trama Verse</span>
                         </div>
                         <div class="list-row">
                             <strong>Catatan</strong>

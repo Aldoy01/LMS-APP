@@ -49,7 +49,7 @@ Catatan: karena project ini juga punya `Dockerfile`, Railway dapat memilih Docke
 Tambahkan variable berikut di service aplikasi:
 
 ```env
-APP_NAME="Techverse Learning LMS"
+APP_NAME="Trama Verse LMS"
 APP_ENV=production
 APP_DEBUG=false
 APP_KEY=base64:ISI_DENGAN_APP_KEY

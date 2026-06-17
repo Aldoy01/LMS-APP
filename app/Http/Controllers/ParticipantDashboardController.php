@@ -57,7 +57,7 @@ class ParticipantDashboardController extends Controller
         $settings = SiteSetting::publicSettings();
         $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
         $whatsappTarget = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
-        $email = $settings['contact_email'] ?? 'admin@techverselearning.test';
+        $email = $settings['contact_email'] ?? 'admin@tramaverse.test';
 
         return view('participant.dashboard', [
             'user' => Auth::user(),
@@ -69,7 +69,7 @@ class ParticipantDashboardController extends Controller
                 [
                     'name' => 'Telegram Community',
                     'description' => 'Diskusi cepat seputar roadmap, tugas modul, dan update kelas.',
-                    'url' => 'https://t.me/techverselearning',
+                    'url' => 'https://t.me/tramaverse',
                 ],
                 [
                     'name' => 'WhatsApp Group',
@@ -79,7 +79,7 @@ class ParticipantDashboardController extends Controller
                 [
                     'name' => 'Discord Lab Room',
                     'description' => 'Ruang tanya jawab praktik lab, tools, dan troubleshooting peserta.',
-                    'url' => 'https://discord.gg/techverselearning',
+                    'url' => 'https://discord.gg/tramaverse',
                 ],
             ],
             'announcements' => [

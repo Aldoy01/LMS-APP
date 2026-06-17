@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @php
         $settings = $siteSettings ?? \App\Models\SiteSetting::DEFAULTS;
-        $siteName = $settings['site_name'] ?? 'TECHVERSE Learning';
-        $logoUrl = $settings['logo_url'] ?: asset('images/techverse-color.png');
+        $siteName = $settings['site_name'] ?? 'Trama Verse';
+        $logoUrl = $settings['logo_url'] ?: asset('images/trama-verse-logo.png');
     @endphp
     <title>{{ $title ?? $siteName }}</title>
     <style>
@@ -561,7 +561,7 @@
     @yield('content')
 </div>
 <footer>
-    Techverse Learning LMS berbasis Laravel dan PostgreSQL. Dibangun dari blueprint implementasi Mei 2026.
+    Trama Verse LMS berbasis Laravel dan PostgreSQL. Dibangun dari blueprint implementasi Mei 2026.
 </footer>
 </body>
 </html>
