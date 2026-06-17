@@ -188,28 +188,34 @@
         }
         .member-hero {
             display: grid;
-            grid-template-columns: minmax(260px, .9fr) minmax(0, 1.1fr);
+            grid-template-columns: minmax(300px, .9fr) minmax(420px, 1.1fr);
             align-items: center;
-            gap: 18px;
+            gap: clamp(24px, 5vw, 64px);
             min-height: 280px;
-            padding: 28px 36px;
+            margin-top: 16px;
+            padding: clamp(28px, 4vw, 42px) clamp(26px, 5vw, 60px);
             border-radius: 12px;
             color: #ffffff;
             background:
-                radial-gradient(circle at 30% 38%, rgba(255,255,255,.28), transparent 18rem),
+                radial-gradient(circle at 28% 42%, rgba(255,255,255,.3), transparent 17rem),
+                radial-gradient(circle at 84% 16%, rgba(0, 212, 255, .18), transparent 13rem),
                 linear-gradient(105deg, #86c8ff 0%, #4ba1ff 44%, #2f7bff 100%);
             box-shadow: 0 22px 48px rgba(16, 85, 245, .18);
             overflow: hidden;
         }
+        .hero-copy {
+            max-width: 620px;
+        }
         .rocket-illustration {
-            width: min(340px, 100%);
+            width: min(360px, 100%);
             justify-self: center;
             filter: drop-shadow(0 24px 28px rgba(16, 85, 245, .24));
         }
         .member-hero h1 {
             margin: 0 0 14px;
-            font-size: clamp(26px, 3.4vw, 38px);
-            line-height: 1.2;
+            font-size: clamp(30px, 3.6vw, 44px);
+            line-height: 1.12;
+            letter-spacing: 0;
         }
         .member-hero p {
             max-width: 560px;
@@ -733,10 +739,18 @@
             .member-hero {
                 grid-template-columns: 1fr;
                 padding: 24px 18px;
+                text-align: center;
             }
             .rocket-illustration {
                 max-width: 260px;
                 order: -1;
+            }
+            .hero-copy {
+                max-width: none;
+            }
+            .member-hero p {
+                margin-inline: auto;
+                text-align: center;
             }
             .member-stats,
             .course-access-grid,
@@ -809,18 +823,6 @@
 
         <main class="member-content">
             <section id="dashboard">
-                <div class="dashboard-headline">
-                    <span class="headline-icon" aria-hidden="true">TL</span>
-                    <div>
-                        <h1>Dashboard LMS Trama Verse</h1>
-                        <p>
-                            Selamat datang, {{ $user->name }}. Pantau kelas yang sudah dibeli,
-                            cek progres belajar, lanjutkan modul aktif, dan temukan rekomendasi level berikutnya.
-                        </p>
-                    </div>
-                    <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
-                </div>
-
                 <div class="purchase-alert">
                     <svg class="purchase-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
                         <path d="M10 15h23v9a9 9 0 0 1-9 9h-5a9 9 0 0 1-9-9v-9z" fill="currentColor" opacity=".18"/>
@@ -829,6 +831,32 @@
                     <div>
                         <strong>{{ $firstCourse ? 'Akses kelas Anda sudah aktif.' : 'Belum ada akses kelas aktif.' }}</strong>
                         <a href="{{ $ctaUrl }}">{{ $firstCourse ? 'Klik di sini untuk melanjutkan produk pembelian' : 'Pilih program untuk memulai registrasi kelas' }}</a>
+                    </div>
+                </div>
+
+                <div class="member-hero">
+                    <svg class="rocket-illustration" viewBox="0 0 420 300" fill="none" aria-hidden="true">
+                        <path d="M106 244c26-4 51-17 73-39l39 39c-44 11-82 18-112 0z" fill="#3157DC"/>
+                        <path d="M70 248c29-10 51-23 67-40l39 39c-38 10-74 11-106 1z" fill="#FFB400"/>
+                        <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224L121 112z" fill="#FFFFFF"/>
+                        <path d="M142 133c48-46 107-71 176-76-5 69-30 128-76 176L142 133z" fill="#DCEBFF"/>
+                        <path d="M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52-5-73z" fill="#FFFFFF"/>
+                        <path d="M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88 73 5z" fill="#FFFFFF"/>
+                        <path d="M121 112c58-60 133-88 224-87-1 92-29 166-88 224M121 112 88 129c-30 16-48 47-49 81l-1 27 88-52M121 112l136 137M257 249 240 282c-16 30-47 48-81 49l-27 1 52-88" stroke="#3157DC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="263" cy="112" r="28" fill="#8CCBFF" stroke="#3157DC" stroke-width="10"/>
+                        <circle cx="173" cy="141" r="28" fill="#FFFFFF" stroke="#3157DC" stroke-width="8"/>
+                        <circle cx="162" cy="134" r="5" fill="#07164D"/>
+                        <circle cx="186" cy="134" r="5" fill="#07164D"/>
+                        <path d="M158 154c9 11 24 11 34 0" stroke="#07164D" stroke-width="6" stroke-linecap="round"/>
+                        <path d="M180 92v-36m-20 22 20-22 20 22" stroke="#3157DC" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="hero-copy">
+                        <h1>Selamat Datang {{ $user->name }}</h1>
+                        <p>
+                            Nikmati kemudahan akses seluruh kelas cyber security dalam satu dashboard.
+                            Lanjutkan modul, pantau progress, dan hubungi admin jika membutuhkan bantuan.
+                        </p>
+                        <a class="button" href="{{ $ctaUrl }}">{{ $ctaLabel }}</a>
                     </div>
                 </div>
             </section>
