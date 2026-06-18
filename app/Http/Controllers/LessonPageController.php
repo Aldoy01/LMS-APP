@@ -28,10 +28,18 @@ class LessonPageController extends Controller
         $progressPercent = $lessons->count() > 0
             ? (int) round(($completedLessons / $lessons->count()) * 100)
             : 0;
+        $lesson->load(['module', 'materials']);
+        $primaryMaterial = $lesson->materials->first(
+            fn ($material) => in_array($material->type, ['video-upload', 'video-embed', 'pdf', 'pdf-slide'], true)
+        );
 
         return view('lms.lesson', [
             'course' => $course,
-            'lesson' => $lesson->load(['module', 'materials']),
+            'lesson' => $lesson,
+            'primaryMaterial' => $primaryMaterial,
+            'embedUrl' => $primaryMaterial && $primaryMaterial->type === 'video-embed'
+                ? $this->embedUrl($primaryMaterial->url)
+                : null,
             'lessons' => $lessons,
             'progress' => $progress,
             'completedLessons' => $completedLessons,
@@ -94,5 +102,35 @@ class LessonPageController extends Controller
         }
 
         return $enrollment;
+    }
+
+    private function embedUrl(?string $url): ?string
+    {
+        if (! $url || ! filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        $parts = parse_url($url);
+        $host = preg_replace('/^www\./', '', strtolower($parts['host'] ?? ''));
+        $path = trim($parts['path'] ?? '', '/');
+        $videoId = null;
+
+        if ($host === 'youtu.be') {
+            $videoId = explode('/', $path)[0] ?? null;
+        } elseif (in_array($host, ['youtube.com', 'm.youtube.com', 'youtube-nocookie.com'], true)) {
+            parse_str($parts['query'] ?? '', $query);
+
+            if ($path === 'watch') {
+                $videoId = $query['v'] ?? null;
+            } elseif (preg_match('~^(?:embed|shorts|live)/([^/]+)~', $path, $matches)) {
+                $videoId = $matches[1];
+            }
+        }
+
+        if ($videoId && preg_match('/^[A-Za-z0-9_-]{6,20}$/', $videoId)) {
+            return 'https://www.youtube-nocookie.com/embed/' . $videoId . '?rel=0&modestbranding=1';
+        }
+
+        return $url;
     }
 }

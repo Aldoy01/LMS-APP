@@ -186,8 +186,9 @@
                                             <input type="file" name="file">
                                         </label>
                                         <label class="wide">
-                                            <span>Link Embed / Resource</span>
-                                            <input name="external_url" placeholder="https://youtube.com/embed/... atau https://drive.google.com/...">
+                                            <span>URL Video / Resource</span>
+                                            <input name="external_url" placeholder="Tempel URL YouTube biasa, youtu.be, shorts, embed, atau URL resource">
+                                            <small>Untuk Embed Video, URL YouTube diputar langsung di halaman pembahasan materi.</small>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:8px">
                                             <input type="checkbox" name="downloadable" value="1" style="width:auto">
@@ -225,8 +226,9 @@
                                                         <input type="file" name="file">
                                                     </label>
                                                     <label class="wide">
-                                                        <span>Ganti Link</span>
+                                                        <span>Ganti URL Video / Resource</span>
                                                         <input name="external_url" value="{{ filter_var($material->url, FILTER_VALIDATE_URL) ? $material->url : '' }}">
+                                                        <small>URL YouTube biasa otomatis menjadi player di dalam lesson.</small>
                                                     </label>
                                                     <label style="display:flex;align-items:center;gap:8px">
                                                         <input type="checkbox" name="downloadable" value="1" style="width:auto" @checked($material->downloadable)>

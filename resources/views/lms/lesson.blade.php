@@ -1,17 +1,6 @@
 @extends('layouts.lms', ['title' => $lesson->title])
 
 @section('content')
-@php
-    $primaryMaterial = $lesson->materials->first(fn ($material) => in_array($material->type, ['video-upload', 'video-embed', 'pdf', 'pdf-slide'], true));
-    $embedUrl = optional($primaryMaterial)->url;
-
-    if ($primaryMaterial && $primaryMaterial->type === 'video-embed' && $embedUrl) {
-        if (preg_match('~(?:youtube\.com/watch\?v=|youtu\.be/)([^&?/]+)~', $embedUrl, $matches)) {
-            $embedUrl = 'https://www.youtube.com/embed/' . $matches[1];
-        }
-    }
-@endphp
-
 <style>
     .topbar, .page-footer { display:none; }
     .classroom { min-height:100vh; display:grid; grid-template-columns:330px minmax(0,1fr); color:#172033; background:#f5f7fb; }
@@ -132,13 +121,6 @@
                 <div class="lesson-copy">
                     <h3>{{ optional($primaryMaterial)->title ?? $lesson->title }}</h3>
                     <p>{{ $lesson->summary ?: 'Pelajari materi ini sampai selesai, kemudian tandai pelajaran sebagai selesai untuk melanjutkan progres.' }}</p>
-                    @if($primaryMaterial && $primaryMaterial->type === 'video-embed' && filter_var($primaryMaterial->url, FILTER_VALIDATE_URL))
-                        <div class="resource-grid">
-                            <a class="resource-link" href="{{ $primaryMaterial->url }}" target="_blank" rel="noopener">
-                                <span>Buka video di sumber asli jika tidak tampil</span><span>↗</span>
-                            </a>
-                        </div>
-                    @endif
                     @php $resources = $lesson->materials->whereIn('type', ['tool', 'resource'])->values(); @endphp
                     @if($resources->isNotEmpty())
                         <div class="resource-grid">
