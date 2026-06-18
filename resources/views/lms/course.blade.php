@@ -36,7 +36,11 @@
     .curriculum-head h2 { margin:5px 0 0; color:#07164d; font-size:28px; }
     .curriculum-head p { margin:0; color:#64748b; }
     .module-card { margin-bottom:18px; overflow:hidden; border:1px solid rgba(47,123,255,.15); border-radius:18px; background:#fff; box-shadow:0 12px 30px rgba(16,85,245,.07); }
-    .module-head { display:flex; justify-content:space-between; gap:20px; padding:21px 22px; background:linear-gradient(90deg,#f4f8ff,#fff); }
+    .module-card summary { list-style:none; cursor:pointer; }
+    .module-card summary::-webkit-details-marker { display:none; }
+    .module-head { position:relative; display:flex; justify-content:space-between; gap:20px; padding:21px 58px 21px 22px; background:linear-gradient(90deg,#f4f8ff,#fff); }
+    .module-head::after { content:"›"; position:absolute; top:50%; right:24px; color:#087ee1; font-size:28px; font-weight:900; transform:translateY(-50%) rotate(90deg); transition:transform .2s ease; }
+    .module-card[open] .module-head::after { transform:translateY(-50%) rotate(-90deg); }
     .module-head small { color:#3157dc; font-size:11px; font-weight:900; letter-spacing:.07em; text-transform:uppercase; }
     .module-head h3 { margin:6px 0; color:#07164d; font-size:20px; }
     .module-head p { margin:0; color:#64748b; font-size:13px; }
@@ -103,8 +107,8 @@
         </div>
 
         @forelse($course->modules as $module)
-            <article class="module-card">
-                <header class="module-head">
+            <details class="module-card" data-access-module>
+                <summary class="module-head">
                     <div>
                         <small>{{ $module->category }} · Modul {{ $module->sort_order }} · {{ $module->duration_minutes ?? 0 }} Menit</small>
                         <h3>{{ $module->title }}</h3>
@@ -113,7 +117,7 @@
                     <span class="module-count">
                         {{ $module->lessons->filter(fn ($item) => optional($progress->get($item->id))->progress_percent === 100)->count() }}/{{ $module->lessons->count() }}
                     </span>
-                </header>
+                </summary>
 
                 @forelse($module->lessons as $lesson)
                     @php $isDone = optional($progress->get($lesson->id))->progress_percent === 100; @endphp
@@ -135,10 +139,24 @@
                 @empty
                     <div class="empty-course">Lesson pada modul ini sedang disiapkan.</div>
                 @endforelse
-            </article>
+            </details>
         @empty
             <div class="module-card empty-course">Modul kelas sedang disiapkan oleh admin.</div>
         @endforelse
     </section>
 </main>
+<script>
+    (function () {
+        const modules = Array.from(document.querySelectorAll('[data-access-module]'));
+
+        modules.forEach((module) => {
+            module.addEventListener('toggle', () => {
+                if (!module.open) return;
+                modules.forEach((otherModule) => {
+                    if (otherModule !== module) otherModule.open = false;
+                });
+            });
+        });
+    }());
+</script>
 @endsection

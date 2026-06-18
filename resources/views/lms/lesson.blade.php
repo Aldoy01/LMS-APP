@@ -9,10 +9,17 @@
     .class-brand a { display:inline-flex; align-items:center; gap:8px; margin-bottom:16px; font-size:12px; font-weight:800; opacity:.9; }
     .class-brand h2 { margin:0; font-size:18px; line-height:1.35; }
     .class-brand p { margin:7px 0 0; color:#dff4ff; font-size:12px; }
-    .module-block { border-bottom:1px solid #e5e9f0; }
-    .module-title { padding:16px 18px 10px; color:#087ee1; font-size:14px; font-weight:900; }
-    .module-meta { padding:0 18px 12px; color:#7b8aa4; font-size:11px; font-weight:700; }
-    .lesson-link { display:grid; grid-template-columns:22px 1fr auto; gap:9px; align-items:center; padding:12px 18px; border-top:1px solid #eef1f5; color:#46526a; font-size:13px; }
+    .module-block { border-bottom:1px solid #e5e9f0; background:#fff; }
+    .module-block summary { position:relative; display:block; padding:20px 46px 18px 22px; cursor:pointer; list-style:none; }
+    .module-block summary::-webkit-details-marker { display:none; }
+    .module-block summary::after { content:"›"; position:absolute; top:50%; right:22px; color:#087ee1; font-size:24px; font-weight:900; transform:translateY(-50%) rotate(90deg); transition:transform .2s ease; }
+    .module-block[open] summary { background:linear-gradient(90deg,#f5f9ff,#fff); }
+    .module-block[open] summary::after { transform:translateY(-50%) rotate(-90deg); }
+    .module-title { display:block; color:#087ee1; font-size:15px; font-weight:900; line-height:1.4; }
+    .module-meta { display:block; margin-top:9px; color:#7b8aa4; font-size:11px; font-weight:800; }
+    .module-lessons { overflow:hidden; border-top:1px solid #eef1f5; }
+    .lesson-link { display:grid; grid-template-columns:22px 1fr auto; gap:9px; align-items:center; min-height:66px; padding:12px 22px; border-top:1px solid #eef1f5; color:#46526a; font-size:13px; }
+    .module-lessons .lesson-link:first-child { border-top:0; }
     .lesson-link:hover { color:#087ee1; background:#f4faff; }
     .lesson-link.active { color:#087ee1; background:#e9f6ff; font-weight:900; box-shadow:inset 4px 0 #0798ec; }
     .lesson-state { width:18px; height:18px; display:grid; place-items:center; border:2px solid #91cdef; border-radius:50%; color:#fff; font-size:11px; }
@@ -67,9 +74,13 @@
         </div>
 
         @foreach($course->modules as $module)
-            <section class="module-block">
+            @php $isActiveModule = (int) $lesson->course_module_id === (int) $module->id; @endphp
+            <details class="module-block" data-module-accordion @if($isActiveModule) open @endif>
+                <summary>
                 <div class="module-title">{{ $module->title }}</div>
                 <div class="module-meta">{{ $module->lessons->count() }} topik · {{ $module->duration_minutes ?? 0 }} menit</div>
+                </summary>
+                <div class="module-lessons">
                 @foreach($module->lessons as $sidebarLesson)
                     @php $isDone = optional($progress->get($sidebarLesson->id))->progress_percent === 100; @endphp
                     <a class="lesson-link {{ $sidebarLesson->id === $lesson->id ? 'active' : '' }}" href="{{ route('lms.lessons.show', [$course, $sidebarLesson]) }}">
@@ -78,7 +89,8 @@
                         <span class="lesson-duration">{{ $sidebarLesson->duration_minutes }}m</span>
                     </a>
                 @endforeach
-            </section>
+                </div>
+            </details>
         @endforeach
     </aside>
 
@@ -162,4 +174,24 @@
         </nav>
     </main>
 </div>
+<script>
+    (function () {
+        const modules = Array.from(document.querySelectorAll('[data-module-accordion]'));
+        const activeLesson = document.querySelector('.lesson-link.active');
+
+        modules.forEach((module) => {
+            module.addEventListener('toggle', () => {
+                if (!module.open) return;
+
+                modules.forEach((otherModule) => {
+                    if (otherModule !== module) {
+                        otherModule.open = false;
+                    }
+                });
+            });
+        });
+
+        activeLesson?.scrollIntoView({ block: 'center' });
+    }());
+</script>
 @endsection
