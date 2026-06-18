@@ -63,18 +63,31 @@ class LmsDashboardController extends Controller
         $course->load(['mentor', 'modules.lessons.materials', 'liveSessions']);
 
         $isAdmin = in_array(optional(Auth::user()->role)->name, ['super-admin', 'admin-lms'], true);
-        $isEnrolled = Enrollment::where('user_id', Auth::id())
+        $enrollment = Enrollment::with('progress')
+            ->where('user_id', Auth::id())
             ->where('course_id', $course->id)
-            ->exists();
+            ->first();
 
-        abort_unless($isAdmin || $isEnrolled, 403, 'Anda belum memiliki akses ke course ini.');
+        abort_unless($isAdmin || $enrollment, 403, 'Anda belum memiliki akses ke course ini.');
 
-        $firstLesson = $course->modules->flatMap->lessons->first();
+        $lessons = $course->modules->flatMap->lessons->values();
+        $progress = $enrollment ? $enrollment->progress->keyBy('lesson_id') : collect();
+        $completedLessons = $progress->where('progress_percent', 100)->count();
+        $progressPercent = $lessons->count() > 0
+            ? (int) round(($completedLessons / $lessons->count()) * 100)
+            : 0;
+        $continueLesson = $lessons->first(
+            fn ($lesson) => optional($progress->get($lesson->id))->progress_percent !== 100
+        ) ?? $lessons->first();
 
-        if ($firstLesson) {
-            return redirect()->route('lms.lessons.show', [$course, $firstLesson]);
-        }
-
-        return view('lms.course', compact('course'));
+        return view('lms.course', compact(
+            'course',
+            'enrollment',
+            'lessons',
+            'progress',
+            'completedLessons',
+            'progressPercent',
+            'continueLesson'
+        ));
     }
 }

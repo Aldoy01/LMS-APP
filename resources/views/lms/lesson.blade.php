@@ -72,7 +72,7 @@
 <div class="classroom">
     <aside class="class-sidebar">
         <div class="class-brand">
-            <a href="{{ route('participant.dashboard') }}">← My Course</a>
+            <a href="{{ route('lms.courses.show', $course) }}">← Akses Kelas</a>
             <h2>{{ $course->title }}</h2>
             <p>{{ $course->level }} · {{ $lessons->count() }} pelajaran</p>
         </div>
@@ -160,7 +160,7 @@
                 <span></span>
             @endif
 
-            <a class="class-back" href="{{ route('participant.dashboard') }}">Back to My Course</a>
+            <a class="class-back" href="{{ route('lms.courses.show', $course) }}">Back to Akses Kelas</a>
 
             @if($enrollment)
                 <form class="complete-form" method="POST" action="{{ route('lms.lessons.complete', [$course, $lesson]) }}">
