@@ -121,11 +121,29 @@
                         <textarea name="settings[hero_subtitle]" rows="4" required>{{ old('settings.hero_subtitle', $settings['hero_subtitle']) }}</textarea>
                         @error('settings.hero_subtitle') <small>{{ $message }}</small> @enderror
                     </label>
-                    <label class="wide">
+                    <label>
                         <span>Daftar Header Hero</span>
                         <textarea name="settings[hero_slides]" rows="7" placeholder="Judul utama | Judul aksen | Deskripsi">{{ old('settings.hero_slides', $settings['hero_slides'] ?? '') }}</textarea>
                         <small>Tulis satu header per baris dengan format: Judul utama | Judul aksen | Deskripsi. Header akan tampil bergantian di halaman Home.</small>
                         @error('settings.hero_slides') <small>{{ $message }}</small> @enderror
+                    </label>
+                    <label>
+                        <span>Upload Gambar Header Hero</span>
+                        <input type="file" name="hero_slide_images[]" accept="image/png,image/jpeg,image/webp" multiple>
+                        <input type="hidden" name="settings[hero_slide_images]" value="{{ old('settings.hero_slide_images', $settings['hero_slide_images'] ?? '') }}">
+                        <small>Pilih beberapa gambar sekaligus sesuai urutan daftar header. Maksimal 10 gambar, masing-masing 4MB.</small>
+                        @error('hero_slide_images') <small>{{ $message }}</small> @enderror
+                        @error('hero_slide_images.*') <small>{{ $message }}</small> @enderror
+                        @php
+                            $currentHeroImages = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slide_images'] ?? ''))->filter();
+                        @endphp
+                        @if($currentHeroImages->isNotEmpty())
+                            <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px">
+                                @foreach($currentHeroImages as $image)
+                                    <img src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset($image) }}" alt="Gambar header {{ $loop->iteration }}" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:9px;border:1px solid rgba(47,123,255,.18)">
+                                @endforeach
+                            </span>
+                        @endif
                     </label>
                     <label>
                         <span>Label CTA Hero</span>

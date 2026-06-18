@@ -36,6 +36,9 @@ class SiteContentController extends Controller
             'settings.hero_title' => ['required', 'string', 'max:180'],
             'settings.hero_subtitle' => ['required', 'string', 'max:360'],
             'settings.hero_slides' => ['nullable', 'string', 'max:3000'],
+            'settings.hero_slide_images' => ['nullable', 'string', 'max:3000'],
+            'hero_slide_images' => ['nullable', 'array', 'max:10'],
+            'hero_slide_images.*' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'settings.hero_cta_label' => ['required', 'string', 'max:60'],
             'settings.hero_visual_badge' => ['required', 'string', 'max:80'],
             'settings.intro_eyebrow' => ['required', 'string', 'max:80'],
@@ -46,6 +49,35 @@ class SiteContentController extends Controller
             'settings.accent_color' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
             'settings.home_background' => ['required', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
+
+        if ($request->hasFile('hero_slide_images')) {
+            try {
+                $directory = storage_path('app/public/site');
+
+                if (! is_dir($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                $uploadedImages = [];
+                foreach ($request->file('hero_slide_images') as $index => $file) {
+                    if (! $file) {
+                        continue;
+                    }
+
+                    $filename = 'hero-slide-' . ($index + 1) . '-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                    $file->move($directory, $filename);
+                    $uploadedImages[] = 'site-media/' . $filename;
+                }
+
+                if ($uploadedImages) {
+                    $data['settings']['hero_slide_images'] = implode("\n", $uploadedImages);
+                }
+            } catch (Throwable $exception) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['hero_slide_images' => 'Gambar slider gagal diupload. Gunakan JPG, PNG, atau WEBP maksimal 4MB per gambar.']);
+            }
+        }
 
         if ($request->hasFile('participant_dashboard_image')) {
             try {

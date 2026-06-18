@@ -8,14 +8,22 @@
         $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
         $whatsappNumber = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
         $contactUrl = 'https://wa.me/' . $whatsappNumber;
+        $heroSlideImages = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slide_images'] ?? ''))
+            ->map(fn ($image) => trim($image))
+            ->filter()
+            ->values();
         $heroSlides = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slides'] ?? ''))
-            ->map(function ($line) use ($settings) {
+            ->map(function ($line, $index) use ($settings, $heroSlideImages) {
                 $parts = array_map('trim', explode('|', $line, 3));
+                $image = $heroSlideImages->get($index, '');
 
                 return [
                     'title' => $parts[0] ?? '',
                     'accent' => $parts[1] ?? '',
                     'description' => $parts[2] ?? ($settings['hero_subtitle'] ?? ''),
+                    'image' => $image
+                        ? (Str::startsWith($image, ['http://', 'https://']) ? $image : asset($image))
+                        : '',
                 ];
             })
             ->filter(fn ($slide) => $slide['title'] !== '')
@@ -26,6 +34,9 @@
                 'title' => $settings['hero_title'] ?? 'Welcome to Trama Verse',
                 'accent' => 'Make Learning Easy & Fun',
                 'description' => $settings['hero_subtitle'] ?? '',
+                'image' => ! empty($settings['hero_image_url'])
+                    ? (Str::startsWith($settings['hero_image_url'], ['http://', 'https://']) ? $settings['hero_image_url'] : asset($settings['hero_image_url']))
+                    : '',
             ]]);
         }
     @endphp
@@ -224,6 +235,24 @@
             border: 1px solid rgba(47, 123, 255, .18);
             box-shadow: 0 30px 80px rgba(16, 85, 245, .18);
             overflow: hidden;
+        }
+        .tv-orbit-card.has-image::before,
+        .tv-orbit-card.has-image::after {
+            display: none;
+        }
+        .tv-orbit-card img {
+            width: 100%;
+            height: 100%;
+            min-height: 430px;
+            display: block;
+            object-fit: cover;
+        }
+        .hero-visual[hidden] { display: none; }
+        .hero-visual {
+            width: 100%;
+            display: grid;
+            place-items: center;
+            animation: heroSlideIn .55s ease both;
         }
         .tv-orbit-card::before {
             content: "";
@@ -556,7 +585,15 @@
                 </div>
             </div>
             <div class="tv-orbit" aria-hidden="true">
-                <div class="tv-orbit-card"></div>
+                @foreach($heroSlides as $slide)
+                    <div class="hero-visual" data-hero-visual @if(!$loop->first) hidden @endif>
+                        <div class="tv-orbit-card {{ $slide['image'] ? 'has-image' : '' }}">
+                            @if($slide['image'])
+                                <img src="{{ $slide['image'] }}" alt="">
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
                 <div class="floating-chip chip-one">Courses</div>
                 <div class="floating-chip chip-two">Tools</div>
                 <div class="floating-chip chip-three">Cyber Lab</div>
@@ -662,6 +699,7 @@
             if (!slider) return;
 
             const slides = Array.from(slider.querySelectorAll('[data-hero-slide]'));
+            const visuals = Array.from(document.querySelectorAll('[data-hero-visual]'));
             const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
             const previous = slider.querySelector('[data-hero-previous]');
             const next = slider.querySelector('[data-hero-next]');
@@ -676,6 +714,9 @@
                 activeIndex = (index + slides.length) % slides.length;
                 slides.forEach((slide, slideIndex) => {
                     slide.hidden = slideIndex !== activeIndex;
+                });
+                visuals.forEach((visual, visualIndex) => {
+                    visual.hidden = visualIndex !== activeIndex;
                 });
                 dots.forEach((dot, dotIndex) => {
                     const isActive = dotIndex === activeIndex;
