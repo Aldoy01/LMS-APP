@@ -1102,7 +1102,7 @@
             </section>
 
             <section class="member-section" id="kelas-dipilih">
-                <h2>Akses Kelas</h2>
+                <h2>My Course</h2>
                 @if($firstEnrollment && $firstCourse)
                     <div class="class-access-shell">
                         @foreach($enrollments as $enrollment)
