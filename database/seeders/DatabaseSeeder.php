@@ -8,12 +8,9 @@ use App\Models\CourseModule;
 use App\Models\Enrollment;
 use App\Models\Lead;
 use App\Models\LeadActivity;
-use App\Models\Lesson;
-use App\Models\LessonMaterial;
 use App\Models\LiveSession;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\ProgressTracking;
 use App\Models\Question;
 use App\Models\Role;
 use App\Models\User;
@@ -171,27 +168,6 @@ class DatabaseSeeder extends Seeder
                 ]
             );
 
-            foreach ($moduleData['lessons'] as $lessonIndex => $lessonData) {
-                $lesson = Lesson::updateOrCreate(
-                    ['course_module_id' => $module->id, 'title' => $lessonData['title']],
-                    [
-                        'summary' => 'Materi inti dari blueprint LMS Cyber Security Playbook.',
-                        'content_type' => $lessonData['type'],
-                        'duration_minutes' => $lessonData['duration'],
-                        'is_preview' => $moduleIndex === 0 && $lessonIndex === 0,
-                        'sort_order' => $lessonIndex + 1,
-                    ]
-                );
-
-                LessonMaterial::updateOrCreate(
-                    ['lesson_id' => $lesson->id, 'title' => $lessonData['material']],
-                    [
-                        'type' => $lessonData['type'],
-                        'url' => 'https://storage.example.test/lms/' . $lesson->id,
-                        'downloadable' => in_array($lessonData['type'], ['pdf', 'ebook', 'checklist', 'worksheet']),
-                    ]
-                );
-            }
         }
 
         $order = Order::updateOrCreate(
@@ -221,14 +197,6 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $participant->id, 'course_id' => $course->id],
             ['order_id' => $order->id, 'access_type' => 'priority', 'started_at' => now()->subDay()]
         );
-
-        $firstLessons = Lesson::whereHas('module', fn ($query) => $query->where('course_id', $course->id))->limit(3)->get();
-        foreach ($firstLessons as $index => $lesson) {
-            ProgressTracking::updateOrCreate(
-                ['enrollment_id' => $enrollment->id, 'lesson_id' => $lesson->id],
-                ['progress_percent' => $index < 2 ? 100 : 45, 'completed_at' => $index < 2 ? now()->subHours(4) : null]
-            );
-        }
 
         $session = LiveSession::updateOrCreate(
             ['course_id' => $course->id, 'title' => 'Live Q&A: Hardening Akun Admin dan Backup'],
