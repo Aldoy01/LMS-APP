@@ -41,6 +41,7 @@ Route::post('/pembayaran/{invoice}/konfirmasi', [PaymentConfirmationController::
 Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::get('/courses/{course:slug}', [LmsDashboardController::class, 'show'])->name('lms.courses.show');
     Route::get('/courses/{course:slug}/lessons/{lesson}', [LessonPageController::class, 'show'])->name('lms.lessons.show');
+    Route::post('/courses/{course:slug}/lessons/{lesson}/complete', [LessonPageController::class, 'complete'])->name('lms.lessons.complete');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
 });
 

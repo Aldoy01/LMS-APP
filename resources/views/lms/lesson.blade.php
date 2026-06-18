@@ -1,83 +1,178 @@
 @extends('layouts.lms', ['title' => $lesson->title])
 
 @section('content')
-    <main class="main">
-        <section class="section">
-            <div class="section-head">
-                <div>
-                    <span class="eyebrow">{{ $lesson->module->category }} / {{ $course->title }}</span>
-                    <h2>{{ $lesson->title }}</h2>
-                </div>
-                <a class="button" style="background:var(--night)" href="{{ route('participant.dashboard') }}">Kembali ke Dashboard</a>
+@php
+    $primaryMaterial = $lesson->materials->first(fn ($material) => in_array($material->type, ['video-upload', 'video-embed', 'pdf', 'pdf-slide'], true));
+    $embedUrl = optional($primaryMaterial)->url;
+
+    if ($primaryMaterial && $primaryMaterial->type === 'video-embed' && $embedUrl) {
+        if (preg_match('~(?:youtube\.com/watch\?v=|youtu\.be/)([^&?/]+)~', $embedUrl, $matches)) {
+            $embedUrl = 'https://www.youtube.com/embed/' . $matches[1];
+        }
+    }
+@endphp
+
+<style>
+    .topbar, .page-footer { display:none; }
+    .classroom { min-height:100vh; display:grid; grid-template-columns:330px minmax(0,1fr); color:#172033; background:#f5f7fb; }
+    .class-sidebar { position:sticky; top:0; height:100vh; overflow-y:auto; background:#fff; border-right:1px solid #dbe3ef; }
+    .class-brand { padding:22px 20px; color:#fff; background:linear-gradient(135deg,#087ee1,#09a5ee); }
+    .class-brand a { display:inline-flex; align-items:center; gap:8px; margin-bottom:16px; font-size:12px; font-weight:800; opacity:.9; }
+    .class-brand h2 { margin:0; font-size:18px; line-height:1.35; }
+    .class-brand p { margin:7px 0 0; color:#dff4ff; font-size:12px; }
+    .module-block { border-bottom:1px solid #e5e9f0; }
+    .module-title { padding:16px 18px 10px; color:#087ee1; font-size:14px; font-weight:900; }
+    .module-meta { padding:0 18px 12px; color:#7b8aa4; font-size:11px; font-weight:700; }
+    .lesson-link { display:grid; grid-template-columns:22px 1fr auto; gap:9px; align-items:center; padding:12px 18px; border-top:1px solid #eef1f5; color:#46526a; font-size:13px; }
+    .lesson-link:hover { color:#087ee1; background:#f4faff; }
+    .lesson-link.active { color:#087ee1; background:#e9f6ff; font-weight:900; box-shadow:inset 4px 0 #0798ec; }
+    .lesson-state { width:18px; height:18px; display:grid; place-items:center; border:2px solid #91cdef; border-radius:50%; color:#fff; font-size:11px; }
+    .lesson-state.done { border-color:#0798ec; background:#0798ec; }
+    .lesson-duration { color:#8b96aa; font-size:10px; }
+    .class-main { min-width:0; padding:30px clamp(20px,4vw,54px) 36px; }
+    .class-head { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; padding-bottom:25px; border-bottom:1px solid #dbe3ef; }
+    .class-head small { color:#0798ec; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+    .class-head h1 { margin:8px 0 5px; color:#111827; font-size:clamp(27px,4vw,46px); line-height:1.08; }
+    .class-head p { margin:0; color:#667085; }
+    .progress-panel { width:min(380px,100%); padding:17px 19px; border:1px solid #dbe3ef; border-radius:14px; background:#fff; box-shadow:0 12px 30px rgba(31,64,104,.08); }
+    .progress-copy { display:flex; justify-content:space-between; gap:12px; color:#536077; font-size:13px; }
+    .progress-copy strong { color:#0798ec; font-size:20px; }
+    .progress-track { height:12px; margin-top:10px; overflow:hidden; border-radius:999px; background:#dfe7f1; }
+    .progress-fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#087ee1,#11b7ed); }
+    .current-section { padding-top:28px; }
+    .current-section h2 { margin:0 0 18px; color:#222c3d; font-size:24px; }
+    .learning-stage { overflow:hidden; border:1px solid #dce3ed; border-radius:14px; background:#fff; box-shadow:0 18px 42px rgba(31,64,104,.1); }
+    .learning-stage video, .learning-stage iframe { width:100%; aspect-ratio:16/9; display:block; border:0; border-radius:0; background:#06122e; }
+    .pdf-stage { min-height:520px; }
+    .lesson-copy { padding:22px; }
+    .lesson-copy h3 { margin:0 0 8px; color:#111827; font-size:20px; }
+    .lesson-copy p { margin:0; color:#667085; line-height:1.7; }
+    .resource-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:15px; }
+    .resource-link { display:flex; justify-content:space-between; gap:14px; padding:14px; border:1px solid #dce3ed; border-radius:11px; color:#3157dc; background:#f8fbff; font-size:13px; font-weight:800; }
+    .class-navigation { display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:center; margin-top:22px; padding-top:22px; border-top:2px solid #e1e7ef; }
+    .class-nav-button, .complete-button { min-height:46px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:11px 24px; border:0; border-radius:999px; color:#fff; background:#0798ec; cursor:pointer; font:inherit; font-size:13px; font-weight:900; }
+    .class-nav-button.next, .complete-form { justify-self:end; }
+    .class-back { color:#0798ec; font-size:12px; font-weight:800; text-decoration:underline; }
+    .status-message { margin-bottom:16px; padding:12px 15px; border-radius:10px; color:#075985; background:#e0f2fe; font-weight:800; }
+    @media(max-width:900px) {
+        .classroom { grid-template-columns:1fr; }
+        .class-sidebar { position:relative; height:auto; max-height:420px; border-right:0; border-bottom:1px solid #dbe3ef; }
+        .class-head { flex-direction:column; }
+        .progress-panel { width:100%; }
+    }
+    @media(max-width:600px) {
+        .class-main { padding:22px 14px 28px; }
+        .resource-grid { grid-template-columns:1fr; }
+        .class-navigation { grid-template-columns:1fr 1fr; }
+        .class-back { grid-column:1/-1; grid-row:2; justify-self:center; }
+        .class-nav-button, .complete-button { width:100%; padding-inline:15px; }
+    }
+</style>
+
+<div class="classroom">
+    <aside class="class-sidebar">
+        <div class="class-brand">
+            <a href="{{ route('participant.dashboard') }}">← My Course</a>
+            <h2>{{ $course->title }}</h2>
+            <p>{{ $course->level }} · {{ $lessons->count() }} pelajaran</p>
+        </div>
+
+        @foreach($course->modules as $module)
+            <section class="module-block">
+                <div class="module-title">{{ $module->title }}</div>
+                <div class="module-meta">{{ $module->lessons->count() }} topik · {{ $module->duration_minutes ?? 0 }} menit</div>
+                @foreach($module->lessons as $sidebarLesson)
+                    @php $isDone = optional($progress->get($sidebarLesson->id))->progress_percent === 100; @endphp
+                    <a class="lesson-link {{ $sidebarLesson->id === $lesson->id ? 'active' : '' }}" href="{{ route('lms.lessons.show', [$course, $sidebarLesson]) }}">
+                        <span class="lesson-state {{ $isDone ? 'done' : '' }}">{{ $isDone ? '✓' : '' }}</span>
+                        <span>{{ $sidebarLesson->title }}</span>
+                        <span class="lesson-duration">{{ $sidebarLesson->duration_minutes }}m</span>
+                    </a>
+                @endforeach
+            </section>
+        @endforeach
+    </aside>
+
+    <main class="class-main">
+        @if(session('lesson_status')) <div class="status-message">{{ session('lesson_status') }}</div> @endif
+
+        <header class="class-head">
+            <div>
+                <small>{{ $lesson->module->title }} · Pelajaran {{ $currentIndex + 1 }}</small>
+                <h1>{{ $lesson->title }}</h1>
+                <p>{{ $lesson->summary }}</p>
             </div>
-
-            <div class="grid split">
-                <div class="card">
-                    <span class="eyebrow">Materi Utama</span>
-                    <p>{{ $lesson->summary }}</p>
-                    <div class="meta">
-                        <span class="badge">{{ ucfirst($lesson->content_type) }}</span>
-                        <span class="badge">{{ $lesson->duration_minutes }} menit</span>
-                    </div>
-
-                    @foreach($lesson->materials as $material)
-                        @if(in_array($material->type, ['pdf', 'pdf-slide'], true))
-                            <div class="list-row" style="margin-top:12px">
-                                <strong>{{ $material->title }}</strong>
-                                <p class="muted">PDF dapat dibuka langsung atau diunduh sesuai kebutuhan belajar.</p>
-                                <div class="meta">
-                                    <a class="button" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Buka PDF</a>
-                                </div>
-                            </div>
-                        @elseif($material->type === 'video-upload')
-                            <div class="list-row" style="margin-top:12px">
-                                <strong>{{ $material->title }}</strong>
-                                <video controls style="width:100%;margin-top:10px;border-radius:8px;background:#000">
-                                    <source src="{{ route('materials.show', $material) }}">
-                                </video>
-                            </div>
-                        @elseif($material->type === 'video-embed')
-                            <div class="list-row" style="margin-top:12px">
-                                <strong>{{ $material->title }}</strong>
-                                <iframe src="{{ $material->url }}" style="width:100%;aspect-ratio:16/9;border:0;border-radius:8px;margin-top:10px" allowfullscreen></iframe>
-                            </div>
-                        @endif
-                    @endforeach
+            <div class="progress-panel">
+                <div class="progress-copy">
+                    <span><strong>{{ $progressPercent }}%</strong> COMPLETE</span>
+                    <span>{{ $completedLessons }}/{{ $lessons->count() }} Steps</span>
                 </div>
-
-                <aside class="card">
-                    <span class="eyebrow">Tools & Resource</span>
-                    <div class="list" style="margin-top:12px">
-                        @forelse($lesson->materials->whereIn('type', ['tool', 'resource']) as $material)
-                            <div class="list-row">
-                                <strong>{{ $material->title }}</strong>
-                                <div class="meta">
-                                    <a class="button" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Buka Link</a>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="list-row">
-                                <strong>Belum ada tools tambahan</strong>
-                                <span class="muted">Admin dapat menambahkan tools list dan resource dari dashboard admin.</span>
-                            </div>
-                        @endforelse
-                    </div>
-                </aside>
+                <div class="progress-track"><div class="progress-fill" style="width:{{ $progressPercent }}%"></div></div>
             </div>
+        </header>
 
-            <div class="meta" style="margin-top:18px;justify-content:space-between">
-                @if($previousLesson)
-                    <a class="button" style="background:var(--night)" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">Previous</a>
+        <section class="current-section">
+            <h2>Sedang Dipelajari</h2>
+            <div class="learning-stage">
+                @if($primaryMaterial && $primaryMaterial->type === 'video-upload')
+                    <video controls controlsList="nodownload">
+                        <source src="{{ route('materials.show', $primaryMaterial) }}">
+                    </video>
+                @elseif($primaryMaterial && $primaryMaterial->type === 'video-embed')
+                    <iframe src="{{ $embedUrl }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                @elseif($primaryMaterial && in_array($primaryMaterial->type, ['pdf', 'pdf-slide'], true))
+                    <iframe class="pdf-stage" src="{{ route('materials.show', $primaryMaterial) }}"></iframe>
                 @else
-                    <span></span>
+                    <div class="lesson-copy">
+                        <h3>{{ $lesson->title }}</h3>
+                        <p>Materi utama belum ditambahkan. Admin dapat memasukkan URL embed ITBOX/YouTube atau mengunggah video dan PDF dari menu Kelola Materi.</p>
+                    </div>
                 @endif
 
-                @if($nextLesson)
-                    <a class="button" href="{{ route('lms.lessons.show', [$course, $nextLesson]) }}">Next</a>
-                @else
-                    <a class="button" href="{{ route('participant.dashboard') }}">Selesai & Kembali</a>
-                @endif
+                <div class="lesson-copy">
+                    <h3>{{ optional($primaryMaterial)->title ?? $lesson->title }}</h3>
+                    <p>{{ $lesson->summary ?: 'Pelajari materi ini sampai selesai, kemudian tandai pelajaran sebagai selesai untuk melanjutkan progres.' }}</p>
+                    @if($primaryMaterial && $primaryMaterial->type === 'video-embed' && filter_var($primaryMaterial->url, FILTER_VALIDATE_URL))
+                        <div class="resource-grid">
+                            <a class="resource-link" href="{{ $primaryMaterial->url }}" target="_blank" rel="noopener">
+                                <span>Buka video di sumber asli jika tidak tampil</span><span>↗</span>
+                            </a>
+                        </div>
+                    @endif
+                    @php $resources = $lesson->materials->whereIn('type', ['tool', 'resource'])->values(); @endphp
+                    @if($resources->isNotEmpty())
+                        <div class="resource-grid">
+                            @foreach($resources as $resource)
+                                <a class="resource-link" href="{{ route('materials.show', $resource) }}" target="_blank" rel="noopener">
+                                    <span>{{ $resource->title }}</span><span>↗</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
         </section>
+
+        <nav class="class-navigation" aria-label="Navigasi pelajaran">
+            @if($previousLesson)
+                <a class="class-nav-button" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">‹ Previous Pelajaran</a>
+            @else
+                <span></span>
+            @endif
+
+            <a class="class-back" href="{{ route('participant.dashboard') }}">Back to My Course</a>
+
+            @if($enrollment)
+                <form class="complete-form" method="POST" action="{{ route('lms.lessons.complete', [$course, $lesson]) }}">
+                    @csrf
+                    <button class="complete-button" type="submit">
+                        {{ $nextLesson ? 'Selesai & Next Topic' : 'Selesaikan Course' }} ›
+                    </button>
+                </form>
+            @elseif($nextLesson)
+                <a class="class-nav-button next" href="{{ route('lms.lessons.show', [$course, $nextLesson]) }}">Next Topic ›</a>
+            @endif
+        </nav>
     </main>
+</div>
 @endsection

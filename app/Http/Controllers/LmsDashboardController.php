@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Question;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Throwable;
 
 class LmsDashboardController extends Controller
@@ -60,6 +61,19 @@ class LmsDashboardController extends Controller
     public function show(Course $course)
     {
         $course->load(['mentor', 'modules.lessons.materials', 'liveSessions']);
+
+        $isAdmin = in_array(optional(Auth::user()->role)->name, ['super-admin', 'admin-lms'], true);
+        $isEnrolled = Enrollment::where('user_id', Auth::id())
+            ->where('course_id', $course->id)
+            ->exists();
+
+        abort_unless($isAdmin || $isEnrolled, 403, 'Anda belum memiliki akses ke course ini.');
+
+        $firstLesson = $course->modules->flatMap->lessons->first();
+
+        if ($firstLesson) {
+            return redirect()->route('lms.lessons.show', [$course, $firstLesson]);
+        }
 
         return view('lms.course', compact('course'));
     }
