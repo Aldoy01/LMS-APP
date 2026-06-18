@@ -60,15 +60,15 @@
         </div>
         <div class="site-footer-column">
             <h2>Program</h2>
-            <a href="{{ $embeddedFooter ? '#kelas-dipilih' : route('lms.dashboard').'#program' }}">Course</a>
-            <a href="{{ $embeddedFooter ? '#rekomendasi-modul' : route('lms.dashboard').'#program' }}">Learning Module</a>
-            <a href="{{ $embeddedFooter ? '#update-news' : route('lms.dashboard').'#kontak' }}">Webinar &amp; Event</a>
+            <a href="{{ route('programs.index') }}#course">Course</a>
+            <a href="{{ route('programs.index') }}#module">Learning Module</a>
+            <a href="{{ route('programs.index') }}#event">Webinar &amp; Event</a>
         </div>
         <div class="site-footer-column">
             <h2>About</h2>
-            <a href="{{ route('lms.dashboard') }}#tentang">About {{ $footerName }}</a>
-            <a href="mailto:{{ $footerEmail }}?subject=Privacy%20Policy">Privacy Policy</a>
-            <a href="mailto:{{ $footerEmail }}?subject=Terms%20and%20Conditions">Terms &amp; Conditions</a>
+            <a href="{{ route('about') }}">About {{ $footerName }}</a>
+            <a href="{{ route('privacy') }}">Privacy Policy</a>
+            <a href="{{ route('terms') }}">Terms &amp; Conditions</a>
         </div>
         <div class="site-footer-column">
             <h2>Contact &amp; Follow Us</h2>
