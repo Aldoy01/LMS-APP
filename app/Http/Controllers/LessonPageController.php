@@ -29,17 +29,19 @@ class LessonPageController extends Controller
             ? (int) round(($completedLessons / $lessons->count()) * 100)
             : 0;
         $lesson->load(['module', 'materials']);
-        $primaryMaterial = $lesson->materials->first(
-            fn ($material) => in_array($material->type, ['video-upload', 'video-embed', 'pdf', 'pdf-slide'], true)
-        );
+        $primaryMaterial = $lesson->materials->first(fn ($material) => $material->type === 'video-upload')
+            ?? $lesson->materials->first(fn ($material) => $material->type === 'video-embed')
+            ?? $lesson->materials->first(fn ($material) => $this->isYouTubeUrl($material->url))
+            ?? $lesson->materials->first(fn ($material) => in_array($material->type, ['pdf', 'pdf-slide'], true));
+        $embedUrl = $primaryMaterial && ($primaryMaterial->type === 'video-embed' || $this->isYouTubeUrl($primaryMaterial->url))
+            ? $this->embedUrl($primaryMaterial->url)
+            : null;
 
         return view('lms.lesson', [
             'course' => $course,
             'lesson' => $lesson,
             'primaryMaterial' => $primaryMaterial,
-            'embedUrl' => $primaryMaterial && $primaryMaterial->type === 'video-embed'
-                ? $this->embedUrl($primaryMaterial->url)
-                : null,
+            'embedUrl' => $embedUrl,
             'lessons' => $lessons,
             'progress' => $progress,
             'completedLessons' => $completedLessons,
@@ -132,5 +134,21 @@ class LessonPageController extends Controller
         }
 
         return $url;
+    }
+
+    private function isYouTubeUrl(?string $url): bool
+    {
+        if (! $url || ! filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $host = preg_replace('/^www\./', '', strtolower(parse_url($url, PHP_URL_HOST) ?? ''));
+
+        return in_array($host, [
+            'youtube.com',
+            'm.youtube.com',
+            'youtube-nocookie.com',
+            'youtu.be',
+        ], true);
     }
 }

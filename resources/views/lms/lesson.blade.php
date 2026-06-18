@@ -107,7 +107,7 @@
                     <video controls controlsList="nodownload">
                         <source src="{{ route('materials.show', $primaryMaterial) }}">
                     </video>
-                @elseif($primaryMaterial && $primaryMaterial->type === 'video-embed')
+                @elseif($primaryMaterial && $embedUrl)
                     <iframe src="{{ $embedUrl }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 @elseif($primaryMaterial && in_array($primaryMaterial->type, ['pdf', 'pdf-slide'], true))
                     <iframe class="pdf-stage" src="{{ route('materials.show', $primaryMaterial) }}"></iframe>
@@ -121,7 +121,12 @@
                 <div class="lesson-copy">
                     <h3>{{ optional($primaryMaterial)->title ?? $lesson->title }}</h3>
                     <p>{{ $lesson->summary ?: 'Pelajari materi ini sampai selesai, kemudian tandai pelajaran sebagai selesai untuk melanjutkan progres.' }}</p>
-                    @php $resources = $lesson->materials->whereIn('type', ['tool', 'resource'])->values(); @endphp
+                    @php
+                        $resources = $lesson->materials
+                            ->whereIn('type', ['tool', 'resource'])
+                            ->reject(fn ($material) => optional($primaryMaterial)->id === $material->id)
+                            ->values();
+                    @endphp
                     @if($resources->isNotEmpty())
                         <div class="resource-grid">
                             @foreach($resources as $resource)
