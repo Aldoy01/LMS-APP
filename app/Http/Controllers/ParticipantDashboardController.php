@@ -63,7 +63,7 @@ class ParticipantDashboardController extends Controller
             ->orderBy('level')
             ->limit(4)
             ->get();
-        $latestCourses = Course::with('modules.lessons')
+        $latestCourses = Course::with(['modules.lessons', 'mentor'])
             ->where('status', 'published')
             ->latest()
             ->limit(4)

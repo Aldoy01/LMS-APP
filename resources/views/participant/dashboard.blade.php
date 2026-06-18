@@ -832,6 +832,128 @@
         .button-order {
             background: #8b9cf6;
         }
+        .news-grid {
+            display: grid;
+            grid-template-columns: minmax(220px, .82fr) minmax(260px, 1.08fr) minmax(260px, 1.1fr);
+            gap: 16px;
+        }
+        .news-card {
+            position: relative;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid rgba(47,123,255,.13);
+            border-radius: 14px;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 86% 8%, rgba(66,200,236,.14), transparent 12rem),
+                #15151c;
+            box-shadow: 0 16px 36px rgba(7,22,77,.12);
+        }
+        .news-card.feature {
+            display: flex;
+            flex-direction: column;
+        }
+        .news-media {
+            position: relative;
+            aspect-ratio: 1.65;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d183e, #3157dc 56%, #6a1ba9);
+        }
+        .news-media img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        .news-media::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 48%;
+            background: linear-gradient(transparent, rgba(8,10,20,.72));
+        }
+        .news-type {
+            position: absolute;
+            z-index: 2;
+            top: 12px;
+            left: 12px;
+            padding: 6px 9px;
+            border-radius: 6px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .news-body { padding: 16px; }
+        .news-body h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 16px;
+            line-height: 1.28;
+        }
+        .news-body p {
+            margin: 9px 0 0;
+            color: rgba(255,255,255,.68);
+            font-size: 11px;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .news-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 14px;
+            color: rgba(255,255,255,.62);
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .news-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .news-meta svg { width: 13px; height: 13px; }
+        .news-card.brief .news-body {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+        }
+        .news-card.brief .news-thumb {
+            margin-top: auto;
+            padding-top: 16px;
+        }
+        .news-thumb img {
+            width: 100%;
+            aspect-ratio: 1.7;
+            display: block;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .news-card.promo .news-media {
+            aspect-ratio: 1.3;
+            margin: 14px;
+            border-radius: 12px;
+        }
+        .news-promo-label {
+            display: inline-flex;
+            margin: 0 14px;
+            padding: 8px 12px;
+            border-radius: 0 0 8px 8px;
+            color: #ffffff;
+            background: #d97706;
+            font-size: 12px;
+            font-weight: 900;
+        }
+        .news-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 13px;
+            color: #53e0d4;
+            font-size: 10px;
+            font-weight: 900;
+        }
         .dashboard-footer {
             margin-top: 30px;
             padding: 20px;
@@ -1057,7 +1179,8 @@
             .member-stats,
             .course-access-grid,
             .announcement-grid,
-            .product-grid {
+            .product-grid,
+            .news-grid {
                 grid-template-columns: 1fr;
             }
             .module-row {
@@ -1084,6 +1207,9 @@
             }
             .product-grid {
                 grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+            .news-grid {
+                grid-template-columns: repeat(2, minmax(240px, 1fr));
             }
         }
     </style>
@@ -1114,7 +1240,7 @@
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4z"/><path d="M14 20h6V4h-6z"/><path d="M4 20h6v-3H4z"/></svg></span>
                     Dashboard
                 </a>
-                <a class="sidebar-link" href="#rekomendasi-modul">
+                <a class="sidebar-link" href="#update-news">
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H7a3 3 0 0 0-3 3z"/><path d="M8 8h8"/><path d="M8 12h6"/></svg></span>
                     Other Course
                 </a>
@@ -1378,6 +1504,80 @@
                             </div>
                         </article>
                     @endforelse
+                </div>
+            </section>
+
+            <section class="member-section" id="update-news">
+                <h2>Update News</h2>
+                <div class="news-grid">
+                    @php
+                        $newsCourses = $latestCourses->take(3)->values();
+                        $newsFallback = asset('images/trama-verse-logo.png');
+                    @endphp
+
+                    <article class="news-card brief">
+                        <div class="news-body">
+                            <span class="news-type">Update</span>
+                            <h3>{{ optional($newsCourses->get(0))->title ?? 'Update Materi Cyber Security' }}</h3>
+                            <p>
+                                {{ optional($newsCourses->get(0))->summary
+                                    ?? 'Materi, insight, dan informasi kelas terbaru dari Trama Verse untuk mendukung proses belajar peserta.' }}
+                            </p>
+                            <div class="news-thumb">
+                                <img src="{{ optional($newsCourses->get(0))->cover_image ?: $newsFallback }}" alt="Update news Trama Verse">
+                            </div>
+                            <div class="news-meta">
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                                    {{ optional(optional($newsCourses->get(0))->created_at)->format('d M Y') ?? now()->format('d M Y') }}
+                                </span>
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                                    Trama Verse
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="news-card feature">
+                        <div class="news-media">
+                            <span class="news-type">Learning Update</span>
+                            <img src="{{ optional($newsCourses->get(1))->cover_image ?: $newsFallback }}" alt="Update kelas dan video pembelajaran">
+                        </div>
+                        <div class="news-body">
+                            <h3>{{ optional($newsCourses->get(1))->title ?? 'Update Video & Kelas Pembelajaran' }}</h3>
+                            <p>
+                                {{ optional($newsCourses->get(1))->summary
+                                    ?? 'Ikuti pembaruan modul, video YouTube, webinar, dan praktik terbaru yang telah ditambahkan oleh tim pembelajaran.' }}
+                            </p>
+                            <div class="news-meta">
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                                    {{ optional(optional($newsCourses->get(1))->created_at)->format('d M Y') ?? now()->format('d M Y') }}
+                                </span>
+                                <span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                                    {{ optional(optional($newsCourses->get(1))->mentor)->name ?? 'Admin LMS' }}
+                                </span>
+                            </div>
+                            <a class="news-action" href="#kelas-dipilih">Lihat pembaruan kelas &rarr;</a>
+                        </div>
+                    </article>
+
+                    <article class="news-card promo">
+                        <span class="news-promo-label">Promo & Event</span>
+                        <div class="news-media">
+                            <img src="{{ optional($newsCourses->get(2))->cover_image ?: $newsFallback }}" alt="Promo dan event Trama Verse">
+                        </div>
+                        <div class="news-body">
+                            <h3>{{ optional($newsCourses->get(2))->title ?? 'Promo Program & Event Terbaru' }}</h3>
+                            <p>
+                                {{ optional($newsCourses->get(2))->summary
+                                    ?? 'Dapatkan informasi promo program, webinar, event komunitas, dan kesempatan belajar terbaru.' }}
+                            </p>
+                            <a class="news-action" href="#rekomendasi-modul">Lihat program tersedia &rarr;</a>
+                        </div>
+                    </article>
                 </div>
             </section>
 
