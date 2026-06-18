@@ -34,8 +34,9 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
+        $request->session()->forget('url.intended');
 
-        return redirect()->intended(route('participant.dashboard'));
+        return redirect()->route('participant.dashboard');
     }
 
     public function adminLogin(Request $request)
