@@ -84,25 +84,82 @@
         .hero-slide {
             animation: heroSlideIn .55s ease both;
         }
-        .hero-slide-nav {
+        .hero-slider-controls {
             display: flex;
             align-items: center;
-            gap: 9px;
+            gap: 12px;
             margin-top: 22px;
         }
-        .hero-slide-dot {
-            width: 10px;
-            height: 10px;
+        .hero-slide-arrow {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 auto;
+            display: grid;
+            place-items: center;
             padding: 0;
-            border: 0;
-            border-radius: 999px;
-            background: rgba(49, 87, 220, .24);
+            border: 1px solid rgba(49, 87, 220, .18);
+            border-radius: 50%;
+            color: var(--brand-dark);
+            background: #ffffff;
+            box-shadow: 0 10px 24px rgba(16, 85, 245, .1);
             cursor: pointer;
-            transition: width .2s ease, background .2s ease;
+            transition: color .2s ease, background .2s ease, transform .2s ease;
         }
-        .hero-slide-dot.is-active {
-            width: 34px;
-            background: linear-gradient(90deg, var(--brand-dark), var(--accent));
+        .hero-slide-arrow:hover {
+            color: #ffffff;
+            background: var(--brand-dark);
+            transform: translateY(-2px);
+        }
+        .hero-slide-arrow svg {
+            width: 19px;
+            height: 19px;
+        }
+        .hero-slide-list {
+            min-width: 0;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 8px;
+            scrollbar-width: thin;
+            scroll-snap-type: x proximity;
+        }
+        .hero-slide-list button {
+            min-width: 150px;
+            max-width: 210px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 9px;
+            align-items: center;
+            padding: 9px 12px;
+            border: 1px solid rgba(49, 87, 220, .14);
+            border-radius: 12px;
+            color: #4b587c;
+            background: rgba(255, 255, 255, .8);
+            cursor: pointer;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            text-align: left;
+            scroll-snap-align: start;
+            transition: border-color .2s ease, color .2s ease, background .2s ease;
+        }
+        .hero-slide-list button span {
+            width: 24px;
+            height: 24px;
+            display: grid;
+            place-items: center;
+            border-radius: 7px;
+            color: var(--brand-dark);
+            background: rgba(49, 87, 220, .1);
+        }
+        .hero-slide-list button.is-active {
+            color: #ffffff;
+            border-color: transparent;
+            background: linear-gradient(135deg, var(--brand-dark), #137bb2);
+        }
+        .hero-slide-list button.is-active span {
+            color: #07164d;
+            background: #67e8f9;
         }
         @keyframes heroSlideIn {
             from { opacity: 0; transform: translateY(12px); }
@@ -447,6 +504,7 @@
             }
         }
         @media (prefers-reduced-motion: reduce) {
+            .hero-slide,
             .path-card,
             .path-icon,
             .path-card::after {
@@ -469,10 +527,21 @@
                     </div>
                 @endforeach
                 @if($heroSlides->count() > 1)
-                    <div class="hero-slide-nav" aria-label="Pilih header">
-                        @foreach($heroSlides as $slide)
-                            <button class="hero-slide-dot {{ $loop->first ? 'is-active' : '' }}" type="button" data-hero-dot="{{ $loop->index }}" aria-label="Tampilkan header {{ $loop->iteration }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"></button>
-                        @endforeach
+                    <div class="hero-slider-controls" aria-label="Navigasi header">
+                        <button class="hero-slide-arrow" type="button" data-hero-previous aria-label="Header sebelumnya">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                        </button>
+                        <div class="hero-slide-list" data-hero-list>
+                            @foreach($heroSlides as $slide)
+                                <button class="{{ $loop->first ? 'is-active' : '' }}" type="button" data-hero-dot="{{ $loop->index }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}">
+                                    <span>{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                                    {{ $slide['title'] }}
+                                </button>
+                            @endforeach
+                        </div>
+                        <button class="hero-slide-arrow" type="button" data-hero-next aria-label="Header berikutnya">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
                     </div>
                 @endif
                 <div class="tv-actions">
@@ -594,10 +663,14 @@
 
             const slides = Array.from(slider.querySelectorAll('[data-hero-slide]'));
             const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
+            const previous = slider.querySelector('[data-hero-previous]');
+            const next = slider.querySelector('[data-hero-next]');
+            const list = slider.querySelector('[data-hero-list]');
             if (slides.length < 2) return;
 
             let activeIndex = 0;
             let timer;
+            let touchStartX = 0;
 
             const showSlide = (index) => {
                 activeIndex = (index + slides.length) % slides.length;
@@ -608,6 +681,9 @@
                     const isActive = dotIndex === activeIndex;
                     dot.classList.toggle('is-active', isActive);
                     dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                    if (isActive) {
+                        dot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
                 });
             };
 
@@ -622,6 +698,30 @@
                     start();
                 });
             });
+
+            previous?.addEventListener('click', () => {
+                showSlide(activeIndex - 1);
+                start();
+            });
+
+            next?.addEventListener('click', () => {
+                showSlide(activeIndex + 1);
+                start();
+            });
+
+            slider.addEventListener('touchstart', (event) => {
+                touchStartX = event.changedTouches[0].clientX;
+            }, { passive: true });
+
+            slider.addEventListener('touchend', (event) => {
+                const distance = event.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(distance) < 45) return;
+                showSlide(activeIndex + (distance < 0 ? 1 : -1));
+                start();
+            }, { passive: true });
+
+            list?.addEventListener('mouseenter', () => window.clearInterval(timer));
+            list?.addEventListener('mouseleave', start);
 
             if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 start();
