@@ -1036,12 +1036,17 @@
         }
         .dashboard-footer {
             margin-top: 30px;
-            padding: 20px;
-            border-radius: 16px;
-            color: #4b587c;
+            aspect-ratio: 1314 / 310;
+            overflow: hidden;
+            border-radius: 14px;
             background: #ffffff;
             border: 1px solid rgba(47, 123, 255, .14);
-            box-shadow: 0 10px 24px rgba(16, 85, 245, .06);
+            box-shadow: 0 14px 34px rgba(16, 85, 245, .08);
+        }
+        .dashboard-footer img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
         .account-dropdown {
             position: absolute;
@@ -1710,10 +1715,7 @@
             </section>
 
             <section class="dashboard-footer">
-                <p>
-                    Trama Verse LMS membantu peserta mengikuti roadmap cyber security secara bertahap:
-                    belajar, praktik, berdiskusi, lalu naik ke level berikutnya saat siap.
-                </p>
+                <img src="{{ asset('images/trama-verse-footer.png') }}" alt="Footer Trama Verse">
             </section>
         </main>
     </div>
