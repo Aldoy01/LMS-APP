@@ -16,6 +16,8 @@ RUN apk add --no-cache \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 
+ENV PHPRC=/var/www/html/php.ini
+
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader \
     && chown -R www-data:www-data storage bootstrap/cache
 

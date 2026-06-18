@@ -182,8 +182,9 @@
                                             <input type="number" name="sort_order" value="0" min="0" required>
                                         </label>
                                         <label>
-                                            <span>Upload File (max 50 MB)</span>
+                                            <span>Upload File (maksimal 50 MB)</span>
                                             <input type="file" name="file">
+                                            <small>Server menerima request hingga 64 MB untuk menyediakan ruang bagi metadata upload.</small>
                                         </label>
                                         <label class="wide">
                                             <span>URL Video / Resource</span>

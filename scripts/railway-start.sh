@@ -3,6 +3,10 @@ set -e
 
 echo "Starting Techverse Learning LMS on port ${PORT:-8080}"
 
+export PHPRC="${PHPRC:-$(pwd)/php.ini}"
+
+echo "PHP upload limits: upload_max_filesize=$(php -r 'echo ini_get("upload_max_filesize");'), post_max_size=$(php -r 'echo ini_get("post_max_size");')"
+
 if [ -n "${DATABASE_URL:-}" ] && [ -z "${DB_CONNECTION:-}" ]; then
     export DB_CONNECTION=pgsql
 fi
