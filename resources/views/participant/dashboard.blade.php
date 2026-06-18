@@ -863,6 +863,12 @@
             font-size: 13px;
             font-weight: 800;
             list-style: none;
+            transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+        }
+        .account-dropdown summary:hover {
+            border-color: rgba(75, 61, 184, .34);
+            box-shadow: 0 14px 30px rgba(75, 61, 184, .14);
+            transform: translateY(-1px);
         }
         .account-mini-avatar {
             width: 28px;
@@ -887,20 +893,59 @@
             white-space: nowrap;
         }
         .account-mini-copy strong { color: #07164d; font-size: 11px; }
-        .account-mini-copy span { margin-top: 1px; color: #73809f; font-size: 9px; font-weight: 700; }
+        .account-mini-copy span {
+            position: relative;
+            margin-top: 1px;
+            padding-left: 10px;
+            color: #73809f;
+            font-size: 9px;
+            font-weight: 700;
+        }
+        .account-mini-copy span::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34,197,94,.12);
+            transform: translateY(-50%);
+        }
+        .account-chevron {
+            width: 27px;
+            height: 27px;
+            flex: 0 0 27px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #4b3db8;
+            background: rgba(75,61,184,.08);
+            transition: transform .2s ease, background .2s ease;
+        }
+        .account-chevron svg { width: 15px; height: 15px; }
         .account-dropdown summary::-webkit-details-marker { display: none; }
-        .account-dropdown summary::after { content: "⌄"; color: #4b3db8; font-size: 16px; }
-        .account-dropdown[open] summary::after { transform: rotate(180deg); }
+        .account-dropdown[open] .account-chevron {
+            background: rgba(75,61,184,.14);
+            transform: rotate(180deg);
+        }
         .account-dropdown-menu {
             min-width: 210px;
             display: grid;
             gap: 4px;
             margin-top: 8px;
-            padding: 8px;
+            padding: 9px;
             border: 1px solid rgba(47, 123, 255, .14);
-            border-radius: 12px;
+            border-radius: 14px;
             background: #ffffff;
             box-shadow: 0 18px 42px rgba(7, 22, 77, .16);
+            transform-origin: top right;
+            animation: accountMenuIn .18s ease both;
+        }
+        @keyframes accountMenuIn {
+            from { opacity: 0; transform: translateY(-6px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .account-dropdown-menu a,
         .account-dropdown-menu button {
@@ -926,6 +971,22 @@
             background: rgba(47, 123, 255, .08);
         }
         .account-dropdown-menu form { margin: 0; }
+        .account-menu-icon {
+            width: 29px;
+            height: 29px;
+            flex: 0 0 29px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #3157dc;
+            background: #eef4ff;
+        }
+        .account-menu-icon svg { width: 15px; height: 15px; }
+        .account-dropdown-menu button:hover .account-menu-icon,
+        .account-dropdown-menu a:hover .account-menu-icon {
+            color: #ffffff;
+            background: linear-gradient(145deg, #42c8ec, #3157dc, #7d16b8);
+        }
         @media (max-width: 980px) {
             .member-area {
                 display: block;
@@ -1114,13 +1175,25 @@
                         @endif
                     </span>
                     <span class="account-mini-copy"><strong>{{ $user->name }}</strong><span>Participant</span></span>
+                    <span class="account-chevron" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 10 4 4 4-4"/></svg>
+                    </span>
                 </summary>
                 <div class="account-dropdown-menu">
-                    <a href="{{ route('participant.profile') }}">Lihat Account</a>
-                    <a href="{{ route('participant.profile') }}#password">Reset Password</a>
+                    <a href="{{ route('participant.profile') }}">
+                        <span class="account-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+                        Lihat Account
+                    </a>
+                    <a href="{{ route('participant.profile') }}#password">
+                        <span class="account-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+                        Reset Password
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit">Log out</button>
+                        <button type="submit">
+                            <span class="account-menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M14 4h4a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-4"/></svg></span>
+                            Log out
+                        </button>
                     </form>
                 </div>
             </details>
