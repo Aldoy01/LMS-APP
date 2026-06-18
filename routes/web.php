@@ -70,6 +70,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:su
     Route::get('courses/{course:slug}/materials', [AdminModuleMaterialController::class, 'index'])->name('courses.materials.index');
     Route::post('courses/{course:slug}/modules', [AdminModuleMaterialController::class, 'storeModule'])->name('modules.store');
     Route::put('modules/{module}', [AdminModuleMaterialController::class, 'updateModule'])->name('modules.update');
+    Route::delete('modules/{module}', [AdminModuleMaterialController::class, 'destroyModule'])->name('modules.destroy');
     Route::post('modules/{module}/lessons', [AdminModuleMaterialController::class, 'storeLesson'])->name('lessons.store');
     Route::post('lessons/{lesson}/materials', [AdminModuleMaterialController::class, 'storeMaterial'])->name('materials.store');
     Route::put('materials/{material}', [AdminModuleMaterialController::class, 'updateMaterial'])->name('materials.update');

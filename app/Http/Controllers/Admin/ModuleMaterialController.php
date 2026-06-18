@@ -22,6 +22,8 @@ class ModuleMaterialController extends Controller
     public function updateModule(Request $request, CourseModule $module)
     {
         $data = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'summary' => ['nullable', 'string', 'max:1000'],
             'category' => ['required', 'in:Basic,Intermediate,Practical'],
             'duration_minutes' => ['required', 'integer', 'min:0', 'max:9999'],
             'sort_order' => ['required', 'integer', 'min:0', 'max:999'],
@@ -29,7 +31,22 @@ class ModuleMaterialController extends Controller
 
         $module->update($data);
 
-        return back()->with('status', 'Urutan dan kategori modul berhasil diperbarui.');
+        return back()->with('status', 'Data modul berhasil diperbarui.');
+    }
+
+    public function destroyModule(CourseModule $module)
+    {
+        $module->load('lessons.materials');
+
+        foreach ($module->lessons as $lesson) {
+            foreach ($lesson->materials as $material) {
+                $this->deleteStoredFile($material);
+            }
+        }
+
+        $module->delete();
+
+        return back()->with('status', 'Modul beserta lesson dan seluruh materinya berhasil dihapus.');
     }
 
     public function storeModule(Request $request, Course $course)

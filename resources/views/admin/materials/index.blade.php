@@ -79,6 +79,10 @@
                             @csrf
                             @method('PUT')
                             <label>
+                                <span>Judul Modul</span>
+                                <input name="title" value="{{ $module->title }}" required>
+                            </label>
+                            <label>
                                 <span>Kategori</span>
                                 <select name="category" required>
                                     @foreach(['Basic', 'Intermediate', 'Practical'] as $category)
@@ -94,9 +98,19 @@
                                 <span>Urutan Modul</span>
                                 <input type="number" name="sort_order" min="0" value="{{ $module->sort_order }}" required>
                             </label>
-                            <div class="meta" style="align-items:end">
-                                <button class="button" type="submit">Simpan Urutan</button>
+                            <label class="wide">
+                                <span>Ringkasan Modul</span>
+                                <textarea name="summary" rows="3">{{ $module->summary }}</textarea>
+                            </label>
+                            <div class="meta wide" style="align-items:end">
+                                <button class="button" type="submit">Simpan Perubahan Modul</button>
                             </div>
+                        </form>
+
+                        <form method="POST" action="{{ route('admin.modules.destroy', $module) }}" style="margin-top:12px" onsubmit="return confirm('Hapus modul beserta semua lesson dan materinya? Tindakan ini tidak dapat dibatalkan.')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="button" style="background:var(--danger)" type="submit">Hapus Modul</button>
                         </form>
 
                         <form method="POST" action="{{ route('admin.lessons.store', $module) }}" class="card" style="margin-top:18px">
