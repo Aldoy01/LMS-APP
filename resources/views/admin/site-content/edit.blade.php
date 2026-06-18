@@ -128,22 +128,45 @@
                         @error('settings.hero_slides') <small>{{ $message }}</small> @enderror
                     </label>
                     <label>
-                        <span>Upload Gambar Header Hero</span>
-                        <input type="file" name="hero_slide_images[]" accept="image/png,image/jpeg,image/webp" multiple>
-                        <input type="hidden" name="settings[hero_slide_images]" value="{{ old('settings.hero_slide_images', $settings['hero_slide_images'] ?? '') }}">
-                        <small>Pilih beberapa gambar sekaligus sesuai urutan daftar header. Maksimal 10 gambar, masing-masing 4MB.</small>
+                        <span>Gambar Setiap Header Hero</span>
+                        @php
+                            $currentHeroSlideLines = collect(preg_split(
+                                '/\r\n|\r|\n/',
+                                old('settings.hero_slides', $settings['hero_slides'] ?? '')
+                            ))->filter(fn ($line) => trim($line) !== '')->values();
+                            $currentHeroImages = collect(preg_split(
+                                '/\r\n|\r|\n/',
+                                old('settings.hero_slide_images', $settings['hero_slide_images'] ?? '')
+                            ))->map(fn ($image) => trim($image))->values();
+                        @endphp
+                        <textarea name="settings[hero_slide_images]" hidden>{{ old('settings.hero_slide_images', $settings['hero_slide_images'] ?? '') }}</textarea>
+                        <span style="display:grid;gap:12px;margin-top:8px">
+                            @forelse($currentHeroSlideLines as $slideIndex => $slideLine)
+                                @php
+                                    $slideTitle = trim(explode('|', $slideLine, 2)[0] ?? 'Header ' . ($slideIndex + 1));
+                                    $currentImage = $currentHeroImages->get($slideIndex, '');
+                                    $currentImageUrl = $currentImage
+                                        ? (Str::startsWith($currentImage, ['http://', 'https://']) ? $currentImage : asset($currentImage))
+                                        : '';
+                                @endphp
+                                <span style="display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;align-items:center;padding:10px;border:1px solid rgba(47,123,255,.14);border-radius:12px;background:#f8fbff">
+                                    @if($currentImageUrl)
+                                        <img src="{{ $currentImageUrl }}" alt="Gambar {{ $slideTitle }}" style="width:88px;aspect-ratio:16/10;object-fit:cover;border-radius:8px">
+                                    @else
+                                        <span style="width:88px;aspect-ratio:16/10;display:grid;place-items:center;border-radius:8px;color:#4b587c;background:#e8efff;font-size:11px;font-weight:800">Belum ada</span>
+                                    @endif
+                                    <span style="display:grid;gap:7px">
+                                        <strong style="color:#07164d;font-size:13px">{{ $slideIndex + 1 }}. {{ $slideTitle }}</strong>
+                                        <input type="file" name="hero_slide_images[{{ $slideIndex }}]" accept="image/png,image/jpeg,image/webp">
+                                    </span>
+                                </span>
+                            @empty
+                                <small>Simpan daftar header terlebih dahulu untuk menampilkan upload gambar per slider.</small>
+                            @endforelse
+                        </span>
+                        <small>Mengganti gambar pada satu header tidak akan mengubah gambar header lainnya. Maksimal 4MB per gambar.</small>
                         @error('hero_slide_images') <small>{{ $message }}</small> @enderror
                         @error('hero_slide_images.*') <small>{{ $message }}</small> @enderror
-                        @php
-                            $currentHeroImages = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slide_images'] ?? ''))->filter();
-                        @endphp
-                        @if($currentHeroImages->isNotEmpty())
-                            <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px">
-                                @foreach($currentHeroImages as $image)
-                                    <img src="{{ Str::startsWith($image, ['http://', 'https://']) ? $image : asset($image) }}" alt="Gambar header {{ $loop->iteration }}" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:9px;border:1px solid rgba(47,123,255,.18)">
-                                @endforeach
-                            </span>
-                        @endif
                     </label>
                     <label>
                         <span>Label CTA Hero</span>

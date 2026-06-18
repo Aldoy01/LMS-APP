@@ -58,7 +58,17 @@ class SiteContentController extends Controller
                     mkdir($directory, 0755, true);
                 }
 
-                $uploadedImages = [];
+                $currentImages = preg_split(
+                    '/\r\n|\r|\n/',
+                    $data['settings']['hero_slide_images'] ?? ''
+                );
+                $slideCount = collect(preg_split(
+                    '/\r\n|\r|\n/',
+                    $data['settings']['hero_slides'] ?? ''
+                ))->filter(fn ($line) => trim($line) !== '')->count();
+
+                $currentImages = array_pad($currentImages, max($slideCount, 1), '');
+
                 foreach ($request->file('hero_slide_images') as $index => $file) {
                     if (! $file) {
                         continue;
@@ -66,12 +76,13 @@ class SiteContentController extends Controller
 
                     $filename = 'hero-slide-' . ($index + 1) . '-' . now()->format('YmdHis') . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
                     $file->move($directory, $filename);
-                    $uploadedImages[] = 'site-media/' . $filename;
+                    $currentImages[$index] = 'site-media/' . $filename;
                 }
 
-                if ($uploadedImages) {
-                    $data['settings']['hero_slide_images'] = implode("\n", $uploadedImages);
-                }
+                $data['settings']['hero_slide_images'] = implode(
+                    "\n",
+                    array_slice($currentImages, 0, max($slideCount, 1))
+                );
             } catch (Throwable $exception) {
                 return back()
                     ->withInput()

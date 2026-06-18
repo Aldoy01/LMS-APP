@@ -10,7 +10,6 @@
         $contactUrl = 'https://wa.me/' . $whatsappNumber;
         $heroSlideImages = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slide_images'] ?? ''))
             ->map(fn ($image) => trim($image))
-            ->filter()
             ->values();
         $heroSlides = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slides'] ?? ''))
             ->map(function ($line, $index) use ($settings, $heroSlideImages) {
