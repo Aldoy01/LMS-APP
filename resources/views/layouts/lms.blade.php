@@ -354,7 +354,7 @@
         }
         textarea { resize: vertical; }
         small { color: var(--accent); }
-        footer { border-top: 1px solid var(--line); padding: 24px clamp(18px, 4vw, 48px); color: var(--muted); background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%); }
+        .page-footer { position: relative; padding-top: 1px; background: linear-gradient(180deg, transparent 0%, #eef5ff 100%); }
         @keyframes cyberBackground {
             0% { background-position: left top, right top, 58% 18%, center; }
             100% { background-position: 8% 4%, 92% 8%, 55% 22%, center; }
@@ -487,11 +487,6 @@
             iframe {
                 min-height: 210px;
             }
-            footer {
-                padding: 20px 14px;
-                font-size: 14px;
-                line-height: 1.6;
-            }
         }
         @media (max-width: 480px) {
             .main {
@@ -560,8 +555,8 @@
 
     @yield('content')
 </div>
-<footer>
-    Trama Verse LMS berbasis Laravel dan PostgreSQL. Dibangun dari blueprint implementasi Mei 2026.
+<footer class="page-footer">
+    @include('partials.footer')
 </footer>
 </body>
 </html>

@@ -29,7 +29,8 @@
             transition: grid-template-columns .24s ease;
         }
         .topbar,
-        footer {
+        body > footer,
+        .shell > footer {
             display: none;
         }
         .member-area.sidebar-closed {
@@ -1034,20 +1035,6 @@
             font-size: 10px;
             font-weight: 900;
         }
-        .dashboard-footer {
-            margin-top: 30px;
-            aspect-ratio: 1314 / 310;
-            overflow: hidden;
-            border-radius: 14px;
-            background: #ffffff;
-            border: 1px solid rgba(47, 123, 255, .14);
-            box-shadow: 0 14px 34px rgba(16, 85, 245, .08);
-        }
-        .dashboard-footer img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
         .account-dropdown {
             position: absolute;
             top: 24px;
@@ -1714,9 +1701,7 @@
                 </div>
             </section>
 
-            <section class="dashboard-footer">
-                <img src="{{ asset('images/trama-verse-footer.png') }}" alt="Footer Trama Verse">
-            </section>
+            @include('partials.footer', ['footerMode' => 'participant'])
         </main>
     </div>
 
