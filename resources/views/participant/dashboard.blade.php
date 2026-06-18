@@ -120,7 +120,9 @@
                 linear-gradient(145deg, #2f7bff, #00d4ff);
             border: 6px solid #e5f0ff;
             box-shadow: 0 16px 34px rgba(16, 85, 245, .14);
+            overflow: hidden;
         }
+        .member-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
         .member-profile strong {
             color: #07164d;
             font-size: 14px;
@@ -873,7 +875,9 @@
             background: linear-gradient(145deg, #42c8ec, #3157dc, #7d16b8);
             font-size: 10px;
             font-weight: 900;
+            overflow: hidden;
         }
+        .account-mini-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
         .account-mini-copy { min-width: 0; flex: 1; }
         .account-mini-copy strong,
         .account-mini-copy span {
@@ -1033,7 +1037,13 @@
 
         <aside class="member-sidebar" id="participantMenu" aria-label="Menu peserta">
             <div class="member-profile">
-                <div class="member-avatar">{{ $initials ?: 'TL' }}</div>
+                <div class="member-avatar">
+                    @if($user->avatar_path)
+                        <img src="{{ route('participant.avatar') }}?v={{ $user->updated_at?->timestamp }}" alt="Foto {{ $user->name }}">
+                    @else
+                        {{ $initials ?: 'TV' }}
+                    @endif
+                </div>
                 <strong>{{ $user->name }}</strong>
             </div>
 
@@ -1096,7 +1106,13 @@
         <main class="member-content">
             <details class="account-dropdown">
                 <summary>
-                    <span class="account-mini-avatar">{{ $initials ?: 'TV' }}</span>
+                    <span class="account-mini-avatar">
+                        @if($user->avatar_path)
+                            <img src="{{ route('participant.avatar') }}?v={{ $user->updated_at?->timestamp }}" alt="">
+                        @else
+                            {{ $initials ?: 'TV' }}
+                        @endif
+                    </span>
                     <span class="account-mini-copy"><strong>{{ $user->name }}</strong><span>Participant</span></span>
                 </summary>
                 <div class="account-dropdown-menu">

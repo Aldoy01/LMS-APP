@@ -52,6 +52,7 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::get('/home', [ParticipantDashboardController::class, 'index'])->name('participant.home');
     Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
     Route::get('/peserta/profile', [ParticipantDashboardController::class, 'profile'])->name('participant.profile');
+    Route::get('/peserta/avatar', [ParticipantDashboardController::class, 'avatar'])->name('participant.avatar');
     Route::put('/peserta/profile', [ParticipantDashboardController::class, 'updateProfile'])->name('participant.profile.update');
     Route::put('/peserta/password', [ParticipantDashboardController::class, 'updatePassword'])->name('participant.password.update');
 });

@@ -8,7 +8,10 @@ use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ParticipantDashboardController extends Controller
 {
@@ -126,15 +129,59 @@ class ParticipantDashboardController extends Controller
             ],
             'phone' => ['nullable', 'string', 'max:40'],
             'company' => ['nullable', 'string', 'max:255'],
+            'avatar' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ], [
             'email.unique' => 'Email sudah digunakan akun lain.',
+            'avatar.mimes' => 'Foto account harus berformat JPG, PNG, atau WEBP.',
+            'avatar.max' => 'Ukuran foto account maksimal 2MB.',
         ]);
+
+        unset($data['avatar']);
+
+        if ($request->hasFile('avatar')) {
+            try {
+                $directory = storage_path('app/public/avatars');
+
+                if (! is_dir($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                if ($user->avatar_path) {
+                    $oldPath = storage_path('app/public/' . $user->avatar_path);
+                    if (is_file($oldPath)) {
+                        unlink($oldPath);
+                    }
+                }
+
+                $file = $request->file('avatar');
+                $filename = 'user-' . $user->id . '-' . Str::random(10) . '.' . $file->getClientOriginalExtension();
+                $file->move($directory, $filename);
+                $data['avatar_path'] = 'avatars/' . $filename;
+            } catch (Throwable $exception) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['avatar' => 'Foto account gagal diupload. Silakan coba file lain.']);
+            }
+        }
 
         $user->update($data);
 
         return redirect()
             ->route('participant.profile')
             ->with('profile_status', 'Data peserta berhasil diperbarui.');
+    }
+
+    public function avatar()
+    {
+        $user = Auth::user();
+
+        abort_unless($user->avatar_path, Response::HTTP_NOT_FOUND);
+
+        $path = storage_path('app/public/' . $user->avatar_path);
+
+        abort_unless(is_file($path), Response::HTTP_NOT_FOUND);
+
+        return response()->file($path);
     }
 
     public function updatePassword(Request $request)

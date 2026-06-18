@@ -65,7 +65,9 @@
             box-shadow: 0 18px 34px rgba(7, 22, 77, .22);
             font-size: 30px;
             font-weight: 900;
+            overflow: hidden;
         }
+        .account-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
         .account-identity { position: relative; z-index: 1; min-width: 0; }
         .account-kicker {
             display: inline-flex;
@@ -170,6 +172,35 @@
             font: inherit;
             transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
         }
+        .avatar-field {
+            display: grid;
+            grid-template-columns: 76px minmax(0, 1fr);
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border: 1px dashed rgba(47,123,255,.28);
+            border-radius: 12px;
+            background: #f8fbff;
+        }
+        .avatar-preview {
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 18px;
+            color: #ffffff;
+            background: linear-gradient(145deg, #42c8ec, #3157dc, #7d16b8);
+            font-size: 21px;
+            font-weight: 900;
+        }
+        .avatar-preview img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .avatar-field input[type="file"] {
+            min-height: auto;
+            padding: 8px;
+            background: #ffffff;
+        }
+        .avatar-help { margin: 5px 0 0; color: #73809f; font-size: 10px; }
         .account-form-grid input:focus {
             outline: none;
             border-color: #4b3db8;
@@ -210,7 +241,13 @@
             </a>
 
             <section class="account-hero">
-                <div class="account-avatar">{{ $initials ?: 'TV' }}</div>
+                <div class="account-avatar">
+                    @if($user->avatar_path)
+                        <img src="{{ route('participant.avatar') }}?v={{ $user->updated_at?->timestamp }}" alt="Foto account {{ $user->name }}">
+                    @else
+                        {{ $initials ?: 'TV' }}
+                    @endif
+                </div>
                 <div class="account-identity">
                     <span class="account-kicker">Participant Account</span>
                     <h1>{{ $user->name }}</h1>
@@ -262,7 +299,7 @@
                 </aside>
 
                 <div class="account-forms">
-                    <form class="account-panel account-form" id="profile" method="POST" action="{{ route('participant.profile.update') }}">
+                    <form class="account-panel account-form" id="profile" method="POST" action="{{ route('participant.profile.update') }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="panel-heading">
@@ -271,6 +308,23 @@
                         </div>
                         @if(session('profile_status')) <div class="account-status">{{ session('profile_status') }}</div> @endif
                         <div class="account-form-grid">
+                            <label class="wide">
+                                <span>Foto Account</span>
+                                <div class="avatar-field">
+                                    <div class="avatar-preview" id="avatarPreview">
+                                        @if($user->avatar_path)
+                                            <img src="{{ route('participant.avatar') }}?v={{ $user->updated_at?->timestamp }}" alt="Preview foto account">
+                                        @else
+                                            {{ $initials ?: 'TV' }}
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <input id="avatarInput" type="file" name="avatar" accept="image/jpeg,image/png,image/webp">
+                                        <p class="avatar-help">JPG, PNG, atau WEBP. Maksimal 2MB.</p>
+                                        @error('avatar') <small class="account-error">{{ $message }}</small> @enderror
+                                    </div>
+                                </div>
+                            </label>
                             <label><span>Nama Lengkap</span><input name="name" value="{{ old('name', $user->name) }}" required>@error('name') <small class="account-error">{{ $message }}</small> @enderror</label>
                             <label><span>Email</span><input type="email" name="email" value="{{ old('email', $user->email) }}" required>@error('email') <small class="account-error">{{ $message }}</small> @enderror</label>
                             <label><span>Nomor Telepon</span><input name="phone" value="{{ old('phone', $user->phone) }}" placeholder="08xxxxxxxxxx">@error('phone') <small class="account-error">{{ $message }}</small> @enderror</label>
@@ -298,4 +352,20 @@
             </div>
         </div>
     </main>
+
+    <script>
+        (() => {
+            const input = document.getElementById('avatarInput');
+            const preview = document.getElementById('avatarPreview');
+            input?.addEventListener('change', () => {
+                const file = input.files?.[0];
+                if (!file || !preview) return;
+                const image = document.createElement('img');
+                image.src = URL.createObjectURL(file);
+                image.alt = 'Preview foto account baru';
+                image.onload = () => URL.revokeObjectURL(image.src);
+                preview.replaceChildren(image);
+            });
+        })();
+    </script>
 @endsection
