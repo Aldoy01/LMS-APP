@@ -188,7 +188,7 @@
                                         <label class="wide">
                                             <span>URL Video / Resource</span>
                                             <input name="external_url" placeholder="Tempel URL YouTube biasa, youtu.be, shorts, embed, atau URL resource">
-                                            <small>Untuk Embed Video, URL YouTube diputar langsung di halaman pembahasan materi.</small>
+                                            <small>URL YouTube dan URL PDF akan ditampilkan langsung di halaman pembahasan materi.</small>
                                         </label>
                                         <label style="display:flex;align-items:center;gap:8px">
                                             <input type="checkbox" name="downloadable" value="1" style="width:auto">
@@ -228,7 +228,7 @@
                                                     <label class="wide">
                                                         <span>Ganti URL Video / Resource</span>
                                                         <input name="external_url" value="{{ filter_var($material->url, FILTER_VALIDATE_URL) ? $material->url : '' }}">
-                                                        <small>URL YouTube biasa otomatis menjadi player di dalam lesson.</small>
+                                                        <small>URL YouTube menjadi player dan URL PDF menjadi viewer di dalam lesson.</small>
                                                     </label>
                                                     <label style="display:flex;align-items:center;gap:8px">
                                                         <input type="checkbox" name="downloadable" value="1" style="width:auto" @checked($material->downloadable)>

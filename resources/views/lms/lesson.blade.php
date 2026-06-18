@@ -38,8 +38,10 @@
     .current-section { padding-top:28px; }
     .current-section h2 { margin:0 0 18px; color:#222c3d; font-size:24px; }
     .learning-stage { overflow:hidden; border:1px solid #dce3ed; border-radius:14px; background:#fff; box-shadow:0 18px 42px rgba(31,64,104,.1); }
+    .material-viewer + .material-viewer { border-top:8px solid #eef2f7; }
+    .material-viewer-title { padding:14px 18px; color:#14213d; background:#f8fbff; border-bottom:1px solid #e1e7ef; font-size:13px; font-weight:900; }
     .learning-stage video, .learning-stage iframe { width:100%; aspect-ratio:16/9; display:block; border:0; border-radius:0; background:#06122e; }
-    .pdf-stage { min-height:520px; }
+    .learning-stage .pdf-stage { min-height:680px; aspect-ratio:auto; background:#eef2f7; }
     .lesson-copy { padding:22px; }
     .lesson-copy h3 { margin:0 0 8px; color:#111827; font-size:20px; }
     .lesson-copy p { margin:0; color:#667085; line-height:1.7; }
@@ -115,28 +117,40 @@
         <section class="current-section">
             <h2>Sedang Dipelajari</h2>
             <div class="learning-stage">
-                @if($primaryMaterial && $primaryMaterial->type === 'video-upload')
-                    <video controls controlsList="nodownload">
-                        <source src="{{ route('materials.show', $primaryMaterial) }}">
-                    </video>
-                @elseif($primaryMaterial && $embedUrl)
-                    <iframe src="{{ $embedUrl }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                @elseif($primaryMaterial && in_array($primaryMaterial->type, ['pdf', 'pdf-slide'], true))
-                    <iframe class="pdf-stage" src="{{ route('materials.show', $primaryMaterial) }}"></iframe>
-                @else
+                @forelse($displayMaterials as $displayMaterial)
+                    @php
+                        $viewerMaterial = $displayMaterial['material'];
+                        $viewerUrl = filter_var($viewerMaterial->url, FILTER_VALIDATE_URL)
+                            ? $viewerMaterial->url
+                            : route('materials.show', $viewerMaterial);
+                    @endphp
+                    <div class="material-viewer">
+                        <div class="material-viewer-title">{{ $viewerMaterial->title }}</div>
+                        @if($displayMaterial['kind'] === 'video-upload')
+                            <video controls controlsList="nodownload">
+                                <source src="{{ route('materials.show', $viewerMaterial) }}">
+                            </video>
+                        @elseif($displayMaterial['kind'] === 'video-embed')
+                            <iframe src="{{ $displayMaterial['url'] }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                        @elseif($displayMaterial['kind'] === 'pdf')
+                            <iframe class="pdf-stage" src="{{ $viewerUrl }}" title="{{ $viewerMaterial->title }}"></iframe>
+                        @endif
+                    </div>
+                @empty
                     <div class="lesson-copy">
                         <h3>{{ $lesson->title }}</h3>
                         <p>Materi utama belum ditambahkan. Admin dapat memasukkan URL embed ITBOX/YouTube atau mengunggah video dan PDF dari menu Kelola Materi.</p>
                     </div>
-                @endif
+                @endforelse
 
                 <div class="lesson-copy">
                     <h3>{{ optional($primaryMaterial)->title ?? $lesson->title }}</h3>
                     <p>{{ $lesson->summary ?: 'Pelajari materi ini sampai selesai, kemudian tandai pelajaran sebagai selesai untuk melanjutkan progres.' }}</p>
                     @php
+                        $displayMaterialIds = $displayMaterials->pluck('material.id');
                         $resources = $lesson->materials
                             ->whereIn('type', ['tool', 'resource'])
-                            ->reject(fn ($material) => optional($primaryMaterial)->id === $material->id)
+                            ->reject(fn ($material) => $displayMaterialIds->contains($material->id))
                             ->values();
                     @endphp
                     @if($resources->isNotEmpty())

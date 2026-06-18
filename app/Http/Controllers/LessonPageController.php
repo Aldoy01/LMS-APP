@@ -29,19 +29,32 @@ class LessonPageController extends Controller
             ? (int) round(($completedLessons / $lessons->count()) * 100)
             : 0;
         $lesson->load(['module', 'materials']);
-        $primaryMaterial = $lesson->materials->first(fn ($material) => $material->type === 'video-upload')
-            ?? $lesson->materials->first(fn ($material) => $material->type === 'video-embed')
-            ?? $lesson->materials->first(fn ($material) => $this->isYouTubeUrl($material->url))
-            ?? $lesson->materials->first(fn ($material) => in_array($material->type, ['pdf', 'pdf-slide'], true));
-        $embedUrl = $primaryMaterial && ($primaryMaterial->type === 'video-embed' || $this->isYouTubeUrl($primaryMaterial->url))
-            ? $this->embedUrl($primaryMaterial->url)
-            : null;
+        $displayMaterials = $lesson->materials
+            ->map(function ($material) {
+                if ($material->type === 'video-upload') {
+                    return ['material' => $material, 'kind' => 'video-upload', 'url' => null];
+                }
+
+                if ($material->type === 'video-embed' || $this->isYouTubeUrl($material->url)) {
+                    return ['material' => $material, 'kind' => 'video-embed', 'url' => $this->embedUrl($material->url)];
+                }
+
+                if (in_array($material->type, ['pdf', 'pdf-slide'], true) || $this->isPdfUrl($material->url)) {
+                    return ['material' => $material, 'kind' => 'pdf', 'url' => null];
+                }
+
+                return null;
+            })
+            ->filter()
+            ->values();
+        $firstDisplayMaterial = $displayMaterials->first();
+        $primaryMaterial = $firstDisplayMaterial['material'] ?? null;
 
         return view('lms.lesson', [
             'course' => $course,
             'lesson' => $lesson,
             'primaryMaterial' => $primaryMaterial,
-            'embedUrl' => $embedUrl,
+            'displayMaterials' => $displayMaterials,
             'lessons' => $lessons,
             'progress' => $progress,
             'completedLessons' => $completedLessons,
@@ -150,5 +163,18 @@ class LessonPageController extends Controller
             'youtube-nocookie.com',
             'youtu.be',
         ], true);
+    }
+
+    private function isPdfUrl(?string $url): bool
+    {
+        if (! $url) {
+            return false;
+        }
+
+        $path = filter_var($url, FILTER_VALIDATE_URL)
+            ? parse_url($url, PHP_URL_PATH)
+            : $url;
+
+        return strtolower(pathinfo((string) $path, PATHINFO_EXTENSION)) === 'pdf';
     }
 }
