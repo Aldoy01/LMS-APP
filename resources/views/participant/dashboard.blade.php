@@ -846,11 +846,10 @@
             z-index: 45;
         }
         .account-dropdown summary {
-            min-width: 150px;
+            min-width: 184px;
             min-height: 42px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 10px;
             padding: 9px 12px;
             border: 1px solid rgba(47, 123, 255, .18);
@@ -863,6 +862,28 @@
             font-weight: 800;
             list-style: none;
         }
+        .account-mini-avatar {
+            width: 28px;
+            height: 28px;
+            flex: 0 0 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #ffffff;
+            background: linear-gradient(145deg, #42c8ec, #3157dc, #7d16b8);
+            font-size: 10px;
+            font-weight: 900;
+        }
+        .account-mini-copy { min-width: 0; flex: 1; }
+        .account-mini-copy strong,
+        .account-mini-copy span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .account-mini-copy strong { color: #07164d; font-size: 11px; }
+        .account-mini-copy span { margin-top: 1px; color: #73809f; font-size: 9px; font-weight: 700; }
         .account-dropdown summary::-webkit-details-marker { display: none; }
         .account-dropdown summary::after { content: "⌄"; color: #4b3db8; font-size: 16px; }
         .account-dropdown[open] summary::after { transform: rotate(180deg); }
@@ -1074,7 +1095,10 @@
 
         <main class="member-content">
             <details class="account-dropdown">
-                <summary>{{ $user->name }}</summary>
+                <summary>
+                    <span class="account-mini-avatar">{{ $initials ?: 'TV' }}</span>
+                    <span class="account-mini-copy"><strong>{{ $user->name }}</strong><span>Participant</span></span>
+                </summary>
                 <div class="account-dropdown-menu">
                     <a href="{{ route('participant.profile') }}">Lihat Account</a>
                     <a href="{{ route('participant.profile') }}#password">Reset Password</a>
