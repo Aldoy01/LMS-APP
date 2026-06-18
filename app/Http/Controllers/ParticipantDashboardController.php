@@ -12,6 +12,14 @@ use Illuminate\Validation\Rule;
 
 class ParticipantDashboardController extends Controller
 {
+    public function profile()
+    {
+        return view('participant.profile', [
+            'user' => Auth::user()->load('role'),
+            'enrollmentCount' => Enrollment::where('user_id', Auth::id())->count(),
+        ]);
+    }
+
     public function index()
     {
         $enrollments = Enrollment::with([
@@ -124,7 +132,8 @@ class ParticipantDashboardController extends Controller
 
         $user->update($data);
 
-        return redirect(route('participant.dashboard') . '#profil')
+        return redirect()
+            ->route('participant.profile')
             ->with('profile_status', 'Data peserta berhasil diperbarui.');
     }
 
@@ -152,7 +161,7 @@ class ParticipantDashboardController extends Controller
             'remember_token' => null,
         ])->save();
 
-        return redirect(route('participant.dashboard') . '#profil')
+        return redirect(route('participant.profile') . '#password')
             ->with('password_status', 'Password berhasil diperbarui.');
     }
 }
