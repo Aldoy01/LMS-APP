@@ -47,12 +47,13 @@
                     </label>
 
                     <label>
-                        <span>Status</span>
+                        <span>Status Course</span>
                         <select name="status" required>
-                            @foreach(['draft' => 'Draft', 'published' => 'Published', 'archived' => 'Archived'] as $value => $label)
-                                <option value="{{ $value }}" @selected(old('status', $course->status) === $value)>{{ $label }}</option>
-                            @endforeach
+                            @php $selectedStatus = old('status', $course->status); @endphp
+                            <option value="published" @selected($selectedStatus === 'published')>Aktif</option>
+                            <option value="draft" @selected(in_array($selectedStatus, ['draft', 'archived'], true))>Nonaktif</option>
                         </select>
+                        <small>Course aktif tampil pada katalog dan dapat dipilih peserta. Course nonaktif hanya dapat dikelola admin.</small>
                         @error('status') <small>{{ $message }}</small> @enderror
                     </label>
 

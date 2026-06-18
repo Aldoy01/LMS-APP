@@ -20,7 +20,7 @@
             <div class="grid courses">
                 @forelse($courses as $course)
                     <article class="card">
-                        <span class="eyebrow">{{ $course->level }} · {{ ucfirst($course->status) }}</span>
+                        <span class="eyebrow">{{ $course->level }} · {{ $course->status === 'published' ? 'Aktif' : 'Nonaktif' }}</span>
                         <h3>{{ $course->title }}</h3>
                         <p>{{ $course->summary }}</p>
                         <div class="meta">
