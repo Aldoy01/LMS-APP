@@ -8,6 +8,26 @@
         $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
         $whatsappNumber = str_starts_with($whatsappNumber, '0') ? '62' . substr($whatsappNumber, 1) : $whatsappNumber;
         $contactUrl = 'https://wa.me/' . $whatsappNumber;
+        $heroSlides = collect(preg_split('/\r\n|\r|\n/', $settings['hero_slides'] ?? ''))
+            ->map(function ($line) use ($settings) {
+                $parts = array_map('trim', explode('|', $line, 3));
+
+                return [
+                    'title' => $parts[0] ?? '',
+                    'accent' => $parts[1] ?? '',
+                    'description' => $parts[2] ?? ($settings['hero_subtitle'] ?? ''),
+                ];
+            })
+            ->filter(fn ($slide) => $slide['title'] !== '')
+            ->values();
+
+        if ($heroSlides->isEmpty()) {
+            $heroSlides = collect([[
+                'title' => $settings['hero_title'] ?? 'Welcome to Trama Verse',
+                'accent' => 'Make Learning Easy & Fun',
+                'description' => $settings['hero_subtitle'] ?? '',
+            ]]);
+        }
     @endphp
 
     <style>
@@ -59,6 +79,34 @@
             font-size: clamp(17px, 2vw, 22px);
             line-height: 1.65;
             text-align: left;
+        }
+        .hero-slide[hidden] { display: none; }
+        .hero-slide {
+            animation: heroSlideIn .55s ease both;
+        }
+        .hero-slide-nav {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 22px;
+        }
+        .hero-slide-dot {
+            width: 10px;
+            height: 10px;
+            padding: 0;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(49, 87, 220, .24);
+            cursor: pointer;
+            transition: width .2s ease, background .2s ease;
+        }
+        .hero-slide-dot.is-active {
+            width: 34px;
+            background: linear-gradient(90deg, var(--brand-dark), var(--accent));
+        }
+        @keyframes heroSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .tv-actions {
             display: flex;
@@ -412,13 +460,21 @@
 
     <div class="tv-home">
         <section class="tv-hero" id="home">
-            <div>
+            <div data-hero-slider>
                 <span class="tv-badge">Free Learning Platform</span>
-                <h1>Welcome to {{ $settings['site_name'] ?? 'Trama Verse' }} <span>Make Learning Easy & Fun</span></h1>
-                <p>
-                    Platform belajar cyber security dan teknologi yang membantu peserta belajar, praktik,
-                    memilih roadmap, dan membangun karier digital dengan materi terarah.
-                </p>
+                @foreach($heroSlides as $slide)
+                    <div class="hero-slide" data-hero-slide @if(!$loop->first) hidden @endif>
+                        <h1>{{ $slide['title'] }} @if($slide['accent'])<span>{{ $slide['accent'] }}</span>@endif</h1>
+                        <p>{{ $slide['description'] }}</p>
+                    </div>
+                @endforeach
+                @if($heroSlides->count() > 1)
+                    <div class="hero-slide-nav" aria-label="Pilih header">
+                        @foreach($heroSlides as $slide)
+                            <button class="hero-slide-dot {{ $loop->first ? 'is-active' : '' }}" type="button" data-hero-dot="{{ $loop->index }}" aria-label="Tampilkan header {{ $loop->iteration }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"></button>
+                        @endforeach
+                    </div>
+                @endif
                 <div class="tv-actions">
                     <a class="button tv-button" href="{{ $memberUrl }}">{{ $memberLabel }}</a>
                     <a class="button tv-button secondary" href="#program">Explore Courses</a>
@@ -531,4 +587,45 @@
             </div>
         </section>
     </div>
+    <script>
+        (function () {
+            const slider = document.querySelector('[data-hero-slider]');
+            if (!slider) return;
+
+            const slides = Array.from(slider.querySelectorAll('[data-hero-slide]'));
+            const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
+            if (slides.length < 2) return;
+
+            let activeIndex = 0;
+            let timer;
+
+            const showSlide = (index) => {
+                activeIndex = (index + slides.length) % slides.length;
+                slides.forEach((slide, slideIndex) => {
+                    slide.hidden = slideIndex !== activeIndex;
+                });
+                dots.forEach((dot, dotIndex) => {
+                    const isActive = dotIndex === activeIndex;
+                    dot.classList.toggle('is-active', isActive);
+                    dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                });
+            };
+
+            const start = () => {
+                window.clearInterval(timer);
+                timer = window.setInterval(() => showSlide(activeIndex + 1), 6000);
+            };
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    showSlide(Number(dot.dataset.heroDot));
+                    start();
+                });
+            });
+
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                start();
+            }
+        }());
+    </script>
 @endsection

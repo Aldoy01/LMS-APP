@@ -121,6 +121,12 @@
                         <textarea name="settings[hero_subtitle]" rows="4" required>{{ old('settings.hero_subtitle', $settings['hero_subtitle']) }}</textarea>
                         @error('settings.hero_subtitle') <small>{{ $message }}</small> @enderror
                     </label>
+                    <label class="wide">
+                        <span>Daftar Header Hero</span>
+                        <textarea name="settings[hero_slides]" rows="7" placeholder="Judul utama | Judul aksen | Deskripsi">{{ old('settings.hero_slides', $settings['hero_slides'] ?? '') }}</textarea>
+                        <small>Tulis satu header per baris dengan format: Judul utama | Judul aksen | Deskripsi. Header akan tampil bergantian di halaman Home.</small>
+                        @error('settings.hero_slides') <small>{{ $message }}</small> @enderror
+                    </label>
                     <label>
                         <span>Label CTA Hero</span>
                         <input name="settings[hero_cta_label]" value="{{ old('settings.hero_cta_label', $settings['hero_cta_label']) }}" required>

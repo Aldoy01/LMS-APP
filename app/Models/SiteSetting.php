@@ -21,6 +21,7 @@ class SiteSetting extends Model
         'register_label' => 'Register',
         'hero_title' => 'Bangun Karirmu sebagai Cyber Security Profesional',
         'hero_subtitle' => 'Pelajari Konsep dan Teknik Cyber Security dari para Pengajar Terbaik yang berpengalaman di Industri sampai Bisa!',
+        'hero_slides' => "Welcome to Trama Verse | Make Learning Easy & Fun | Platform belajar cyber security dan teknologi dengan materi terarah.\nBuild Your Cyber Career | Learn, Practice, Grow | Pelajari skill baru melalui course, modul praktik, dan dukungan komunitas.\nExplore Technology Together | From Beginner to Practical | Pilih roadmap belajar dan tumbuh bersama mentor serta peserta lainnya.",
         'hero_cta_label' => 'Belajar Sekarang',
         'hero_visual_badge' => 'SQL  XSS  LAB',
         'intro_eyebrow' => 'Kenapa Trama Verse',

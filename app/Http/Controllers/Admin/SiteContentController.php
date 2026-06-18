@@ -35,6 +35,7 @@ class SiteContentController extends Controller
             'settings.register_label' => ['required', 'string', 'max:40'],
             'settings.hero_title' => ['required', 'string', 'max:180'],
             'settings.hero_subtitle' => ['required', 'string', 'max:360'],
+            'settings.hero_slides' => ['nullable', 'string', 'max:3000'],
             'settings.hero_cta_label' => ['required', 'string', 'max:60'],
             'settings.hero_visual_badge' => ['required', 'string', 'max:80'],
             'settings.intro_eyebrow' => ['required', 'string', 'max:80'],
