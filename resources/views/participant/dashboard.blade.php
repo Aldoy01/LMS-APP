@@ -838,6 +838,126 @@
             border: 1px solid rgba(47, 123, 255, .14);
             box-shadow: 0 10px 24px rgba(16, 85, 245, .06);
         }
+        .profile-layout {
+            display: grid;
+            grid-template-columns: minmax(240px, .72fr) minmax(0, 1.28fr);
+            gap: 18px;
+            align-items: start;
+        }
+        .profile-summary,
+        .profile-form-card {
+            border: 1px solid rgba(47, 123, 255, .14);
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 14px 34px rgba(16, 85, 245, .08);
+        }
+        .profile-summary {
+            padding: 22px;
+            text-align: center;
+        }
+        .profile-summary .member-avatar {
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 14px;
+            font-size: 26px;
+        }
+        .profile-summary h3 {
+            margin: 0;
+            color: #07164d;
+            font-size: 18px;
+        }
+        .profile-summary > p {
+            margin: 6px 0 18px;
+            color: #4b587c;
+            font-size: 13px;
+            text-align: center;
+        }
+        .profile-data {
+            display: grid;
+            gap: 10px;
+            text-align: left;
+        }
+        .profile-data div {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #f7faff;
+        }
+        .profile-data span {
+            display: block;
+            color: #73809f;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .profile-data strong {
+            display: block;
+            margin-top: 3px;
+            color: #07164d;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+        .profile-forms {
+            display: grid;
+            gap: 18px;
+        }
+        .profile-form-card {
+            padding: 20px;
+        }
+        .profile-form-card h3 {
+            margin: 0 0 4px;
+            color: #07164d;
+            font-size: 17px;
+        }
+        .profile-form-card > p {
+            margin: 0 0 16px;
+            color: #4b587c;
+            font-size: 12px;
+            text-align: left;
+        }
+        .profile-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 13px;
+        }
+        .profile-form-grid .wide {
+            grid-column: 1 / -1;
+        }
+        .profile-form-grid label {
+            display: grid;
+            gap: 6px;
+            color: #4b587c;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .profile-form-grid input {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            border: 1px solid rgba(47, 123, 255, .18);
+            border-radius: 9px;
+            color: #07164d;
+            background: #fafdff;
+            font: inherit;
+        }
+        .profile-form-grid input:focus {
+            outline: 2px solid rgba(47, 123, 255, .18);
+            border-color: #3157dc;
+        }
+        .field-error {
+            color: #b42318;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .profile-status {
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            border: 1px solid rgba(34, 197, 94, .22);
+            border-radius: 10px;
+            color: #15803d;
+            background: rgba(34, 197, 94, .09);
+            font-size: 12px;
+            font-weight: 800;
+        }
         @media (max-width: 980px) {
             .member-area {
                 display: block;
@@ -918,8 +1038,15 @@
             .discussion-card,
             .class-access-shell,
             .discussion-split,
-            .lesson-access-row {
+            .lesson-access-row,
+            .profile-layout {
                 grid-template-columns: 1fr;
+            }
+            .profile-form-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-form-grid .wide {
+                grid-column: auto;
             }
             .headline-icon {
                 width: 58px;
@@ -1238,16 +1365,87 @@
             </section>
 
             <section class="member-section" id="profil">
-                <h2>Profil & Bantuan</h2>
-                <div class="announcement-grid" id="bantuan">
-                    <article class="announcement-card">
-                        <strong>{{ $user->name }}</strong>
-                        <p>{{ $user->email }} - {{ optional($user->role)->label ?? 'Peserta' }}</p>
+                <h2>Profile Peserta</h2>
+
+                @if(session('profile_status'))
+                    <div class="profile-status">{{ session('profile_status') }}</div>
+                @endif
+                @if(session('password_status'))
+                    <div class="profile-status">{{ session('password_status') }}</div>
+                @endif
+
+                <div class="profile-layout">
+                    <article class="profile-summary">
+                        <div class="member-avatar">{{ $initials ?: 'TV' }}</div>
+                        <h3>{{ $user->name }}</h3>
+                        <p>{{ optional($user->role)->label ?? 'Peserta' }}</p>
+                        <div class="profile-data">
+                            <div><span>Email</span><strong>{{ $user->email }}</strong></div>
+                            <div><span>Nomor Telepon</span><strong>{{ $user->phone ?: 'Belum diisi' }}</strong></div>
+                            <div><span>Instansi / Perusahaan</span><strong>{{ $user->company ?: 'Belum diisi' }}</strong></div>
+                            <div><span>Kelas Aktif</span><strong>{{ $enrollments->count() }} kelas</strong></div>
+                        </div>
                     </article>
-                    <article class="announcement-card">
-                        <strong>Kontak Admin</strong>
-                        <p>WhatsApp: <a href="{{ $support['whatsapp'] }}" target="_blank" rel="noopener">{{ $support['whatsapp_label'] }}</a><br>Email: <a href="{{ $support['email'] }}">{{ $support['email_label'] }}</a></p>
-                    </article>
+
+                    <div class="profile-forms">
+                        <form class="profile-form-card" method="POST" action="{{ route('participant.profile.update') }}">
+                            @csrf
+                            @method('PUT')
+                            <h3>Edit Data Peserta</h3>
+                            <p>Perbarui identitas yang digunakan pada akun LMS.</p>
+                            <div class="profile-form-grid">
+                                <label>
+                                    <span>Nama Lengkap</span>
+                                    <input name="name" value="{{ old('name', $user->name) }}" required>
+                                    @error('name') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <label>
+                                    <span>Email</span>
+                                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                    @error('email') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <label>
+                                    <span>Nomor Telepon</span>
+                                    <input name="phone" value="{{ old('phone', $user->phone) }}" placeholder="08xxxxxxxxxx">
+                                    @error('phone') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <label>
+                                    <span>Instansi / Perusahaan</span>
+                                    <input name="company" value="{{ old('company', $user->company) }}" placeholder="Opsional">
+                                    @error('company') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <div class="wide">
+                                    <button class="button" type="submit">Simpan Perubahan</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form class="profile-form-card" method="POST" action="{{ route('participant.password.update') }}">
+                            @csrf
+                            @method('PUT')
+                            <h3>Reset Password</h3>
+                            <p>Gunakan minimal 8 karakter dan masukkan password lama untuk verifikasi.</p>
+                            <div class="profile-form-grid">
+                                <label class="wide">
+                                    <span>Password Lama</span>
+                                    <input type="password" name="current_password" autocomplete="current-password" required>
+                                    @error('current_password') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <label>
+                                    <span>Password Baru</span>
+                                    <input type="password" name="password" autocomplete="new-password" required>
+                                    @error('password') <small class="field-error">{{ $message }}</small> @enderror
+                                </label>
+                                <label>
+                                    <span>Konfirmasi Password Baru</span>
+                                    <input type="password" name="password_confirmation" autocomplete="new-password" required>
+                                </label>
+                                <div class="wide">
+                                    <button class="button hero-course-button" type="submit">Ubah Password</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </section>
 

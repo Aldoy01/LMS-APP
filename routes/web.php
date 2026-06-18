@@ -51,6 +51,8 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::post('/paket/{course:slug}/order', [PurchaseController::class, 'order'])->name('purchase.order');
     Route::get('/home', [ParticipantDashboardController::class, 'index'])->name('participant.home');
     Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
+    Route::put('/peserta/profile', [ParticipantDashboardController::class, 'updateProfile'])->name('participant.profile.update');
+    Route::put('/peserta/password', [ParticipantDashboardController::class, 'updatePassword'])->name('participant.password.update');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'no.cache', 'role:super-admin,admin-lms'])->group(function () {

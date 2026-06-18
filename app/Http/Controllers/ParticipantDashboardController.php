@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\SiteSetting;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class ParticipantDashboardController extends Controller
 {
@@ -99,5 +102,57 @@ class ParticipantDashboardController extends Controller
                 'whatsapp_label' => $settings['contact_whatsapp'] ?? '08513332305',
             ],
         ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'phone' => ['nullable', 'string', 'max:40'],
+            'company' => ['nullable', 'string', 'max:255'],
+        ], [
+            'email.unique' => 'Email sudah digunakan akun lain.',
+        ]);
+
+        $user->update($data);
+
+        return redirect(route('participant.dashboard') . '#profil')
+            ->with('profile_status', 'Data peserta berhasil diperbarui.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'current_password.required' => 'Password lama wajib diisi.',
+            'password.min' => 'Password baru minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password baru tidak sama.',
+        ]);
+
+        $user = Auth::user();
+
+        if (! Hash::check($data['current_password'], $user->password)) {
+            return back()
+                ->withErrors(['current_password' => 'Password lama tidak sesuai.'])
+                ->withInput();
+        }
+
+        $user->forceFill([
+            'password' => Hash::make($data['password']),
+            'remember_token' => null,
+        ])->save();
+
+        return redirect(route('participant.dashboard') . '#profil')
+            ->with('password_status', 'Password berhasil diperbarui.');
     }
 }
