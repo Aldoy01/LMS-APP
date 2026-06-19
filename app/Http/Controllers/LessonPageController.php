@@ -70,9 +70,9 @@ class LessonPageController extends Controller
             'previousLesson' => $currentIndex > 0 ? $lessons[$currentIndex - 1] : null,
             'nextLesson' => $currentIndex !== false && $currentIndex < $lessons->count() - 1 ? $lessons[$currentIndex + 1] : null,
             'discussionGroups' => [
-                ['label' => 'Telegram', 'url' => 'https://t.me/tramaverse', 'class' => 'telegram'],
-                ['label' => 'WhatsApp Admin', 'url' => 'https://wa.me/' . $whatsappTarget, 'class' => 'whatsapp'],
-                ['label' => 'Discord', 'url' => 'https://discord.gg/tramaverse', 'class' => 'discord'],
+                ['name' => 'Telegram Community', 'description' => 'Diskusi materi, berbagi insight, dan bertanya bersama peserta Trama Verse.', 'url' => 'https://t.me/tramaverse'],
+                ['name' => 'WhatsApp Support', 'description' => 'Hubungi admin untuk kendala akses kelas dan progres belajar.', 'url' => 'https://wa.me/' . $whatsappTarget],
+                ['name' => 'Discord Lab Room', 'description' => 'Tanyakan kendala praktik, troubleshooting tools, dan review workflow bersama komunitas.', 'url' => 'https://discord.gg/tramaverse'],
             ],
         ]);
     }

@@ -59,22 +59,11 @@
     .learning-forum { margin-top:34px; }
     .learning-forum h2 { margin:6px 0 8px; color:#07164d; font-size:28px; }
     .learning-forum > p { margin:0 0 18px; color:#64748b; }
-    .forum-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
-    .forum-card { position:relative; min-height:210px; display:flex; flex-direction:column; padding:22px; overflow:hidden; border-radius:18px; color:#fff; box-shadow:0 16px 36px rgba(16,85,245,.15); }
-    .forum-card.telegram { background:linear-gradient(145deg,#149ddd,#2563eb); }
-    .forum-card.whatsapp { background:linear-gradient(145deg,#14b86a,#078d58); }
-    .forum-card.discord { background:linear-gradient(145deg,#5865f2,#7c3aed); }
-    .forum-card::after { content:""; position:absolute; width:150px; height:150px; right:-50px; bottom:-70px; border-radius:50%; background:rgba(255,255,255,.13); }
-    .forum-card small { position:relative; z-index:1; font-weight:900; letter-spacing:.08em; text-transform:uppercase; opacity:.82; }
-    .forum-card h3 { position:relative; z-index:1; margin:14px 0 8px; color:#fff; font-size:21px; }
-    .forum-card p { position:relative; z-index:1; margin:0; color:rgba(255,255,255,.88); font-size:13px; line-height:1.65; }
-    .forum-card a { position:relative; z-index:1; align-self:flex-start; margin-top:auto; padding:10px 14px; border-radius:10px; color:#07164d; background:#fff; font-size:12px; font-weight:900; }
     @media(max-width:760px) {
         .access-cover { grid-template-columns:1fr; padding:28px 20px; }
         .curriculum-head,.module-head { align-items:flex-start; flex-direction:column; }
         .lesson-access { grid-template-columns:24px minmax(0,1fr); padding:15px; }
         .open-lesson { grid-column:2; justify-self:start; }
-        .forum-grid { grid-template-columns:1fr; }
     }
 </style>
 
@@ -164,23 +153,7 @@
         <span class="eyebrow">Community Learning</span>
         <h2>Forum Belajar Peserta</h2>
         <p>Diskusikan materi kelas, tanyakan kendala, dan lanjutkan praktik bersama komunitas.</p>
-        <div class="forum-grid">
-            @foreach($discussionGroups as $group)
-                @php
-                    $forumClass = str_contains($group['name'], 'Telegram')
-                        ? 'telegram'
-                        : (str_contains($group['name'], 'WhatsApp') ? 'whatsapp' : 'discord');
-                @endphp
-                <article class="forum-card {{ $forumClass }}">
-                    <small>{{ $group['name'] }}</small>
-                    <h3>{{ $forumClass === 'whatsapp' ? 'Bantuan Admin Kelas' : 'Gabung Forum Diskusi' }}</h3>
-                    <p>{{ $group['description'] }}</p>
-                    <a href="{{ $group['url'] }}" target="_blank" rel="noopener">
-                        {{ $forumClass === 'whatsapp' ? 'Hubungi Admin' : 'Gabung Sekarang' }} →
-                    </a>
-                </article>
-            @endforeach
-        </div>
+        @include('partials.learning-forum')
     </section>
 
     @include('partials.footer', ['footerMode' => 'participant'])
