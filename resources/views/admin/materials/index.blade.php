@@ -1,6 +1,45 @@
 @extends('layouts.lms', ['title' => 'Kelola Materi'])
 
 @section('content')
+    <style>
+        .admin-toggle {
+            margin-top: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(47,123,255,.14);
+            border-radius: 12px;
+            background: #ffffff;
+        }
+        .admin-toggle > summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 13px 15px;
+            color: #3157dc;
+            background: #f7faff;
+            cursor: pointer;
+            list-style: none;
+            font-size: 13px;
+            font-weight: 900;
+        }
+        .admin-toggle > summary::-webkit-details-marker { display: none; }
+        .admin-toggle > summary::after { content: "+"; font-size: 20px; line-height: 1; }
+        .admin-toggle[open] > summary::after { content: "−"; }
+        .admin-toggle-body { padding: 15px; border-top: 1px solid rgba(47,123,255,.1); }
+        .material-summary {
+            display: grid;
+            grid-template-columns: minmax(0,1fr) auto;
+            gap: 15px;
+            align-items: center;
+        }
+        .material-summary h4 { margin: 0; color: #07164d; font-size: 15px; }
+        .material-summary p { margin: 5px 0 0; color: #64748b; font-size: 12px; }
+        .material-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .material-actions .button { min-height: 36px; padding: 8px 12px; font-size: 11px; }
+        @media (max-width: 680px) {
+            .material-summary { grid-template-columns: 1fr; }
+        }
+    </style>
     <main class="main">
         <section class="section">
             <div class="section-head">
@@ -160,91 +199,110 @@
                                     <strong>{{ $lesson->title }}</strong>
                                     <span class="muted">{{ ucfirst($lesson->content_type) }} / {{ $lesson->duration_minutes }} menit</span>
 
-                                    <form method="POST" action="{{ route('admin.materials.store', $lesson) }}" enctype="multipart/form-data" class="form-grid" style="margin-top:12px">
-                                        @csrf
-                                        <label>
-                                            <span>Judul Materi</span>
-                                            <input name="title" required>
-                                        </label>
-                                        <label>
-                                            <span>Tipe</span>
-                                            <select name="type" required>
-                                                <option value="pdf">PDF Materi</option>
-                                                <option value="pdf-slide">PDF Slide</option>
-                                                <option value="video-upload">Upload Video</option>
-                                                <option value="video-embed">Embed Video</option>
-                                                <option value="tool">Tools List</option>
-                                                <option value="resource">Resource Link</option>
-                                            </select>
-                                        </label>
-                                        <label>
-                                            <span>Urutan</span>
-                                            <input type="number" name="sort_order" value="0" min="0" required>
-                                        </label>
-                                        <label>
-                                            <span>Upload File (maksimal 50 MB)</span>
-                                            <input type="file" name="file">
-                                            <small>Server menerima request hingga 64 MB untuk menyediakan ruang bagi metadata upload.</small>
-                                        </label>
-                                        <label class="wide">
-                                            <span>URL Video / Resource</span>
-                                            <input name="external_url" placeholder="Tempel URL YouTube biasa, youtu.be, shorts, embed, atau URL resource">
-                                            <small>URL YouTube dan URL PDF akan ditampilkan langsung di halaman pembahasan materi.</small>
-                                        </label>
-                                        <label style="display:flex;align-items:center;gap:8px">
-                                            <input type="checkbox" name="downloadable" value="1" style="width:auto">
-                                            <span>Bisa diunduh</span>
-                                        </label>
-                                        <div class="meta">
-                                            <button class="button" type="submit">Tambah Materi</button>
+                                    <details class="admin-toggle">
+                                        <summary>Tambah Materi Baru</summary>
+                                        <div class="admin-toggle-body">
+                                            <form method="POST" action="{{ route('admin.materials.store', $lesson) }}" enctype="multipart/form-data" class="form-grid">
+                                                @csrf
+                                                <label>
+                                                    <span>Judul Materi</span>
+                                                    <input name="title" required>
+                                                </label>
+                                                <label>
+                                                    <span>Tipe</span>
+                                                    <select name="type" required>
+                                                        <option value="pdf">PDF Materi</option>
+                                                        <option value="pdf-slide">PDF Slide</option>
+                                                        <option value="video-upload">Upload Video</option>
+                                                        <option value="video-embed">Embed Video</option>
+                                                        <option value="tool">Tools List</option>
+                                                        <option value="resource">Resource Link</option>
+                                                    </select>
+                                                </label>
+                                                <label>
+                                                    <span>Urutan</span>
+                                                    <input type="number" name="sort_order" value="{{ $lesson->materials->count() + 1 }}" min="0" required>
+                                                </label>
+                                                <label>
+                                                    <span>Upload File (maksimal 50 MB)</span>
+                                                    <input type="file" name="file">
+                                                    <small>Server menerima request hingga 64 MB untuk metadata upload.</small>
+                                                </label>
+                                                <label class="wide">
+                                                    <span>URL Video / Resource</span>
+                                                    <input name="external_url" placeholder="Tempel URL YouTube, PDF, atau resource">
+                                                    <small>URL YouTube dan PDF ditampilkan langsung pada lesson.</small>
+                                                </label>
+                                                <label style="display:flex;align-items:center;gap:8px">
+                                                    <input type="checkbox" name="downloadable" value="1" style="width:auto">
+                                                    <span>Bisa diunduh</span>
+                                                </label>
+                                                <div class="meta">
+                                                    <button class="button" type="submit">Simpan Materi Baru</button>
+                                                </div>
+                                            </form>
                                         </div>
-                                    </form>
+                                    </details>
 
                                     <div class="list" style="margin-top:12px">
                                         @foreach($lesson->materials as $material)
                                             <div class="list-row">
-                                                <form method="POST" action="{{ route('admin.materials.update', $material) }}" enctype="multipart/form-data" class="form-grid">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <label>
-                                                        <span>Judul</span>
-                                                        <input name="title" value="{{ $material->title }}" required>
-                                                    </label>
-                                                    <label>
-                                                        <span>Tipe</span>
-                                                        <select name="type" required>
-                                                            @foreach(['pdf' => 'PDF Materi', 'pdf-slide' => 'PDF Slide', 'video-upload' => 'Upload Video', 'video-embed' => 'Embed Video', 'tool' => 'Tools List', 'resource' => 'Resource Link'] as $value => $label)
-                                                                <option value="{{ $value }}" @selected($material->type === $value)>{{ $label }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </label>
-                                                    <label>
-                                                        <span>Urutan</span>
-                                                        <input type="number" name="sort_order" value="{{ $material->sort_order }}" min="0" required>
-                                                    </label>
-                                                    <label>
-                                                        <span>Ganti File</span>
-                                                        <input type="file" name="file">
-                                                    </label>
-                                                    <label class="wide">
-                                                        <span>Ganti URL Video / Resource</span>
-                                                        <input name="external_url" value="{{ filter_var($material->url, FILTER_VALIDATE_URL) ? $material->url : '' }}">
-                                                        <small>URL YouTube menjadi player dan URL PDF menjadi viewer di dalam lesson.</small>
-                                                    </label>
-                                                    <label style="display:flex;align-items:center;gap:8px">
-                                                        <input type="checkbox" name="downloadable" value="1" style="width:auto" @checked($material->downloadable)>
-                                                        <span>Bisa diunduh</span>
-                                                    </label>
-                                                    <div class="meta">
-                                                        <button class="button" type="submit">Update Materi</button>
+                                                <div class="material-summary">
+                                                    <div>
+                                                        <h4>{{ $material->title }}</h4>
+                                                        <p>{{ strtoupper(str_replace('-', ' ', $material->type)) }} · Urutan {{ $material->sort_order }}{{ $material->downloadable ? ' · Bisa diunduh' : '' }}</p>
                                                     </div>
-                                                </form>
-                                                <form method="POST" action="{{ route('admin.materials.destroy', $material) }}" class="meta">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a class="button" style="background:var(--night)" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Preview</a>
-                                                    <button class="button" style="background:var(--danger)" type="submit">Hapus Materi</button>
-                                                </form>
+                                                    <div class="material-actions">
+                                                        <a class="button" style="background:var(--night)" href="{{ route('materials.show', $material) }}" target="_blank" rel="noopener">Preview</a>
+                                                        <form method="POST" action="{{ route('admin.materials.destroy', $material) }}" onsubmit="return confirm('Hapus materi ini?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="button" style="background:var(--danger)" type="submit">Hapus</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                                <details class="admin-toggle">
+                                                    <summary>Edit Materi</summary>
+                                                    <div class="admin-toggle-body">
+                                                        <form method="POST" action="{{ route('admin.materials.update', $material) }}" enctype="multipart/form-data" class="form-grid">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <label>
+                                                                <span>Judul</span>
+                                                                <input name="title" value="{{ $material->title }}" required>
+                                                            </label>
+                                                            <label>
+                                                                <span>Tipe</span>
+                                                                <select name="type" required>
+                                                                    @foreach(['pdf' => 'PDF Materi', 'pdf-slide' => 'PDF Slide', 'video-upload' => 'Upload Video', 'video-embed' => 'Embed Video', 'tool' => 'Tools List', 'resource' => 'Resource Link'] as $value => $label)
+                                                                        <option value="{{ $value }}" @selected($material->type === $value)>{{ $label }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </label>
+                                                            <label>
+                                                                <span>Urutan</span>
+                                                                <input type="number" name="sort_order" value="{{ $material->sort_order }}" min="0" required>
+                                                            </label>
+                                                            <label>
+                                                                <span>Ganti File</span>
+                                                                <input type="file" name="file">
+                                                            </label>
+                                                            <label class="wide">
+                                                                <span>Ganti URL Video / Resource</span>
+                                                                <input name="external_url" value="{{ filter_var($material->url, FILTER_VALIDATE_URL) ? $material->url : '' }}">
+                                                                <small>Kosongkan jika file atau URL lama tidak ingin diubah.</small>
+                                                            </label>
+                                                            <label style="display:flex;align-items:center;gap:8px">
+                                                                <input type="checkbox" name="downloadable" value="1" style="width:auto" @checked($material->downloadable)>
+                                                                <span>Bisa diunduh</span>
+                                                            </label>
+                                                            <div class="meta">
+                                                                <button class="button" type="submit">Simpan Perubahan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </details>
                                             </div>
                                         @endforeach
                                     </div>
