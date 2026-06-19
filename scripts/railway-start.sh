@@ -7,6 +7,20 @@ export PHPRC="${PHPRC:-$(pwd)/php.ini}"
 
 echo "PHP upload limits: upload_max_filesize=$(php -r 'echo ini_get("upload_max_filesize");'), post_max_size=$(php -r 'echo ini_get("post_max_size");')"
 
+# Railway Volume mounted at /app/storage starts as an empty directory.
+# Create Laravel runtime and material directories before Artisan writes to them.
+mkdir -p \
+    storage/app/public/site \
+    storage/app/public/avatars \
+    storage/app/materials/videos \
+    storage/app/materials/files \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs
+
+chmod -R ug+rwX storage bootstrap/cache 2>/dev/null || true
+
 if [ -n "${DATABASE_URL:-}" ] && [ -z "${DB_CONNECTION:-}" ]; then
     export DB_CONNECTION=pgsql
 fi

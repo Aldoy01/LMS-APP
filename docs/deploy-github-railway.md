@@ -102,7 +102,27 @@ Jika service crash, cek tab **Deploy Logs** untuk error build dan tab **Runtime 
 
 Jangan jalankan `php artisan storage:link` di Railway runtime jika muncul error `symlink(): Permission denied`; script project ini sudah tidak menjalankannya.
 
-## 7. Akun Demo
+## 7. Volume untuk Menyimpan Materi
+
+Filesystem bawaan deployment Railway bersifat sementara. Agar video, PDF, avatar, dan gambar yang di-upload tidak hilang saat redeploy, pasang Railway Volume pada service aplikasi:
+
+1. Buka project Railway.
+2. Pada project canvas, klik kanan lalu pilih **New Volume**. Volume juga dapat dibuat melalui `Ctrl/Cmd + K`.
+3. Hubungkan volume ke service aplikasi LMS, bukan ke service PostgreSQL.
+4. Isi **Mount Path** dengan:
+
+   ```text
+   /app/storage
+   ```
+
+5. Deploy ulang service aplikasi.
+6. Upload satu materi percobaan, lakukan redeploy, lalu pastikan materi masih dapat dibuka.
+
+Script `scripts/railway-start.sh` otomatis membuat folder Laravel yang diperlukan ketika volume masih kosong.
+
+Materi yang sudah hilang sebelum volume dipasang tidak dapat dipulihkan otomatis dan perlu di-upload satu kali lagi.
+
+## 8. Akun Demo
 
 Seeder akan berjalan hanya jika Anda menjalankan seed manual. Untuk production, sebaiknya buat admin manual atau jalankan:
 
@@ -117,7 +137,7 @@ Akun demo dari seeder:
 
 Ganti password setelah production aktif.
 
-## 8. URL Penting
+## 9. URL Penting
 
 - Landing LMS: `https://domain-railway`
 - Login peserta: `/login`
@@ -125,6 +145,6 @@ Ganti password setelah production aktif.
 - Login admin: `/admin/login`
 - Manajemen course: `/admin/courses`
 
-## 9. Catatan
+## 10. Catatan
 
 Dokumentasi Nixpacks untuk PHP/Laravel menyarankan document root Laravel diarahkan ke folder `public`; project ini mengatur `NIXPACKS_PHP_ROOT_DIR=/app/public` lewat `nixpacks.toml`.
