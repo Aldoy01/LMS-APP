@@ -56,6 +56,58 @@
     .lesson-forum h2 { margin:6px 0 8px; color:#07164d; font-size:24px; }
     .lesson-forum p { margin:0 0 16px; color:#64748b; }
     .lesson-footer { margin-top:30px; }
+
+    /* Modern digital classroom */
+    body { background:#07164d; }
+    .classroom { grid-template-columns:350px minmax(0,1fr); background:radial-gradient(circle at 84% 5%,rgba(0,212,255,.12),transparent 26rem),#f3f6fb; }
+    .class-sidebar { z-index:20; color:#dbeafe; background:linear-gradient(180deg,#07164d 0%,#0b2865 48%,#102f78 100%); border-right-color:rgba(103,232,249,.16); box-shadow:16px 0 45px rgba(7,22,77,.14); scrollbar-width:thin; scrollbar-color:#3157dc transparent; }
+    .class-brand { position:relative; padding:26px 24px 24px; overflow:hidden; background:radial-gradient(circle at 92% 8%,rgba(0,212,255,.25),transparent 11rem),linear-gradient(145deg,rgba(49,87,220,.28),rgba(7,22,77,.2)); border-bottom:1px solid rgba(255,255,255,.1); }
+    .class-brand::after { content:""; position:absolute; width:120px; height:120px; right:-64px; bottom:-72px; border:18px solid rgba(103,232,249,.1); border-radius:50%; }
+    .class-brand a { position:relative; z-index:1; padding:8px 11px; border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#dbeafe; background:rgba(255,255,255,.07); font-size:11px; font-weight:900; }
+    .class-brand h2,.class-brand p { position:relative; z-index:1; }
+    .class-brand h2 { font-size:20px; }
+    .class-brand p { color:#9edffa; font-weight:800; }
+    .sidebar-progress { position:relative; z-index:1; margin-top:18px; padding:13px; border:1px solid rgba(255,255,255,.12); border-radius:13px; background:rgba(255,255,255,.07); }
+    .sidebar-progress-copy { display:flex; justify-content:space-between; gap:12px; color:#dbeafe; font-size:10px; font-weight:900; }
+    .sidebar-progress-track { height:7px; margin-top:9px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.13); }
+    .sidebar-progress-track span { height:100%; display:block; border-radius:inherit; background:linear-gradient(90deg,#67e8f9,#34d399); box-shadow:0 0 14px rgba(103,232,249,.4); }
+    .module-block { border-bottom-color:rgba(255,255,255,.08); background:transparent; }
+    .module-block summary { padding:20px 48px 18px 24px; transition:background .18s ease; }
+    .module-block summary::after { color:#67e8f9; }
+    .module-block[open] summary { background:rgba(255,255,255,.08); }
+    .module-title { color:#fff; }
+    .module-meta { color:#93c5fd; }
+    .module-lessons { border-top-color:rgba(255,255,255,.08); background:rgba(2,10,36,.18); }
+    .lesson-link { grid-template-columns:25px 1fr auto; gap:11px; min-height:68px; padding:13px 22px; border-top-color:rgba(255,255,255,.07); color:#c7d8f8; transition:background .18s ease,color .18s ease,padding-left .18s ease; }
+    .lesson-link:hover { padding-left:27px; color:#fff; background:rgba(255,255,255,.08); }
+    .lesson-link.active { color:#fff; background:linear-gradient(90deg,rgba(0,212,255,.2),rgba(49,87,220,.16)); box-shadow:inset 4px 0 #67e8f9; }
+    .lesson-state { width:22px; height:22px; border-color:#5da9d7; border-radius:8px; background:rgba(255,255,255,.05); }
+    .lesson-state.done { border-color:#34d399; background:linear-gradient(145deg,#06b6d4,#34d399); box-shadow:0 6px 16px rgba(52,211,153,.22); }
+    .lesson-duration { color:#93c5fd; }
+    .class-main { padding:32px clamp(22px,4vw,58px) 42px; }
+    .class-head { position:relative; padding:28px; overflow:hidden; border:1px solid rgba(47,123,255,.14); border-radius:24px; background:rgba(255,255,255,.9); box-shadow:0 18px 46px rgba(16,85,245,.09); backdrop-filter:blur(14px); }
+    .class-head::after { content:""; position:absolute; width:180px; height:180px; top:-110px; right:-80px; border:28px solid rgba(0,212,255,.08); border-radius:50%; }
+    .class-head > * { position:relative; z-index:1; }
+    .class-head small { display:inline-flex; padding:7px 10px; border-radius:999px; color:#3157dc; background:#eaf2ff; }
+    .class-head h1 { margin-top:14px; color:#07164d; font-size:clamp(30px,4vw,50px); letter-spacing:-.025em; }
+    .class-head p { max-width:720px; line-height:1.7; }
+    .progress-panel { padding:20px; border-color:rgba(49,87,220,.16); border-radius:18px; background:linear-gradient(145deg,#fff,#f4f8ff); box-shadow:0 14px 32px rgba(31,64,104,.1); }
+    .progress-copy strong { color:#3157dc; font-size:22px; }
+    .progress-track { box-shadow:inset 0 1px 3px rgba(7,22,77,.1); }
+    .progress-fill { background:linear-gradient(90deg,#3157dc,#00d4ff,#34d399); box-shadow:0 0 18px rgba(0,212,255,.3); }
+    .current-section { padding-top:34px; }
+    .current-section h2 { color:#07164d; font-size:26px; }
+    .learning-stage { border-color:rgba(47,123,255,.15); border-radius:22px; box-shadow:0 24px 60px rgba(31,64,104,.13); }
+    .material-viewer-title { display:flex; align-items:center; gap:9px; padding:15px 20px; background:linear-gradient(90deg,#eff6ff,#fff); }
+    .material-viewer-title::before { content:""; width:9px; height:9px; border-radius:3px; background:linear-gradient(145deg,#3157dc,#00d4ff); box-shadow:0 0 0 5px rgba(49,87,220,.08); }
+    .lesson-copy { padding:26px; }
+    .resource-link { padding:15px; border-color:#cddfff; border-radius:13px; background:linear-gradient(145deg,#f8fbff,#eef5ff); transition:transform .18s ease,box-shadow .18s ease; }
+    .resource-link:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(49,87,220,.1); }
+    .class-navigation { margin-top:24px; padding:18px; border:1px solid rgba(47,123,255,.13); border-radius:18px; background:rgba(255,255,255,.86); box-shadow:0 12px 32px rgba(16,85,245,.07); }
+    .class-nav-button,.complete-button { min-height:48px; padding:12px 24px; border-radius:13px; background:linear-gradient(135deg,#087ee1,#3157dc); box-shadow:0 10px 24px rgba(49,87,220,.2); transition:transform .18s ease; }
+    .class-nav-button:hover,.complete-button:hover { color:#fff; transform:translateY(-2px); }
+    .class-back { padding:9px 12px; border-radius:10px; color:#3157dc; background:#eef4ff; text-decoration:none; }
+    .lesson-forum { padding:28px; border:1px solid rgba(47,123,255,.12); border-radius:22px; background:rgba(255,255,255,.84); box-shadow:0 18px 46px rgba(16,85,245,.08); }
     @media(max-width:900px) {
         .classroom { grid-template-columns:1fr; }
         .class-sidebar { position:relative; height:auto; max-height:420px; border-right:0; border-bottom:1px solid #dbe3ef; }
@@ -76,6 +128,13 @@
         <div class="class-brand">
             <a href="{{ route('lms.courses.show', $course) }}">← Akses Kelas</a>
             <h2>{{ $course->title }}</h2>
+            <div class="sidebar-progress">
+                <div class="sidebar-progress-copy">
+                    <span>PROGRESS KELAS</span>
+                    <span>{{ $progressPercent }}%</span>
+                </div>
+                <div class="sidebar-progress-track"><span style="width:{{ $progressPercent }}%"></span></div>
+            </div>
             <p>{{ $course->level }} · {{ $lessons->count() }} pelajaran</p>
         </div>
 
