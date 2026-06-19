@@ -79,6 +79,28 @@ class LmsDashboardController extends Controller
         $continueLesson = $lessons->first(
             fn ($lesson) => optional($progress->get($lesson->id))->progress_percent !== 100
         ) ?? $lessons->first();
+        $settings = \App\Models\SiteSetting::publicSettings();
+        $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
+        $whatsappTarget = str_starts_with($whatsappNumber, '0')
+            ? '62' . substr($whatsappNumber, 1)
+            : $whatsappNumber;
+        $discussionGroups = [
+            [
+                'name' => 'Telegram Community',
+                'description' => 'Diskusi materi, berbagi insight, dan bertanya bersama peserta Trama Verse.',
+                'url' => 'https://t.me/tramaverse',
+            ],
+            [
+                'name' => 'WhatsApp Support',
+                'description' => 'Hubungi admin untuk kendala akses kelas, materi, dan progres belajar.',
+                'url' => 'https://wa.me/' . $whatsappTarget,
+            ],
+            [
+                'name' => 'Discord Lab Room',
+                'description' => 'Ruang diskusi praktik, troubleshooting tools, dan review workflow.',
+                'url' => 'https://discord.gg/tramaverse',
+            ],
+        ];
 
         return view('lms.course', compact(
             'course',
@@ -87,7 +109,8 @@ class LmsDashboardController extends Controller
             'progress',
             'completedLessons',
             'progressPercent',
-            'continueLesson'
+            'continueLesson',
+            'discussionGroups'
         ));
     }
 }
