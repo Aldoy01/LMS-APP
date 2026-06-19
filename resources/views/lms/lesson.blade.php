@@ -52,6 +52,17 @@
     .class-nav-button.next, .complete-form { justify-self:end; }
     .class-back { color:#0798ec; font-size:12px; font-weight:800; text-decoration:underline; }
     .status-message { margin-bottom:16px; padding:12px 15px; border-radius:10px; color:#075985; background:#e0f2fe; font-weight:800; }
+    .lesson-forum { margin-top:34px; padding-top:28px; border-top:1px solid #dbe3ef; }
+    .lesson-forum h2 { margin:6px 0 8px; color:#07164d; font-size:24px; }
+    .lesson-forum p { margin:0 0 16px; color:#64748b; }
+    .lesson-forum-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .lesson-forum-card { min-height:110px; display:flex; flex-direction:column; justify-content:space-between; padding:17px; border-radius:14px; color:#fff; font-weight:900; box-shadow:0 12px 28px rgba(16,85,245,.12); }
+    .lesson-forum-card.telegram { background:linear-gradient(145deg,#149ddd,#2563eb); }
+    .lesson-forum-card.whatsapp { background:linear-gradient(145deg,#14b86a,#078d58); }
+    .lesson-forum-card.discord { background:linear-gradient(145deg,#5865f2,#7c3aed); }
+    .lesson-forum-card span { font-size:13px; }
+    .lesson-forum-card small { color:rgba(255,255,255,.82); font-size:11px; }
+    .lesson-footer { margin-top:30px; }
     @media(max-width:900px) {
         .classroom { grid-template-columns:1fr; }
         .class-sidebar { position:relative; height:auto; max-height:420px; border-right:0; border-bottom:1px solid #dbe3ef; }
@@ -64,6 +75,7 @@
         .class-navigation { grid-template-columns:1fr 1fr; }
         .class-back { grid-column:1/-1; grid-row:2; justify-self:center; }
         .class-nav-button, .complete-button { width:100%; padding-inline:15px; }
+        .lesson-forum-grid { grid-template-columns:1fr; }
     }
 </style>
 
@@ -186,6 +198,24 @@
                 <a class="class-nav-button next" href="{{ route('lms.lessons.show', [$course, $nextLesson]) }}">Next Topic ›</a>
             @endif
         </nav>
+
+        <section class="lesson-forum">
+            <span class="eyebrow">Community Learning</span>
+            <h2>Forum Belajar Peserta</h2>
+            <p>Tanyakan materi, diskusikan praktik, atau hubungi admin tanpa meninggalkan alur kelas.</p>
+            <div class="lesson-forum-grid">
+                @foreach($discussionGroups as $group)
+                    <a class="lesson-forum-card {{ $group['class'] }}" href="{{ $group['url'] }}" target="_blank" rel="noopener">
+                        <span>{{ $group['label'] }}</span>
+                        <small>Buka forum →</small>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+
+        <div class="lesson-footer">
+            @include('partials.footer', ['footerMode' => 'participant'])
+        </div>
     </main>
 </div>
 <script>

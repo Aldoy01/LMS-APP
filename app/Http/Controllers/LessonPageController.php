@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\ProgressTracking;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Auth;
 
 class LessonPageController extends Controller
@@ -49,6 +50,11 @@ class LessonPageController extends Controller
             ->values();
         $firstDisplayMaterial = $displayMaterials->first();
         $primaryMaterial = $firstDisplayMaterial['material'] ?? null;
+        $settings = SiteSetting::publicSettings();
+        $whatsappNumber = preg_replace('/\D+/', '', $settings['contact_whatsapp'] ?? '08513332305');
+        $whatsappTarget = str_starts_with($whatsappNumber, '0')
+            ? '62' . substr($whatsappNumber, 1)
+            : $whatsappNumber;
 
         return view('lms.lesson', [
             'course' => $course,
@@ -63,6 +69,11 @@ class LessonPageController extends Controller
             'enrollment' => $enrollment,
             'previousLesson' => $currentIndex > 0 ? $lessons[$currentIndex - 1] : null,
             'nextLesson' => $currentIndex !== false && $currentIndex < $lessons->count() - 1 ? $lessons[$currentIndex + 1] : null,
+            'discussionGroups' => [
+                ['label' => 'Telegram', 'url' => 'https://t.me/tramaverse', 'class' => 'telegram'],
+                ['label' => 'WhatsApp Admin', 'url' => 'https://wa.me/' . $whatsappTarget, 'class' => 'whatsapp'],
+                ['label' => 'Discord', 'url' => 'https://discord.gg/tramaverse', 'class' => 'discord'],
+            ],
         ]);
     }
 
