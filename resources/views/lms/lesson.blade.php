@@ -63,7 +63,10 @@
     .class-sidebar { z-index:20; color:#dbeafe; background:linear-gradient(180deg,#07164d 0%,#0b2865 48%,#102f78 100%); border-right-color:rgba(103,232,249,.16); box-shadow:16px 0 45px rgba(7,22,77,.14); scrollbar-width:thin; scrollbar-color:#3157dc transparent; }
     .class-brand { position:relative; padding:26px 24px 24px; overflow:hidden; background:radial-gradient(circle at 92% 8%,rgba(0,212,255,.25),transparent 11rem),linear-gradient(145deg,rgba(49,87,220,.28),rgba(7,22,77,.2)); border-bottom:1px solid rgba(255,255,255,.1); }
     .class-brand::after { content:""; position:absolute; width:120px; height:120px; right:-64px; bottom:-72px; border:18px solid rgba(103,232,249,.1); border-radius:50%; }
-    .class-brand a { position:relative; z-index:1; padding:8px 11px; border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#dbeafe; background:rgba(255,255,255,.07); font-size:11px; font-weight:900; }
+    .class-brand a { position:relative; z-index:1; min-height:42px; padding:7px 14px 7px 8px; border:1px solid rgba(255,255,255,.16); border-radius:14px; color:#e8f8ff; background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.06)); box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px rgba(0,0,0,.12); backdrop-filter:blur(12px); font-size:11px; font-weight:900; transition:transform .2s ease,background .2s ease,box-shadow .2s ease; }
+    .class-brand a:hover { color:#fff; background:rgba(255,255,255,.17); box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 14px 28px rgba(0,0,0,.18); transform:translateX(-3px); }
+    .nav-icon { width:28px; height:28px; display:grid; place-items:center; flex:0 0 auto; border-radius:10px; background:rgba(103,232,249,.16); }
+    .nav-icon svg { width:15px; height:15px; }
     .class-brand h2,.class-brand p { position:relative; z-index:1; }
     .class-brand h2 { font-size:20px; }
     .class-brand p { color:#9edffa; font-weight:800; }
@@ -103,10 +106,20 @@
     .lesson-copy { padding:26px; }
     .resource-link { padding:15px; border-color:#cddfff; border-radius:13px; background:linear-gradient(145deg,#f8fbff,#eef5ff); transition:transform .18s ease,box-shadow .18s ease; }
     .resource-link:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(49,87,220,.1); }
-    .class-navigation { margin-top:24px; padding:18px; border:1px solid rgba(47,123,255,.13); border-radius:18px; background:rgba(255,255,255,.86); box-shadow:0 12px 32px rgba(16,85,245,.07); }
-    .class-nav-button,.complete-button { min-height:48px; padding:12px 24px; border-radius:13px; background:linear-gradient(135deg,#087ee1,#3157dc); box-shadow:0 10px 24px rgba(49,87,220,.2); transition:transform .18s ease; }
-    .class-nav-button:hover,.complete-button:hover { color:#fff; transform:translateY(-2px); }
-    .class-back { padding:9px 12px; border-radius:10px; color:#3157dc; background:#eef4ff; text-decoration:none; }
+    .class-navigation { margin-top:26px; padding:14px; border:1px solid rgba(47,123,255,.12); border-radius:22px; background:rgba(255,255,255,.74); box-shadow:0 18px 45px rgba(16,85,245,.09); backdrop-filter:blur(16px); }
+    .class-nav-button,.complete-button { position:relative; min-height:58px; display:inline-flex; align-items:center; gap:12px; padding:8px 18px 8px 9px; overflow:hidden; border:1px solid rgba(255,255,255,.18); border-radius:18px; background:linear-gradient(135deg,#087ee1,#3157dc 72%,#5634bb); box-shadow:0 12px 28px rgba(49,87,220,.24),inset 0 1px 0 rgba(255,255,255,.18); transition:transform .2s ease,box-shadow .2s ease,filter .2s ease; }
+    .class-nav-button.next,.complete-button { padding:8px 9px 8px 18px; }
+    .class-nav-button::before,.complete-button::before { content:""; position:absolute; inset:0; background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.16) 45%,transparent 70%); transform:translateX(-120%); transition:transform .5s ease; }
+    .class-nav-button:hover,.complete-button:hover { color:#fff; filter:saturate(1.1); transform:translateY(-3px); box-shadow:0 18px 34px rgba(49,87,220,.32),inset 0 1px 0 rgba(255,255,255,.2); }
+    .class-nav-button:hover::before,.complete-button:hover::before { transform:translateX(120%); }
+    .nav-button-icon { position:relative; z-index:1; width:40px; height:40px; display:grid; place-items:center; flex:0 0 auto; border-radius:13px; color:#fff; background:rgba(255,255,255,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.18); }
+    .nav-button-icon svg { width:18px; height:18px; }
+    .nav-button-copy { position:relative; z-index:1; display:grid; gap:1px; text-align:left; }
+    .nav-button-copy small { color:rgba(255,255,255,.72); font-size:9px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+    .nav-button-copy strong { color:#fff; font-size:12px; }
+    .class-back { min-height:46px; display:inline-flex; align-items:center; gap:8px; padding:9px 15px; border:1px solid rgba(49,87,220,.12); border-radius:15px; color:#3157dc; background:linear-gradient(145deg,#fff,#edf4ff); box-shadow:0 8px 20px rgba(49,87,220,.09); text-decoration:none; transition:transform .18s ease,box-shadow .18s ease; }
+    .class-back:hover { color:#3157dc; transform:translateY(-2px); box-shadow:0 12px 26px rgba(49,87,220,.14); }
+    .class-back svg { width:16px; height:16px; }
     .lesson-forum { padding:28px; border:1px solid rgba(47,123,255,.12); border-radius:22px; background:rgba(255,255,255,.84); box-shadow:0 18px 46px rgba(16,85,245,.08); }
     @media(max-width:900px) {
         .classroom { grid-template-columns:1fr; }
@@ -126,7 +139,12 @@
 <div class="classroom">
     <aside class="class-sidebar">
         <div class="class-brand">
-            <a href="{{ route('lms.courses.show', $course) }}">← Akses Kelas</a>
+            <a href="{{ route('lms.courses.show', $course) }}">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>
+                </span>
+                <span>Kembali ke Akses Kelas</span>
+            </a>
             <h2>{{ $course->title }}</h2>
             <div class="sidebar-progress">
                 <div class="sidebar-progress-copy">
@@ -231,22 +249,41 @@
 
         <nav class="class-navigation" aria-label="Navigasi pelajaran">
             @if($previousLesson)
-                <a class="class-nav-button" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">‹ Previous Pelajaran</a>
+                <a class="class-nav-button" href="{{ route('lms.lessons.show', [$course, $previousLesson]) }}">
+                    <span class="nav-button-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m15 18-6-6 6-6"/></svg>
+                    </span>
+                    <span class="nav-button-copy"><small>Sebelumnya</small><strong>Previous Pelajaran</strong></span>
+                </a>
             @else
                 <span></span>
             @endif
 
-            <a class="class-back" href="{{ route('lms.courses.show', $course) }}">Back to Akses Kelas</a>
+            <a class="class-back" href="{{ route('lms.courses.show', $course) }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                <span>Daftar Modul</span>
+            </a>
 
             @if($enrollment)
                 <form class="complete-form" method="POST" action="{{ route('lms.lessons.complete', [$course, $lesson]) }}">
                     @csrf
                     <button class="complete-button" type="submit">
-                        {{ $nextLesson ? 'Selesai & Next Topic' : 'Selesaikan Course' }} ›
+                        <span class="nav-button-copy">
+                            <small>{{ $nextLesson ? 'Tandai selesai' : 'Progress lengkap' }}</small>
+                            <strong>{{ $nextLesson ? 'Next Topic' : 'Selesaikan Course' }}</strong>
+                        </span>
+                        <span class="nav-button-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m9 18 6-6-6-6"/></svg>
+                        </span>
                     </button>
                 </form>
             @elseif($nextLesson)
-                <a class="class-nav-button next" href="{{ route('lms.lessons.show', [$course, $nextLesson]) }}">Next Topic ›</a>
+                <a class="class-nav-button next" href="{{ route('lms.lessons.show', [$course, $nextLesson]) }}">
+                    <span class="nav-button-copy"><small>Berikutnya</small><strong>Next Topic</strong></span>
+                    <span class="nav-button-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="m9 18 6-6-6-6"/></svg>
+                    </span>
+                </a>
             @endif
         </nav>
 
