@@ -8,7 +8,10 @@
                     <span class="eyebrow">Admin LMS</span>
                     <h2>Manajemen Course</h2>
                 </div>
-                <a class="button" href="{{ route('admin.courses.create') }}">Tambah Course</a>
+                <div class="meta">
+                    <a class="button" style="background:var(--teal)" href="{{ route('admin.payments.index') }}">Cek Pembayaran</a>
+                    <a class="button" href="{{ route('admin.courses.create') }}">Tambah Course</a>
+                </div>
             </div>
 
             @if(session('status'))

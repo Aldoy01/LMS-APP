@@ -8,6 +8,7 @@
                     <span class="eyebrow">Admin LMS</span>
                     <h2>Verifikasi Pembayaran</h2>
                 </div>
+                <a class="button" style="background:var(--night)" href="{{ route('admin.courses.index') }}">Kembali ke Admin</a>
             </div>
 
             @if(session('status'))
