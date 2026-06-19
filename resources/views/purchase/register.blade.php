@@ -48,8 +48,8 @@
             <span class="eyebrow">Daftar Peserta</span>
             <h1>Pilih paket kelas dan mulai proses registrasi.</h1>
             <p>
-                Setelah memilih paket, isi data peserta, buat password akun, lalu lanjutkan pembayaran.
-                Admin akan memverifikasi pembayaran dan mengaktifkan akses kelas Anda.
+                Setelah memilih paket, isi data peserta lalu lanjutkan pembayaran.
+                Sistem membuat akun otomatis, kemudian mengirimkan password melalui email setelah pembayaran diverifikasi.
             </p>
         </div>
     </section>
@@ -64,12 +64,12 @@
             <div class="card">
                 <span class="eyebrow">Langkah 2</span>
                 <h3>Isi Registrasi</h3>
-                <p>Masukkan nama, email, nomor WhatsApp, dan password akun peserta.</p>
+                <p>Masukkan nama, email aktif, dan nomor WhatsApp untuk pembuatan akun otomatis.</p>
             </div>
             <div class="card">
                 <span class="eyebrow">Langkah 3</span>
                 <h3>Konfirmasi Bayar</h3>
-                <p>Upload atau kirim bukti pembayaran agar admin bisa membuka akses kelas.</p>
+                <p>Kirim bukti pembayaran. Setelah disetujui, akses dan password dikirim ke email.</p>
             </div>
         </section>
 

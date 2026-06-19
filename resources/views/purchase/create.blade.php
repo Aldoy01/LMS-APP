@@ -15,7 +15,7 @@
         <div class="hero-panel">
             <img class="hero-logo" src="{{ asset('images/trama-verse-logo.png') }}" alt="Trama Verse">
             <strong>Alur Pembelian</strong>
-            <p style="margin:0;color:var(--hero-copy)">Registrasi akun, transfer pembayaran, konfirmasi pembayaran, lalu admin mengaktifkan akses kelas.</p>
+            <p style="margin:0;color:var(--hero-copy)">Isi data, transfer dan konfirmasi pembayaran. Akun dibuat otomatis dan informasi login dikirim melalui email setelah disetujui admin.</p>
         </div>
     </section>
 
@@ -61,8 +61,9 @@
                             @error('name') <small>{{ $message }}</small> @enderror
                         </label>
                         <label>
-                            <span>Email Login</span>
+                            <span>Email Aktif</span>
                             <input type="email" name="email" value="{{ old('email') }}" required>
+                            <small>Password dan tautan akses akan dikirim ke alamat ini setelah pembayaran disetujui.</small>
                             @error('email') <small>{{ $message }}</small> @enderror
                         </label>
                         <label>
@@ -75,18 +76,9 @@
                             <input name="company" value="{{ old('company') }}">
                             @error('company') <small>{{ $message }}</small> @enderror
                         </label>
-                        <label>
-                            <span>Password Akun</span>
-                            <input type="password" name="password" required>
-                            @error('password') <small>{{ $message }}</small> @enderror
-                        </label>
-                        <label>
-                            <span>Konfirmasi Password</span>
-                            <input type="password" name="password_confirmation" required>
-                        </label>
                     </div>
                     <div class="meta" style="margin-top:18px">
-                        <button class="button" type="submit">Daftar & Lanjut Pembayaran</button>
+                        <button class="button" type="submit">Buat Akun & Lanjut Pembayaran</button>
                     </div>
                 </form>
             </div>

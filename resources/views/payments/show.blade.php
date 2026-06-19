@@ -26,6 +26,12 @@
                         <span class="badge">Status: {{ ucfirst(str_replace('_', ' ', $order->status)) }}</span>
                         <span class="badge">Total: Rp{{ number_format($order->total, 0, ',', '.') }}</span>
                     </div>
+                    @if(! $order->user->is_active)
+                        <div class="list-row" style="margin-top:14px;border-color:var(--brand);background:var(--brand-soft)">
+                            <strong>Akun menunggu aktivasi</strong>
+                            <span class="muted">Setelah pembayaran disetujui admin, password dan tautan login akan dikirim ke {{ $order->user->email }}.</span>
+                        </div>
+                    @endif
 
                     <div class="list" style="margin-top:14px">
                         <div class="list-row">

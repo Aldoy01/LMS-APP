@@ -26,8 +26,15 @@ class AuthController extends Controller
         ]);
 
         $remember = $request->boolean('remember');
+        $user = User::where('email', $credentials['email'])->first();
 
-        if (! User::where('email', $credentials['email'])->exists() || ! Auth::attempt($credentials, $remember)) {
+        if ($user && ! $user->is_active) {
+            return back()
+                ->withErrors(['email' => 'Akun belum aktif. Selesaikan pembayaran dan tunggu verifikasi admin. Informasi login akan dikirim ke email Anda.'])
+                ->onlyInput('email');
+        }
+
+        if (! $user || ! Auth::attempt(array_merge($credentials, ['is_active' => true]), $remember)) {
             return back()
                 ->withErrors(['email' => 'Email atau password salah.'])
                 ->onlyInput('email');
@@ -46,7 +53,8 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (! User::where('email', $credentials['email'])->exists() || ! Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! User::where('email', $credentials['email'])->where('is_active', true)->exists()
+            || ! Auth::attempt(array_merge($credentials, ['is_active' => true]), $request->boolean('remember'))) {
             return back()
                 ->withErrors(['email' => 'Email atau password salah.'])
                 ->onlyInput('email');

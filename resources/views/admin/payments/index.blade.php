@@ -16,6 +16,11 @@
                     {{ session('status') }}
                 </div>
             @endif
+            @if($errors->any())
+                <div class="list-row" style="border-color:var(--danger);background:var(--accent-soft);margin-bottom:14px">
+                    {{ $errors->first() }}
+                </div>
+            @endif
 
             <div class="list">
                 @forelse($orders as $order)
@@ -33,16 +38,19 @@
                         <div class="meta">
                             <span class="badge">Total Rp{{ number_format($order->total, 0, ',', '.') }}</span>
                             <span class="badge">Payment: {{ optional($payment)->status ?? '-' }}</span>
+                            <span class="badge">Akun: {{ $order->user->is_active ? 'Aktif' : 'Menunggu pembayaran' }}</span>
                             @if(optional($payment)->proof_path)
                                 <span class="badge">Ref: {{ $payment->proof_path }}</span>
                             @endif
                         </div>
-                        @if($order->status !== 'paid')
+                        @if($order->status === 'payment_submitted')
                             <form method="POST" action="{{ route('admin.payments.verify', $order) }}" class="meta">
                                 @csrf
                                 @method('PUT')
-                                <button class="button" type="submit">Verifikasi & Aktifkan Kelas</button>
+                                <button class="button" type="submit">Verifikasi, Aktifkan & Kirim Email</button>
                             </form>
+                        @elseif($order->status === 'waiting_payment')
+                            <p class="muted" style="margin-bottom:0">Menunggu peserta mengirim konfirmasi pembayaran.</p>
                         @endif
                     </article>
                 @empty

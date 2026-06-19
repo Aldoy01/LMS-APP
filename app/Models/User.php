@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'company',
+        'is_active',
+        'activation_credentials_sent_at',
         'avatar_path',
         'password',
     ];
@@ -44,6 +46,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
+        'activation_credentials_sent_at' => 'datetime',
     ];
 
     public function role()

@@ -61,7 +61,14 @@ CACHE_DRIVER=file
 QUEUE_CONNECTION=sync
 SESSION_DRIVER=file
 FILESYSTEM_DISK=local
-MAIL_MAILER=log
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.provider-email-anda.com
+MAIL_PORT=587
+MAIL_USERNAME=USERNAME_SMTP
+MAIL_PASSWORD=PASSWORD_SMTP
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=no-reply@domain-anda.com
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 Tambahkan juga variable PostgreSQL dari Railway PostgreSQL service:
@@ -75,6 +82,8 @@ DB_PASSWORD=${{Postgres.PGPASSWORD}}
 ```
 
 Nama `Postgres` bisa berbeda sesuai nama service database di Railway. Sesuaikan dengan variable reference yang muncul di Railway.
+
+Konfigurasi SMTP wajib diisi agar password akun dan notifikasi aktivasi kelas benar-benar terkirim. Jika `MAIL_MAILER=log`, email hanya ditulis ke log Railway dan tidak masuk ke inbox peserta.
 
 ## 5. Membuat APP_KEY
 

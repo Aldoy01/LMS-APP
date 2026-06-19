@@ -74,11 +74,8 @@ class PurchaseController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')],
             'phone' => ['required', 'string', 'max:40'],
             'company' => ['nullable', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
-            'email.unique' => 'Email sudah terdaftar. Silakan login atau gunakan email lain.',
-            'password.confirmed' => 'Konfirmasi password tidak sama.',
-            'password.min' => 'Password minimal 8 karakter.',
+            'email.unique' => 'Email sudah terdaftar. Silakan login jika sudah menjadi member, atau hubungi admin jika pembayaran masih diproses.',
         ]);
 
         $participantRole = Role::where('name', 'participant')->first();
@@ -88,7 +85,8 @@ class PurchaseController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'company' => $data['company'] ?? null,
-            'password' => Hash::make($data['password']),
+            'is_active' => false,
+            'password' => Hash::make(Str::random(48)),
         ]);
 
         $invoice = 'INV-LMS-' . now()->format('Ymd') . '-' . strtoupper(Str::random(6));
@@ -111,6 +109,6 @@ class PurchaseController extends Controller
 
         return redirect()
             ->route('payments.show', $order->invoice_number)
-            ->with('status', 'Registrasi berhasil. Silakan lanjutkan pembayaran dan konfirmasi transfer.');
+            ->with('status', 'Akun sementara berhasil dibuat. Setelah pembayaran diverifikasi, akun akan aktif dan password login dikirim ke email Anda.');
     }
 }
