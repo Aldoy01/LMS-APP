@@ -3,6 +3,9 @@
     $faqDisplayMode = $faqMode ?? 'embedded';
     $faqHeading = $faqTitle ?? "FAQ's";
     $faqDescription = $faqSubtitle ?? 'Punya pertanyaan tentang Trama Verse? Tenang, kami sudah merangkum jawaban dari pertanyaan yang paling sering ditanyakan.';
+    $visibleFaqItems = $faqDisplayMode === 'embedded'
+        ? array_slice($faqItems, 0, 4)
+        : $faqItems;
 @endphp
 
 @once
@@ -55,17 +58,6 @@
         max-width: 720px;
         margin: 0 auto clamp(24px, 4vw, 38px);
         text-align: center;
-    }
-    .tv-faq-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        margin-bottom: 8px;
-        color: #eaf2ff;
-        font-size: 10px;
-        font-weight: 900;
-        letter-spacing: .12em;
-        text-transform: uppercase;
     }
     .tv-faq-heading h2 {
         margin: 0;
@@ -214,13 +206,12 @@
 <section class="tv-faq {{ $faqDisplayMode }}" aria-label="Pertanyaan yang sering ditanyakan">
     <div class="tv-faq-container">
         <header class="tv-faq-heading">
-            <span class="tv-faq-kicker">Pusat Bantuan</span>
             <h2>{{ $faqHeading }}</h2>
             <p>{{ $faqDescription }}</p>
         </header>
 
         <div class="tv-faq-list">
-            @foreach($faqItems as $index => $faq)
+            @foreach($visibleFaqItems as $index => $faq)
                 <details class="tv-faq-item" @if($index === 0 && ($faqOpenFirst ?? true)) open @endif>
                     <summary>{{ $faq['question'] }}</summary>
                     <div class="tv-faq-answer">
@@ -232,7 +223,7 @@
 
         @if($faqDisplayMode === 'embedded')
             <div class="tv-faq-more">
-                <a href="{{ route('faq') }}">Buka Halaman FAQ Lengkap</a>
+                <a href="{{ route('faq') }}">Lihat Semua FAQ</a>
             </div>
         @endif
     </div>
