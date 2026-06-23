@@ -189,33 +189,8 @@
         flex-direction: column;
         padding: 20px;
     }
-    .course-topline {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #e1e8f5;
-    }
-    .course-category {
-        min-height: 29px;
-        display: inline-flex;
-        align-items: center;
-        padding: 5px 10px;
-        border: 1px solid rgba(32, 78, 207, .16);
-        border-radius: 999px;
-        color: var(--catalog-blue);
-        background: #eef4ff;
-        font-size: 11px;
-        font-weight: 900;
-    }
-    .course-level {
-        color: #71809e;
-        font-size: 11px;
-        font-weight: 800;
-    }
     .course-body h3 {
-        margin: 14px 0 8px;
+        margin: 0 0 8px;
         color: var(--catalog-night);
         font-size: 21px;
         line-height: 1.25;
@@ -385,10 +360,6 @@
                         @endif
                     </div>
                     <div class="course-body">
-                        <div class="course-topline">
-                            <span class="course-category">Kategori: {{ $course->category }}</span>
-                            <span class="course-level">{{ $course->level }}</span>
-                        </div>
                         <h3>{{ $course->title }}</h3>
                         <p class="course-summary">{{ $course->summary }}</p>
 
