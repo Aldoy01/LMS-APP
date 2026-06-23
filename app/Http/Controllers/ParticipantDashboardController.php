@@ -117,28 +117,30 @@ class ParticipantDashboardController extends Controller
 
     public function otherCourses(Request $request)
     {
+        $categories = ['Cyber Security', 'Programming', 'AI & Automation'];
         $enrolledCourseIds = Enrollment::where('user_id', Auth::id())
             ->pluck('course_id')
             ->all();
 
-        $levels = Course::where('status', 'published')
-            ->whereNotNull('level')
-            ->distinct()
-            ->orderBy('level')
-            ->pluck('level');
+        $selectedCategory = in_array($request->input('category'), $categories, true)
+            ? $request->input('category')
+            : null;
+        $selectedPrice = in_array($request->input('price'), ['free', 'paid'], true)
+            ? $request->input('price')
+            : null;
 
         $courses = Course::with(['mentor', 'modules.lessons'])
             ->where('status', 'published')
-            ->when($request->filled('category'), fn ($query) => $query->where('level', $request->input('category')))
-            ->when($request->price === 'free', fn ($query) => $query->where('price', 0))
-            ->when($request->price === 'paid', fn ($query) => $query->where('price', '>', 0))
-            ->orderBy('level')
+            ->when($selectedCategory, fn ($query) => $query->where('category', $selectedCategory))
+            ->when($selectedPrice === 'free', fn ($query) => $query->where('price', 0))
+            ->when($selectedPrice === 'paid', fn ($query) => $query->where('price', '>', 0))
+            ->orderBy('category')
             ->orderBy('title')
             ->get();
 
         return view('participant.other-courses', [
             'courses' => $courses,
-            'levels' => $levels,
+            'categories' => $categories,
             'enrolledCourseIds' => $enrolledCourseIds,
         ]);
     }

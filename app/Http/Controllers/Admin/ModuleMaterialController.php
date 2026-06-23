@@ -69,7 +69,7 @@ class ModuleMaterialController extends Controller
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'summary' => ['nullable', 'string', 'max:1000'],
-            'content_type' => ['required', 'in:video,pdf,ebook,checklist,worksheet,lab'],
+            'content_type' => ['required', 'in:video,pdf,ebook,checklist,worksheet,lab,quiz'],
             'duration_minutes' => ['required', 'integer', 'min:0', 'max:9999'],
             'sort_order' => ['required', 'integer', 'min:0', 'max:999'],
             'is_preview' => ['nullable', 'boolean'],

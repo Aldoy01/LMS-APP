@@ -31,9 +31,27 @@
                     </label>
 
                     <label>
-                        <span>Harga</span>
+                        <span>Harga Jual</span>
                         <input type="number" name="price" min="0" value="{{ old('price', $course->price ?? 0) }}" required>
+                        <small>Isi 0 jika course gratis.</small>
                         @error('price') <small>{{ $message }}</small> @enderror
+                    </label>
+
+                    <label>
+                        <span>Harga Coret</span>
+                        <input type="number" name="original_price" min="0" value="{{ old('original_price', $course->original_price) }}" placeholder="Contoh: 650000">
+                        <small>Opsional. Harus sama atau lebih besar dari harga jual.</small>
+                        @error('original_price') <small>{{ $message }}</small> @enderror
+                    </label>
+
+                    <label>
+                        <span>Kategori Kelas</span>
+                        <select name="category" required>
+                            @foreach(['Cyber Security', 'Programming', 'AI & Automation'] as $category)
+                                <option value="{{ $category }}" @selected(old('category', $course->category) === $category)>{{ $category }}</option>
+                            @endforeach
+                        </select>
+                        @error('category') <small>{{ $message }}</small> @enderror
                     </label>
 
                     <label>

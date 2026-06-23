@@ -20,7 +20,11 @@ class CourseController extends Controller
     public function create()
     {
         return view('admin.courses.form', [
-            'course' => new Course(['status' => 'draft', 'level' => 'Beginner']),
+            'course' => new Course([
+                'status' => 'draft',
+                'level' => 'Beginner',
+                'category' => 'Cyber Security',
+            ]),
             'mentors' => $this->mentors(),
             'method' => 'POST',
             'action' => route('admin.courses.store'),
@@ -71,6 +75,8 @@ class CourseController extends Controller
             'summary' => ['required', 'string', 'max:1000'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'integer', 'min:0'],
+            'original_price' => ['nullable', 'integer', 'min:0', 'gte:price'],
+            'category' => ['required', 'in:Cyber Security,Programming,AI & Automation'],
             'level' => ['required', 'string', 'max:100'],
             'status' => ['required', 'in:draft,published,archived'],
             'mentor_id' => ['nullable', 'exists:users,id'],

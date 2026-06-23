@@ -12,6 +12,8 @@ class Course extends Model
         'summary',
         'description',
         'price',
+        'original_price',
+        'category',
         'level',
         'status',
         'cover_image',

@@ -88,6 +88,8 @@ class DatabaseSeeder extends Seeder
                 'summary' => 'Program praktis untuk membangun kebiasaan, checklist, SOP, dan respons awal keamanan siber bisnis.',
                 'description' => 'Materi pembelajaran digital untuk founder, IT internal, dan operator bisnis yang ingin menerapkan baseline cyber security secara terstruktur.',
                 'price' => 2500000,
+                'original_price' => 3000000,
+                'category' => 'Cyber Security',
                 'level' => 'Professional',
                 'status' => 'published',
                 'mentor_id' => $mentor->id,

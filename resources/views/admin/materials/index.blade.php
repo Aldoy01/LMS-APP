@@ -169,6 +169,7 @@
                                         <option value="checklist">Checklist</option>
                                         <option value="worksheet">Worksheet</option>
                                         <option value="lab">Lab</option>
+                                        <option value="quiz">Quiz</option>
                                     </select>
                                 </label>
                                 <label>
