@@ -67,6 +67,7 @@
         <div class="site-footer-column">
             <h2>About</h2>
             <a href="{{ route('about') }}">About {{ $footerName }}</a>
+            <a href="{{ route('faq') }}">FAQ</a>
             <a href="{{ route('privacy') }}">Privacy Policy</a>
             <a href="{{ route('terms') }}">Terms &amp; Conditions</a>
         </div>

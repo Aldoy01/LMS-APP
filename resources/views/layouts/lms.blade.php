@@ -533,6 +533,7 @@
         <nav class="nav nav-left" aria-label="Menu utama">
             <a href="{{ route('lms.dashboard') }}">{{ $settings['nav_home_label'] ?? 'Home' }}</a>
             <a href="{{ route('programs.index') }}">{{ $settings['nav_program_label'] ?? 'Program' }}</a>
+            <a href="{{ route('faq') }}">FAQ</a>
             <a href="{{ route('lms.dashboard') }}#kontak">{{ $settings['nav_contact_label'] ?? 'Contact' }}</a>
         </nav>
         <nav class="nav nav-actions" aria-label="Akses akun">

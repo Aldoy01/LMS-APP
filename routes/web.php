@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LmsDashboardController::class, 'index'])->name('lms.dashboard');
 Route::get('/program', [PublicPageController::class, 'programs'])->name('programs.index');
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/faq', [PublicPageController::class, 'faq'])->name('faq');
 Route::get('/privacy-policy', [PublicPageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PublicPageController::class, 'terms'])->name('terms');
 Route::get('/site-media/{filename}', [SiteMediaController::class, 'show'])->name('site-media.show');
