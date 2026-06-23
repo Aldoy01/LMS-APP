@@ -3,9 +3,9 @@
     $faqDisplayMode = $faqMode ?? 'embedded';
     $faqHeading = $faqTitle ?? "FAQ's";
     $faqDescription = $faqSubtitle ?? 'Punya pertanyaan tentang Trama Verse? Tenang, kami sudah merangkum jawaban dari pertanyaan yang paling sering ditanyakan.';
-    $visibleFaqItems = $faqDisplayMode === 'embedded'
-        ? array_slice($faqItems, 0, 4)
-        : $faqItems;
+    $visibleFaqItems = $faqDisplayMode === 'embedded' ? array_slice($faqItems, 0, 4) : $faqItems;
+    $hiddenFaqItems = $faqDisplayMode === 'embedded' ? array_slice($faqItems, 4) : [];
+    $faqSectionId = 'faq-extra-' . uniqid();
 @endphp
 
 @once
@@ -167,6 +167,35 @@
         font-weight: 800;
         background: rgba(255,255,255,.1);
     }
+    .tv-faq-more button {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 15px;
+        border: 1px solid rgba(255,255,255,.7);
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255,255,255,.1);
+        font: inherit;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: background .2s ease, transform .2s ease;
+    }
+    .tv-faq-more button:hover,
+    .tv-faq-more button:focus-visible {
+        background: rgba(255,255,255,.2);
+        transform: translateY(-1px);
+        outline: none;
+    }
+    .tv-faq-extra {
+        display: grid;
+        gap: 8px;
+    }
+    .tv-faq-extra[hidden] {
+        display: none;
+    }
     @media (max-width: 680px) {
         .tv-faq.embedded {
             padding: 26px 13px;
@@ -219,12 +248,44 @@
                     </div>
                 </details>
             @endforeach
+
+            @if($hiddenFaqItems)
+                <div class="tv-faq-extra" id="{{ $faqSectionId }}" hidden>
+                    @foreach($hiddenFaqItems as $faq)
+                        <details class="tv-faq-item">
+                            <summary>{{ $faq['question'] }}</summary>
+                            <div class="tv-faq-answer">
+                                <p>{{ $faq['answer'] }}</p>
+                            </div>
+                        </details>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
-        @if($faqDisplayMode === 'embedded')
+        @if($faqDisplayMode === 'embedded' && $hiddenFaqItems)
             <div class="tv-faq-more">
-                <a href="{{ route('faq') }}">Lihat Semua FAQ</a>
+                <button type="button" aria-expanded="false" aria-controls="{{ $faqSectionId }}" data-faq-toggle>
+                    Lihat Semua FAQ
+                </button>
             </div>
         @endif
     </div>
 </section>
+
+@once
+<script>
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-faq-toggle]');
+        if (!button) return;
+
+        const target = document.getElementById(button.getAttribute('aria-controls'));
+        if (!target) return;
+
+        const willOpen = target.hasAttribute('hidden');
+        target.toggleAttribute('hidden', !willOpen);
+        button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        button.textContent = willOpen ? 'Sembunyikan FAQ' : 'Lihat Semua FAQ';
+    });
+</script>
+@endonce
