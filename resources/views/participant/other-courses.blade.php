@@ -89,6 +89,12 @@
         font-size: clamp(30px, 4vw, 46px);
         line-height: 1.12;
     }
+    .catalog-section-head p {
+        margin: 12px 0 0;
+        color: #5a6782;
+        font-size: 15px;
+        line-height: 1.65;
+    }
     .catalog-filters {
         display: grid;
         grid-template-columns: repeat(2, minmax(180px, 280px)) auto;
@@ -223,26 +229,23 @@
         color: #0f9d64;
     }
     .course-features {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 9px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
         margin: 17px 0;
     }
     .course-feature {
-        min-width: 0;
-        padding: 10px;
-        border: 1px solid #e0e8f7;
-        border-radius: 9px;
-        color: #536383;
-        background: #f8faff;
-        font-size: 11px;
-        font-weight: 800;
-    }
-    .course-feature strong {
-        display: block;
-        margin-bottom: 2px;
-        color: var(--catalog-night);
-        font-size: 17px;
+        min-height: 24px;
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 8px;
+        border: 1px solid rgba(47, 123, 255, .12);
+        border-radius: 999px;
+        color: #3157dc;
+        background: rgba(47, 123, 255, .08);
+        font-size: 10px;
+        font-weight: 900;
+        line-height: 1;
     }
     .course-actions {
         margin-top: auto;
@@ -317,6 +320,7 @@
         <div class="catalog-section-head">
             <span>Course Catalogue</span>
             <h2>Temukan Course yang Cocok untuk Kamu</h2>
+            <p>Tingkatkan skill Anda melalui course praktis yang mudah dipelajari dan relevan untuk dunia kerja.</p>
         </div>
 
         <form class="catalog-filters" method="GET" action="{{ route('participant.other-courses') }}">
@@ -373,10 +377,10 @@
                         </div>
 
                         <div class="course-features">
-                            <div class="course-feature"><strong>{{ $moduleCount }}</strong>Jumlah Modul</div>
-                            <div class="course-feature"><strong>{{ $lessonCount }}</strong>Jumlah Lesson</div>
-                            <div class="course-feature"><strong>{{ $labCount }}</strong>Lab Practice</div>
-                            <div class="course-feature"><strong>{{ $quizCount }}</strong>Quiz</div>
+                            <span class="course-feature">{{ $moduleCount }} Modul</span>
+                            <span class="course-feature">{{ $lessonCount }} Lesson</span>
+                            <span class="course-feature">{{ $labCount }} Lab Practice</span>
+                            <span class="course-feature">{{ $quizCount }} Quiz</span>
                         </div>
 
                         <div class="course-actions">
