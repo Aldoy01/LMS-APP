@@ -402,5 +402,11 @@
             @endforelse
         </div>
     </section>
+
+    @include('partials.faq-section', [
+        'faqMode' => 'embedded',
+        'faqTitle' => "FAQ's",
+        'faqOpenFirst' => false,
+    ])
 </main>
 @endsection

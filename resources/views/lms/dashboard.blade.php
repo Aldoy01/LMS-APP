@@ -691,6 +691,12 @@
                 </div>
             </div>
         </section>
+
+        @include('partials.faq-section', [
+            'faqMode' => 'embedded',
+            'faqTitle' => "FAQ's",
+            'faqOpenFirst' => false,
+        ])
     </div>
     <script>
         (function () {

@@ -1653,6 +1653,12 @@
                 </div>
             </section>
 
+            @include('partials.faq-section', [
+                'faqMode' => 'embedded',
+                'faqTitle' => "FAQ's",
+                'faqOpenFirst' => false,
+            ])
+
             <section class="member-section" id="grup-diskusi">
                 <h2>Forum Belajar Peserta</h2>
                 @php
