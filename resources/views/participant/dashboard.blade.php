@@ -1312,7 +1312,7 @@
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4z"/><path d="M14 20h6V4h-6z"/><path d="M4 20h6v-3H4z"/></svg></span>
                     Dashboard
                 </a>
-                <a class="sidebar-link" href="#update-news">
+                <a class="sidebar-link" href="{{ route('participant.other-courses') }}">
                     <span class="sidebar-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v14H7a3 3 0 0 0-3 3z"/><path d="M8 8h8"/><path d="M8 12h6"/></svg></span>
                     Other Course
                 </a>

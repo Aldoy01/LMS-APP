@@ -57,6 +57,7 @@ Route::middleware(['auth', 'no.cache'])->group(function () {
     Route::post('/paket/{course:slug}/order', [PurchaseController::class, 'order'])->name('purchase.order');
     Route::get('/home', [ParticipantDashboardController::class, 'index'])->name('participant.home');
     Route::get('/peserta/dashboard', [ParticipantDashboardController::class, 'index'])->name('participant.dashboard');
+    Route::get('/peserta/other-course', [ParticipantDashboardController::class, 'otherCourses'])->name('participant.other-courses');
     Route::get('/peserta/profile', [ParticipantDashboardController::class, 'profile'])->name('participant.profile');
     Route::get('/peserta/avatar', [ParticipantDashboardController::class, 'avatar'])->name('participant.avatar');
     Route::put('/peserta/profile', [ParticipantDashboardController::class, 'updateProfile'])->name('participant.profile.update');

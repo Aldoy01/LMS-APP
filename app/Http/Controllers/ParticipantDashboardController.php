@@ -115,6 +115,34 @@ class ParticipantDashboardController extends Controller
         ]);
     }
 
+    public function otherCourses(Request $request)
+    {
+        $enrolledCourseIds = Enrollment::where('user_id', Auth::id())
+            ->pluck('course_id')
+            ->all();
+
+        $levels = Course::where('status', 'published')
+            ->whereNotNull('level')
+            ->distinct()
+            ->orderBy('level')
+            ->pluck('level');
+
+        $courses = Course::with(['mentor', 'modules.lessons'])
+            ->where('status', 'published')
+            ->when($request->filled('category'), fn ($query) => $query->where('level', $request->input('category')))
+            ->when($request->price === 'free', fn ($query) => $query->where('price', 0))
+            ->when($request->price === 'paid', fn ($query) => $query->where('price', '>', 0))
+            ->orderBy('level')
+            ->orderBy('title')
+            ->get();
+
+        return view('participant.other-courses', [
+            'courses' => $courses,
+            'levels' => $levels,
+            'enrolledCourseIds' => $enrolledCourseIds,
+        ]);
+    }
+
     public function updateProfile(Request $request)
     {
         $user = Auth::user();
