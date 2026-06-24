@@ -540,7 +540,7 @@
             @auth
                 <a class="icon-link icon-dashboard" href="{{ route('participant.dashboard') }}">Kelas Saya</a>
                 @if(in_array(optional(auth()->user()->role)->name, ['super-admin', 'admin-lms'], true))
-                    <a class="icon-link icon-card" href="{{ route('admin.site-content.edit') }}">Konten</a>
+                    <a class="icon-link icon-card" href="{{ route('admin.site-content.edit') }}">Konten & Tampilan</a>
                     <a class="icon-link icon-card" href="{{ route('admin.payments.index') }}">Pembayaran</a>
                     <a class="icon-link icon-shield" href="{{ route('admin.courses.index') }}">Admin</a>
                 @endif
